@@ -15,8 +15,8 @@ Option Explicit
 '-------------------------------------------------------------------------------
 
 Public Enum Errs
-'   Error types enum.
-'   Should have an equivalent description in ErrsLookup
+'   Error types enum. Each error should
+'   have an equivalent description in ErrsLookup.
     NotImplementedException
     InterfaceUsedAsObject
 End Enum

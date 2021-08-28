@@ -58,7 +58,7 @@ Public Sub OpenFile(fileName As String)
     mFileName = fileName
     mFile = FreeFile
     
-    Logger.Log "Opening for read: " & mFileName
+    Logger.Log "Opening (" & mFile & "): " & mFileName
     
     Open mFileName For Input Access Read As #mFile
     mFileIsOpen = True
@@ -67,7 +67,7 @@ End Sub
 Public Sub CloseFile()
 '   Closes the file if it is open.
     If Not mFileIsOpen Then Exit Sub
-    Logger.Log "Closing: " & mFileName
+    Logger.Log "Closing (" & mFile & "): " & mFileName
     
     Close #mFile
     mFileIsOpen = False

@@ -1,0 +1,38 @@
+VERSION 1.0 CLASS
+BEGIN
+  MultiUse = -1  'True
+END
+Attribute VB_Name = "Throw"
+Attribute VB_GlobalNameSpace = False
+Attribute VB_Creatable = False
+Attribute VB_PredeclaredId = True
+Attribute VB_Exposed = False
+Option Explicit
+
+'-------------------------------------------------------------------------------
+'   Static Class: Throw
+'   Adds a modern language feel to throwing errors.
+'-------------------------------------------------------------------------------
+
+Public Enum Errs
+'   Error types enum.
+'   Should have an equivalent description in ErrsLookup
+    NotImplementedException
+End Enum
+
+Private Function ErrsLookup(errType As Errs) As String
+    Select Case errType
+        Case Is = Errs.NotImplementedException
+            ErrsLookup = "Not yet implemented."
+        Case Else
+            ErrsLookup = "Internal error " & errType & "."
+    End Select
+End Function
+
+Public Property Let Exception(errType As Errs)
+    Dim errDesc As String
+    errDesc = ErrsLookup(errType)
+    
+    Logger.Log errDesc
+    Err.Raise vbObjectError + errType + 1, Description:=errDesc
+End Property

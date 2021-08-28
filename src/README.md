@@ -69,4 +69,3 @@ This class is responsible for writing the document using the text and styling in
 1. ~~File reader.~~
 1. ~~Collection wrapper for pushing and popping.~~
 1. ~~Basic logger class.~~
-

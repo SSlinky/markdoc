@@ -19,19 +19,19 @@ Private mFile As Integer
 Private mFileIsOpen As Boolean
 Private mNextLine As String
 
-Public Function NextLine() As String
+Public Function IIo_NextLine() As String
 '   Returns the next line to be read and advances the pointer.
-    Throw = Errs.InterfaceUsedAsObject
+    Throw = Errs.NotImplementedException
 End Function
 
-Public Function PeekNextLine() As String
+Public Function IIo_PeekNextLine() As String
 '   Returns the next line to be read without advancing the pointer.
-    Throw = Errs.InterfaceUsedAsObject
+    Throw = Errs.NotImplementedException
 End Function
 
-Public Function EOF() As Boolean
+Public Function IIo_EOF() As Boolean
 '   Returns True if the entire contents has been read.
-    Throw = Errs.InterfaceUsedAsObject
+    Throw = Errs.NotImplementedException
 End Function
 
 Public Sub OpenFile(fileName As String)

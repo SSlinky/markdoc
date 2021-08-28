@@ -18,34 +18,57 @@ Implements IIo
 Private mFile As Integer
 Private mFileIsOpen As Boolean
 Private mNextLine As String
+Private mFileName As String
 
 Public Function IIo_NextLine() As String
 '   Returns the next line to be read and advances the pointer.
-    Throw = Errs.NotImplementedException
+    If Not mNextLine = "" Then
+        IIo_NextLine = mNextLine
+        mNextLine = ""
+    Else
+        IIo_NextLine = ReadNextLine
+    End If
 End Function
 
 Public Function IIo_PeekNextLine() As String
 '   Returns the next line to be read without advancing the pointer.
-    Throw = Errs.NotImplementedException
+    If mNextLine = "" Then
+        mNextLine = ReadNextLine
+    End If
+    IIo_PeekNextLine = mNextLine
+End Function
+
+Private Function ReadNextLine() As String
+'   Reads the next line in the file.
+    If IIo_EOF Then Throw = Errs.FileReaderEOF
+    Dim s As String
+    Line Input #mFile, s
+    ReadNextLine = s
 End Function
 
 Public Function IIo_EOF() As Boolean
 '   Returns True if the entire contents has been read.
-    Throw = Errs.NotImplementedException
+    IIo_EOF = EOF(mFile)
 End Function
 
 Public Sub OpenFile(fileName As String)
 '   Opens a file ReadOnly for reading.
     If mFileIsOpen Then CloseFile
+    
+    mFileName = fileName
     mFile = FreeFile
     
-    Open fileName For Input Access Read As #mFile
+    Logger.Log "Opening for read: " & mFileName
+    
+    Open mFileName For Input Access Read As #mFile
     mFileIsOpen = True
 End Sub
 
 Public Sub CloseFile()
 '   Closes the file if it is open.
     If Not mFileIsOpen Then Exit Sub
+    Logger.Log "Closing: " & mFileName
+    
     Close #mFile
     mFileIsOpen = False
 End Sub

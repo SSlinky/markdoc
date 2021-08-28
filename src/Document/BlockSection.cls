@@ -7,6 +7,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
+Option Explicit
 Implements ISection
 
 '-------------------------------------------------------------------------------
@@ -32,7 +33,7 @@ Public Sub ISection_WriteContent()
     Dim i As Long
     For i = 1 To n
         Set inSec = mInsecs.Pop
-        inSec.WriteText
+        inSec.ISection_WriteContent
         mInsecs.Push inSec
     Next i
 End Sub

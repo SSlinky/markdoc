@@ -68,3 +68,20 @@ Sub test_FileReader()
 '    fr.CloseFile
     
 End Sub
+
+Sub test_FileReader_Eof()
+    Dim fn As String
+    fn = ThisDocument.Path & "\README.md"
+    
+    Dim fr As New FileReader
+    fr.OpenFile fn
+    
+    Do While Not fr.IIo_EOF
+        fr.IIo_NextLine
+    Loop
+    
+    Debug.Print "File read completely"
+    
+    fr.IIo_NextLine
+    
+End Sub

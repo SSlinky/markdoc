@@ -23,8 +23,7 @@ Sub fhawl()
     Debug.Print r.Text
 End Sub
 
-
-Sub test_InlineSection()
+Sub test_InlineSection_WriteAndStyleContent()
     Dim inSec As InlineSection
     Set inSec = New InlineSection
     
@@ -35,7 +34,16 @@ Sub test_InlineSection()
             .Push "Emphasis"
             .Push "Strong"
         End With
-        .WriteText
-        .WriteStyles
+        .ISection_WriteContent
+        .ISection_StyleContent
     End With
+End Sub
+
+Sub test_InterfaceRaisesError()
+    Dim sect As New ISection
+    sect.WriteContent
+End Sub
+
+Sub test_Exception()
+    Throw = Errs.NotImplementedException
 End Sub

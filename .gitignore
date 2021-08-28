@@ -1,5 +1,6 @@
 #JustWindowsThings
 ~$*
+~*.tmp
 
 # Inspecting the guts of Main.docm
 /main.docm unzipped/**

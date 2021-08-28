@@ -4,48 +4,48 @@
 
 ## Lexer
 
-[x] Class
+1. ~~Class~~
 
 ### Markdown Parsing
 
-[ ] Headings
-[ ] Paragraph
-[ ] Line Breaks
-[ ] Emphasis
-[ ] Block Quotes
-[ ] Ordered Lists
-[ ] Unordered Lists
-[ ] Inline Code
-[ ] Links
-[ ] Images
+1. Headings
+1. Paragraph
+1. Line Breaks
+1. Emphasis
+1. Block Quotes
+1. Ordered Lists
+1. Unordered Lists
+1. Inline Code
+1. Links
+1. Images
 
 ### Extended Markdown Parsing
 
-[ ] Table
-[ ] Code Block
+1. Table
+1. Code Block
 
 ### Block Section
 
 Container for block (paragraph) text and styling information. A block will contain at least one InlineSection. This container is for logically separating out paragraphs in the document.
 
-[x] Class
+1. ~~Class~~
 
 ### Inline Section
 
 Container for inline text and styling information.
 
-[x] Class
+1. ~~Class~~
 
 ### Table Section
 
-[ ] Class
+1. Class
 
 ## DocumentWriter
 
 This class is responsible for writing the document using the text and styling information in the BlockSection objects.
 
-[ ] Class
+1. Class
 
 ## Utilities
 
-[ ] String cleaner to remove or replace non printable characters.
+1. String cleaner to remove or replace non printable characters.

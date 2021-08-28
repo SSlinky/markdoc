@@ -51,6 +51,11 @@ Public Function IIo_EOF() As Boolean
     IIo_EOF = EOF(mFile)
 End Function
 
+Public Sub IIo_SetReference(fileName As String)
+'   Interface implementation to open a file
+    OpenFile fileName
+End Sub
+
 Public Sub OpenFile(fileName As String)
 '   Opens a file ReadOnly for reading.
     If mFileIsOpen Then CloseFile

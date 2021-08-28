@@ -47,3 +47,24 @@ End Sub
 Sub test_Exception()
     Throw = Errs.NotImplementedException
 End Sub
+
+Sub test_FileReader()
+    Dim fn As String
+    fn = ThisDocument.Path & "\README.md"
+    
+    Dim fr As New FileReader
+    
+    fr.OpenFile fn
+    Debug.Print "next", fr.IIo_NextLine
+    Debug.Print "next", fr.IIo_NextLine
+    Debug.Print "peek", fr.IIo_PeekNextLine
+    Debug.Print "next", fr.IIo_NextLine
+    
+    fr.OpenFile fn
+    Debug.Print "peek", fr.IIo_PeekNextLine
+    Debug.Print "peek", fr.IIo_PeekNextLine
+    Debug.Print "next", fr.IIo_NextLine
+    
+'    fr.CloseFile
+    
+End Sub

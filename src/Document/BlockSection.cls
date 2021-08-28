@@ -7,7 +7,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
-Option Explicit
+Implements ISection
 
 '-------------------------------------------------------------------------------
 '   Class: BlockSection
@@ -16,13 +16,14 @@ Option Explicit
 '   logically separating out paragraphs in the document.
 '-------------------------------------------------------------------------------
 
+
 Private mInsecs As List
 
 Private Sub Class_Initialize()
     Set mInsecs = New List
 End Sub
 
-Public Sub WriteText()
+Public Sub ISection_WriteContent()
     Dim n As Long
     n = mInsecs.Count
     
@@ -34,4 +35,8 @@ Public Sub WriteText()
         inSec.WriteText
         mInsecs.Push inSec
     Next i
+End Sub
+
+Public Sub ISection_StyleContent()
+    Err.Raise vbObjectError + 1, , "Not implemented yet"
 End Sub

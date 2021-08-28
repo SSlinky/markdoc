@@ -7,13 +7,14 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
-Option Explicit
+Implements ISection
 
 '-------------------------------------------------------------------------------
 '   Class: InlineSection
 '   Container for inline text and styling information.
 '   Currently also writes to document so goes against SOLID and needs rethinking
 '-------------------------------------------------------------------------------
+
 
 Public Text As String
 
@@ -28,14 +29,14 @@ Public Property Get CharacterStyles() As List
     Set CharacterStyles = mStyles
 End Property
 
-Public Sub WriteText()
+Public Sub ISection_WriteContent()
     With ActiveDocument
         Set mRange = .Range(Len(.Content) - 1)
     End With
     mRange.Text = Me.Text
 End Sub
 
-Public Sub WriteStyles()
+Public Sub ISection_StyleContent()
     With ActiveDocument
         Do While mStyles.Count > 0
             Select Case .Styles(mStyles.Pop)

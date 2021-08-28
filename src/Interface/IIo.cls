@@ -12,6 +12,8 @@ Option Explicit
 '-------------------------------------------------------------------------------
 '   Interface: IIo
 '   An interface that describes base input output methods.
+'   This interface exists so different text objects can be swapped out,
+'   e.g. file, direct text, or http get.
 '-------------------------------------------------------------------------------
 
 
@@ -29,3 +31,8 @@ Public Function EOF() As Boolean
 '   Returns True if the entire contents has been read.
     Throw = Errs.InterfaceUsedAsObject
 End Function
+
+Public Sub SetReference(fileOrTextReference As String)
+'   Sets a reference to the text stream.
+    Throw = Errs.InterfaceUsedAsObject
+End Sub

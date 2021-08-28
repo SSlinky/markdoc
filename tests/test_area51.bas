@@ -52,18 +52,19 @@ Sub test_FileReader()
     Dim fn As String
     fn = ThisDocument.Path & "\README.md"
     
-    Dim fr As New FileReader
+    Dim fr As IIo
+    Set fr = New FileReader
     
-    fr.OpenFile fn
-    Debug.Print "next", fr.IIo_NextLine
-    Debug.Print "next", fr.IIo_NextLine
-    Debug.Print "peek", fr.IIo_PeekNextLine
-    Debug.Print "next", fr.IIo_NextLine
+    fr.SetReference fn
+    Debug.Print "next", fr.NextLine
+    Debug.Print "next", fr.NextLine
+    Debug.Print "peek", fr.PeekNextLine
+    Debug.Print "next", fr.NextLine
     
-    fr.OpenFile fn
-    Debug.Print "peek", fr.IIo_PeekNextLine
-    Debug.Print "peek", fr.IIo_PeekNextLine
-    Debug.Print "next", fr.IIo_NextLine
+    fr.SetReference fn
+    Debug.Print "peek", fr.PeekNextLine
+    Debug.Print "peek", fr.PeekNextLine
+    Debug.Print "next", fr.NextLine
     
 '    fr.CloseFile
     
@@ -73,15 +74,16 @@ Sub test_FileReader_Eof()
     Dim fn As String
     fn = ThisDocument.Path & "\README.md"
     
-    Dim fr As New FileReader
-    fr.OpenFile fn
+    Dim fr As IIo
+    Set fr = New FileReader
+    fr.SetReference fn
     
-    Do While Not fr.IIo_EOF
-        fr.IIo_NextLine
+    Do While Not fr.EOF
+        fr.NextLine
     Loop
     
     Debug.Print "File read completely"
     
-    fr.IIo_NextLine
+    fr.NextLine
     
 End Sub

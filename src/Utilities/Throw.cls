@@ -18,12 +18,15 @@ Public Enum Errs
 '   Error types enum.
 '   Should have an equivalent description in ErrsLookup
     NotImplementedException
+    InterfaceUsedAsObject
 End Enum
 
 Private Function ErrsLookup(errType As Errs) As String
     Select Case errType
         Case Is = Errs.NotImplementedException
             ErrsLookup = "Not yet implemented."
+        Case Is = Errs.InterfaceUsedAsObject
+            ErrsLookup = "Interface cannot be concrete type."
         Case Else
             ErrsLookup = "Internal error " & errType & "."
     End Select
@@ -33,6 +36,6 @@ Public Property Let Exception(errType As Errs)
     Dim errDesc As String
     errDesc = ErrsLookup(errType)
     
-    Logger.Log errDesc
+    Logger.Log errDesc, Level.Exception
     Err.Raise vbObjectError + errType + 1, Description:=errDesc
 End Property

@@ -38,5 +38,5 @@ Public Sub ISection_WriteContent()
 End Sub
 
 Public Sub ISection_StyleContent()
-    Err.Raise vbObjectError + 1, , "Not implemented yet"
+    Throw = Errs.NotImplementedException
 End Sub

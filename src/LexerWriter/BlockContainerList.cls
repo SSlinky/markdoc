@@ -13,6 +13,20 @@ Implements IDocWritable
 
 '-------------------------------------------------------------------------------
 '   Class: BlockContainerList
+'
+'   1. Changing the bullet or ordered list delimiter starts a new list.
+'
+'   2. A list can interrupt a paragraph. That is, no blank line is needed to
+'      separate a paragraph from a following list
+'
+'   3. Lists can be nested within lists through indentation.
+'
+'   4. List item text can be separated by one or more blank lines as long as the
+'      text that continues is indented to the same level.
+'
+'   5. To force a non-paragraph space, end the previous line with double space.
+'      Indentation on the next line is not required when using this form. A code
+'      block cannot be started in this format but a quote can. *shrug*
 '-------------------------------------------------------------------------------
 
 Private mChildren As New List

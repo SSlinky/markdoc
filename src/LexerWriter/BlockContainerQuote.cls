@@ -12,6 +12,7 @@ Implements IBlockContainer
 Implements IDocWritable
 
 '-------------------------------------------------------------------------------
+'   Class: BlockContainerQuote
 '   A block quote marker, optionally preceded by up to three spaces of
 '   indentation, consists of (a) the character > together with a following space
 '   of indentation, or (b) a single character > not followed by a space of

@@ -31,11 +31,6 @@ Public Property Get Children() As List
     Throw = Errs.InterfaceUsedAsObject
 End Property
 
-Public Property Let Content(textContent As String)
-'   Passes a string object to be built into an object tree.
-    Throw = Errs.InterfaceUsedAsObject
-End Property
-
 Public Sub WriteContent()
 '   This method MUST be called before StyleContent.
     Throw = Errs.InterfaceUsedAsObject

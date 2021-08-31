@@ -29,14 +29,12 @@ Implements IDocWritable
 '      block cannot be started in this format but a quote can. *shrug*
 '-------------------------------------------------------------------------------
 
+
 Private mChildren As New List
+
 
 Public Property Get IBlockContainer_Children() As List
     Set IBlockContainer_Children = mChildren
-End Property
-
-Public Property Let IBlockContainer_Content(textContent As String)
-    Throw = Errs.NotImplementedexception
 End Property
 
 Public Sub IBlockContainer_WriteContent()
@@ -81,4 +79,3 @@ Public Sub StyleContent()
         docWritable.StyleContent
     Loop
 End Sub
-

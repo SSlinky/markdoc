@@ -44,10 +44,6 @@ Public Property Get IBlockContainer_Children() As List
     Set IBlockContainer_Children = mChildren
 End Property
 
-Public Property Let IBlockContainer_Content(textContent As String)
-    Throw = Errs.NotImplementedexception
-End Property
-
 Public Sub IBlockContainer_WriteContent()
     WriteContent
 End Sub

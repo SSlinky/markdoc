@@ -16,17 +16,19 @@ Option Explicit
 '-------------------------------------------------------------------------------
 
 Private mBase As Collection
+Private mIsTapeStyle As Boolean
 
 Private Sub Class_Initialize()
     Set mBase = New Collection
-End Sub
-
-Private Sub Class_Terminate()
-    Set mBase = Nothing
+    mIsTapeStyle = True
 End Sub
 
 Public Sub Push(obj As Variant)
-    mBase.Add obj
+    If mIsTapeStyle Or mBase.Count = 0 Then
+        mBase.Add obj
+    Else
+        mBase.Add obj, Before:=1
+    End If
 End Sub
 
 Public Property Get Pop() As Variant
@@ -45,3 +47,46 @@ End Property
 Public Property Get Items() As Collection
     Set Items = mBase
 End Property
+
+Public Sub SetTapeStyle()
+    If Not mIsTapeStyle Then
+        ReverseCollection
+        mIsTapeStyle = True
+    End If
+End Sub
+
+Public Sub SetStandardStyle()
+    If mIsTapeStyle Then
+        ReverseCollection
+        mIsTapeStyle = False
+    End If
+End Sub
+
+Public Property Get IsTapeStyle() As Boolean
+'   Sets pushing and popping to FILO
+    IsTapeStyle = mIsTapeStyle
+End Property
+
+Public Property Get IsStandardStyle() As Boolean
+'   Sets pushing and popping to FIFO
+    IsStandardStyle = Not mIsTapeStyle
+End Property
+
+
+Private Sub ReverseCollection()
+    Dim cnt As Long
+    cnt = mBase.Count - 1
+    If cnt <= 0 Then Exit Sub
+    
+    Dim tBase As New Collection
+    tBase.Add mBase.Item(1)
+    mBase.Remove 1
+    
+    Dim i As Long
+    For i = 1 To cnt
+        tBase.Add mBase.Item(1), Before:=1
+        mBase.Remove 1
+    Next i
+    
+    Set mBase = tBase
+End Sub

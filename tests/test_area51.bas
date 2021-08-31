@@ -87,3 +87,58 @@ Sub test_FileReader_Eof()
     fr.NextLine
     
 End Sub
+
+Sub test_ClassMutability()
+    Dim x As IBlockContainer
+    Set x = New BlockContainerList
+    x.Children.Push New BlockContainerQuote
+    
+    Debug.Print TypeName(x), "Children: " & x.Children.Count
+    Set x = CBlock(x, New BlockLeafBlankLine)
+    
+    Debug.Print TypeName(x), "Children: " & x.Children.Count
+End Sub
+
+Function CBlockContainer(castObject As IBlockContainer, asObject As IBlockContainer) As IBlockContainer
+'   Testing cast of one container type to another.
+    With castObject.Children
+        Do While .Count > 0
+            asObject.Children.Push .Pop
+        Loop
+    End With
+    
+    Set CBlock = asObject
+End Function
+
+Sub test_ListStyle()
+    Dim i As Long
+    Dim x As New List
+    
+    Debug.Print "Standard: " & x.IsStandardStyle
+    
+    For i = 1 To 3
+        Debug.Print "Pushing: " & i
+        x.Push i
+    Next i
+    
+    Do While x.Count > 0
+        Debug.Print "Popping: " & x.Pop
+    Loop
+    
+    Debug.Print vbNewLine & "-----" & vbNewLine
+    Debug.Print "Standard: " & x.IsStandardStyle
+    
+        For i = 1 To 3
+        Debug.Print "Pushing: " & i
+        x.Push i
+    Next i
+    
+    Debug.Print vbNewLine & "Reversing..."
+    x.SetTapeStyle
+    Debug.Print "Standard: " & x.IsStandardStyle & vbNewLine
+    
+    Do While x.Count > 0
+        Debug.Print "Popping: " & x.Pop
+    Loop
+    
+End Sub

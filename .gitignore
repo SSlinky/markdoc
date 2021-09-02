@@ -4,3 +4,6 @@
 
 # Inspecting the guts of Main.docm
 /main.docm unzipped/**
+
+# Ignore this for the minute to avoid gumming up the repo history.
+Main.docm

@@ -38,14 +38,28 @@ End Sub
 
 ' Private Helpers
 
-Private Sub CloseCurrent()
+Private Function CloseBlock() As IBlockContainer
+'   Return the next ancestor from the stack
+    Set CloseBlock = mBlockStack.Pop
+End Function
+
+Private Function OpenChildBlock(currentBlock As IBlockContainer) As BlockContainer
+'   Create a new block container as a child of the current block
+    Dim nb As New BlockContainer
+    currentBlock.IBlockContainer_Children.Push nb
     
-End Sub
+'   Push the current block onto the stack and return a new block
+    mBlockStack.Push currentBlock
+    Set OpenChildBlock = New BlockContainer
+End Function
 
-Private Sub OpenCurrent()
+Private Function OpenSiblingBlock() As BlockContainer
+'   Return a new block container as a child of the current parent.
+    Set OpenSiblingBlock = CloseBlock.OpenChildBlock
+End Function
 
-End Sub
 
+' Constructor
 Private Sub Class_Initialize()
     Set mBlockStack = New List
     mBlockStack.SetStandardStyle

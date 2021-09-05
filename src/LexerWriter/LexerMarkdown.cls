@@ -17,6 +17,8 @@ Option Explicit
 
 Private mBlockStack As List
 
+Private mFencedCodeFence As String
+
 
 'Properties
 Public Property Get BlockStack() As List
@@ -36,8 +38,36 @@ Public Sub ParseTree()
 
 End Sub
 
-' Private Helpers
+Function ParseLineType(line As String) As String
+    Select Case True
+        Case Is = IsFencedCodeBlockStart
+    End Select
+End Function
 
+
+' Constructor
+Private Sub Class_Initialize()
+    Set mBlockStack = New List
+    mBlockStack.SetStandardStyle
+    
+'   This is the document level block
+    mBlockStack.Push New BlockContainer
+End Sub
+
+
+' Parser Helpers
+Function ParseLineType(line As String) As String
+    Select Case True
+        Case Is = IsFencedCodeBlockStart
+    End Select
+End Function
+
+Private Function IsFencedCodeBlockStart() As Boolean
+
+End Function
+
+
+' Private Helpers
 Private Function CloseBlock() As IBlockContainer
 '   Return the next ancestor from the stack
     Set CloseBlock = mBlockStack.Pop
@@ -57,13 +87,3 @@ Private Function OpenSiblingBlock() As BlockContainer
 '   Return a new block container as a child of the current parent.
     Set OpenSiblingBlock = CloseBlock.OpenChildBlock
 End Function
-
-
-' Constructor
-Private Sub Class_Initialize()
-    Set mBlockStack = New List
-    mBlockStack.SetStandardStyle
-    
-'   This is the document level block
-    mBlockStack.Push New BlockContainer
-End Sub

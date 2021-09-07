@@ -103,3 +103,12 @@ Private Function OpenSiblingBlock() As BlockContainer
 '   Return a new block container as a child of the current parent.
     Set OpenSiblingBlock = CloseBlock.OpenChildBlock
 End Function
+
+Private Function ThisBlock() As BlockContainer
+'   Returns the current block container.
+    Dim tb As Variant
+    Set tb = mBlockStack.Peek
+    If TypeOf tb Is BlockContainer Then
+        Set ThisBlock = mBlockStack.Peek
+    End If
+End Function

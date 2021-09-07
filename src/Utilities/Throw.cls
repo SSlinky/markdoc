@@ -17,8 +17,15 @@ Option Explicit
 Public Enum Errs
 '   Error types enum. Each error should
 '   have an equivalent description in ErrsLookup.
+
+'   Application
     NotImplementedException
     InterfaceUsedAsObject
+
+'   Block    
+    BlockTypeMismatch
+
+'   Utility    
     UtilsBadArguments
 End Enum
 
@@ -28,6 +35,8 @@ Private Function ErrsLookup(errType As Errs) As String
             ErrsLookup = "Not yet implemented."
         Case Is = Errs.InterfaceUsedAsObject
             ErrsLookup = "Interface cannot be concrete type."
+        Case Is = Errs.BlockTypeMismatch
+            ErrsLookup = "Block type mismatch."
         Case Is = Errs.UtilsBadArguments
             ErrsLookup = "Arguments passed not valid."
         Case Else

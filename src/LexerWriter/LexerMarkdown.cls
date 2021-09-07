@@ -63,6 +63,14 @@ Function ParseLineType(line As String) As String
     End Select
 End Function
 
+Private Sub ParseAddToCurrent(line As String)
+    If mCurrentBlockContent = "" Then
+        mCurrentBlockContent = line
+    Else
+        mCurrentBlockContent = mCurrentBlockContent & vbNewLine & line
+    End If
+End Sub
+
 Private Function IsFencedCodeBlockStart() As Boolean
     If IsInCodeBlock Then Exit Function
     

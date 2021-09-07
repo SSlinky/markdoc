@@ -19,6 +19,7 @@ Public Enum Errs
 '   have an equivalent description in ErrsLookup.
     NotImplementedException
     InterfaceUsedAsObject
+    UtilsBadArguments
 End Enum
 
 Private Function ErrsLookup(errType As Errs) As String
@@ -27,6 +28,8 @@ Private Function ErrsLookup(errType As Errs) As String
             ErrsLookup = "Not yet implemented."
         Case Is = Errs.InterfaceUsedAsObject
             ErrsLookup = "Interface cannot be concrete type."
+        Case Is = Errs.UtilsBadArguments
+            ErrsLookup = "Arguments passed not valid."
         Case Else
             ErrsLookup = "Internal error " & errType & "."
     End Select

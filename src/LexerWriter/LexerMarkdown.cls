@@ -64,6 +64,9 @@ End Function
 
 Private Function IsFencedCodeBlockStart() As Boolean
 
+' Private Functions
+Private Function IsInCodeBlock() As Boolean
+    IsInCodeBlock = Not mFencedCodeFence = ""
 End Function
 
 

@@ -40,6 +40,15 @@ Public Property Get Pop() As Variant
     mBase.Remove 1
 End Property
 
+Public Property Get Peek() As Variant
+'   Same as Pop but doesn't remove the object.
+    If IsObject(mBase.Item(1)) Then
+        Set Pop = mBase.Item(1)
+    Else
+        Pop = mBase.Item(1)
+    End If
+End If
+
 Public Property Get Count() As Long
     Count = mBase.Count
 End Property

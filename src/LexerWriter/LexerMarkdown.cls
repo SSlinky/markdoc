@@ -18,6 +18,7 @@ Option Explicit
 Private mBlockStack As List
 
 Private mFencedCodeFence As String
+private mIndentationLevel as Long   
 
 
 'Properties
@@ -63,6 +64,10 @@ Function ParseLineType(line As String) As String
 End Function
 
 Private Function IsFencedCodeBlockStart() As Boolean
+    If IsInCodeBlock Then Exit Function
+    
+End Function
+
 
 ' Private Functions
 Private Function IsInCodeBlock() As Boolean

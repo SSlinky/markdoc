@@ -50,9 +50,19 @@ End Function
 Private Sub Class_Initialize()
     Set mBlockStack = New List
     mBlockStack.SetStandardStyle
-    
-'   This is the document level block
-    mBlockStack.Push New BlockContainer
+
+'   This is the document level block.
+    Dim doc As IBlockContainer
+    Set doc = New BlockContainer
+
+'   This is the first child.
+    Dim par As IBlockLeaf
+    Set par = New BlockLeafParagraph
+
+'   Push the first items onto the stack.    
+    doc.Children.Push par
+    mBlockStack.Push doc
+    mBlockStack.Push par
 End Sub
 
 

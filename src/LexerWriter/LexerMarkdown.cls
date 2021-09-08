@@ -88,8 +88,8 @@ End Function
 
 
 ' Private Functions
-Private Function IsInCodeBlock() As Boolean
-    IsInCodeBlock = Not mFencedCodeFence = ""
+Private Function IsInFencedCodeBlock() As Boolean
+    IsInFencedCodeBlock = Not mFencedCodeFence = ""
 End Function
 
 

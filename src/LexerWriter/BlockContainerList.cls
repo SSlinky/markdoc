@@ -33,10 +33,15 @@ Implements IDocWritable
 Private mChildren As New List
 
 
+' Properties
+'-------------------------------------------------------------------------------
 Public Property Get IBlockContainer_Children() As List
     Set IBlockContainer_Children = mChildren
 End Property
 
+
+' Interface Implementation
+'-------------------------------------------------------------------------------
 Public Sub IBlockContainer_WriteContent()
     WriteContent
 End Sub
@@ -53,6 +58,9 @@ Public Sub IDocWritable_StyleContent()
     StyleContent
 End Sub
 
+
+' Methods
+'-------------------------------------------------------------------------------
 Public Sub WriteContent()
 '   This method MUST be called before StyleContent.
 

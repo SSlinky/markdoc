@@ -12,10 +12,15 @@ Implements IBlockLeaf
 Implements IDocWritable
 
 
+' Properties
+'-------------------------------------------------------------------------------
 Public Property Let IBlockLeaf_Content(textContent As String)
     Throw = Errs.NotImplementedexception
 End Property
 
+
+' Interface Implementation
+'-------------------------------------------------------------------------------
 Public Sub IBlockLeaf_WriteContent()
     WriteContent
 End Sub
@@ -32,6 +37,9 @@ Public Sub IDocWritable_StyleContent()
     StyleContent
 End Sub
 
+
+' Methods
+'-------------------------------------------------------------------------------
 Public Sub WriteContent()
     Throw = Errs.NotImplementedexception
 End Sub

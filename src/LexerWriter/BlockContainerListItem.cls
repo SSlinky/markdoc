@@ -30,10 +30,15 @@ Implements IDocWritable
 Private mChildren As New List
 
 
+' Properties
+'-------------------------------------------------------------------------------
 Public Property Get IBlockContainer_Children() As List
     Set IBlockContainer_Children = mChildren
 End Property
 
+
+' Interface Implementation
+'-------------------------------------------------------------------------------
 Public Sub IBlockContainer_WriteContent()
 '   This method MUST be called before StyleContent.
     Throw = Errs.NotImplementedException
@@ -51,3 +56,6 @@ End Sub
 Public Sub IDocWritable_StyleContent()
     Throw = Errs.NotImplementedException
 End Sub
+
+' Methods
+'-------------------------------------------------------------------------------

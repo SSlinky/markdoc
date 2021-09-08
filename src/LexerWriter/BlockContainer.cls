@@ -33,6 +33,8 @@ Implements IBlockContainer
 Private mChildren As New List
 
 
+' Interface Implementation
+'-------------------------------------------------------------------------------
 Public Property Get IBlockContainer_Children() As List
 '   Get accessor to the container's children.
     Throw = Errs.InterfaceUsedAsObject

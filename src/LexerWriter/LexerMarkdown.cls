@@ -23,12 +23,14 @@ private mIndentationLevel as Long
 
 
 'Properties
+'-------------------------------------------------------------------------------
 Public Property Get BlockStack() As List
     Set BlockStack = mBlockStack
 End Property
 
 
 ' Public Methods
+'-------------------------------------------------------------------------------
 Public Sub ParseMarkdown(textStream As IIo)
 '   Phase 1: Parse the text stream into blocks.
 
@@ -48,6 +50,7 @@ End Function
 
 
 ' Constructor
+'-------------------------------------------------------------------------------
 Private Sub Class_Initialize()
     Set mBlockStack = New List
     mBlockStack.SetStandardStyle
@@ -68,6 +71,7 @@ End Sub
 
 
 ' Parser Helpers
+'-------------------------------------------------------------------------------
 Function ParseLineType(line As String) As String
     Select Case True
 '       Parsing from inside fenced code block.
@@ -108,7 +112,8 @@ Private Function IsFencedCodeBlockStart(line As String) As Boolean
 End Function
 
 
-' Private Functions
+' Parser State
+'-------------------------------------------------------------------------------
 Private Function IsInFencedCodeBlock() As Boolean
     IsInFencedCodeBlock = Not mFencedCodeFence = ""
 End Function
@@ -120,6 +125,7 @@ Private Function IsInListBlock() As Boolean
 End Function
 
 ' Private Helpers
+'-------------------------------------------------------------------------------
 Private Function CloseBlock() As IBlockContainer
 '   Return the next ancestor from the stack.
     mCurrentBlockContent = ""

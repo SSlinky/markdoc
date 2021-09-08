@@ -25,10 +25,14 @@ Private Type StyledContent
 End Type
 
 
+' Properties
+'-------------------------------------------------------------------------------
 Public Property Let IBlockLeaf_Content(textContent As String)
     Throw = Errs.NotImplementedException
 End Property
 
+' Interface Implementation
+'-------------------------------------------------------------------------------
 Public Sub IBlockLeaf_WriteContent()
     Throw = Errs.NotImplementedException
 End Sub
@@ -44,3 +48,7 @@ End Sub
 Public Sub IDocWritable_StyleContent()
     Throw = Errs.NotImplementedException
 End Sub
+
+
+' Methods
+'-------------------------------------------------------------------------------

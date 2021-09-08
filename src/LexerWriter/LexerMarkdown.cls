@@ -16,6 +16,7 @@ Option Explicit
 
 
 Private mBlockStack As List
+Private mCurrentBlockContent As String
 
 Private mFencedCodeFence As String
 private mIndentationLevel as Long   
@@ -69,7 +70,26 @@ End Sub
 ' Parser Helpers
 Function ParseLineType(line As String) As String
     Select Case True
-        Case Is = IsFencedCodeBlockStart
+'       Parsing from inside fenced code block.
+        Case Is = IsInFencedCodeBlock
+            Select Case True
+                Case Is = IsFencedCodeBlockEnd(line)
+                    Call CloseFencedCodeBlock
+                Case Else
+            End Select
+'       Parsing from inside indented code block.
+        Case Is = IsInIndentedCodeBlock
+'       Parsing from inside list block.
+        Case Is = IsInListBlock
+'       Parsing from inside a paragraph.
+        Case Else
+            Select Case True
+                Case Is = IsFencedCodeBlockStart(line)
+'                   Set content of current.
+'                   Open a sibling.
+                Case Else
+                    ParseAddToCurrent line
+            End Select
     End Select
 End Function
 
@@ -81,8 +101,9 @@ Private Sub ParseAddToCurrent(line As String)
     End If
 End Sub
 
-Private Function IsFencedCodeBlockStart() As Boolean
-    If IsInCodeBlock Then Exit Function
+Private Function IsFencedCodeBlockStart(line As String) As Boolean
+'   Cannot be the start of a fenced code block if we're already in one.
+    If IsInFencedCodeBlock Then Exit Function
     
 End Function
 
@@ -106,11 +127,12 @@ Private Function CloseBlock() As IBlockContainer
 End Function
 
 Private Function OpenChildBlock(currentBlock As IBlockContainer) As BlockContainer
-'   Create a new block container as a child of the current block
-    Dim nb As New BlockContainer
-    currentBlock.IBlockContainer_Children.Push nb
+'   Create a new block container as a child of the current block.
+    Dim nb As IBlockContainer
+    Set nb = New BlockContainer
+    currentBlock.Children.Push nb
     
-'   Push the current block onto the stack and return a new block
+'   Push the current block onto the stack and return a new block.
     mBlockStack.Push currentBlock
     Set OpenChildBlock = New BlockContainer
 End Function

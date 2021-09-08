@@ -50,3 +50,7 @@ Function CleanString(str As String, Optional dirtyChars As String, Optional clea
 '   You cannot pass dirtyChars without cleanChars and they must be the same length.
     If Len(dirtyChars) = Len(cleanChars) Then Throw = UtilsBadArguments
 End Function
+
+Function StrContains(str As String, subStr As String) As Boolean
+    StrContains = Instr(str, subStr) > 0
+End Function

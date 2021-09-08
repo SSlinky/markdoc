@@ -92,6 +92,11 @@ Private Function IsInFencedCodeBlock() As Boolean
     IsInFencedCodeBlock = Not mFencedCodeFence = ""
 End Function
 
+Private Function IsInIndentedCodeBlock() As Boolean
+End Function
+
+Private Function IsInListBlock() As Boolean
+End Function
 
 ' Private Helpers
 Private Function CloseBlock() As IBlockContainer

@@ -17,10 +17,13 @@ Option Explicit
 Const NBSP As Long = 160
 
 Public Function CountSubstr(str As String, substr As String) As Long
+'   Counts the number of times subStr is present in str.
     CountSubstr = (Len(str) - Len(Replace(str, substr, ""))) / Len(substr)
 End Function
 
 Public Function GetIndentationLevel(line As String) As Long
+'   Gets indent by counting spaces preceding any non-space character.
+'   TODO: Have this also take tab characters into account.
     If Trim(line) = "" Then
         GetIndentationLevel = 0
         Exit Function
@@ -60,7 +63,7 @@ End Function
 Function CleanString(str As String, Optional dirtyChars As String, Optional cleanChars As String) As String
 '   Converts any single dirtyChar into a cleanChar.
 '   You cannot pass dirtyChars without cleanChars and they must be the same length.
-   If Len(dirtyChars) = Len(cleanChars) Then Throw = UtilsBadArguments
+    If Len(dirtyChars) = Len(cleanChars) Then Throw = UtilsBadArguments
     
 '   Set up defaults if nothing passed
     If dirtyChars = "" Then

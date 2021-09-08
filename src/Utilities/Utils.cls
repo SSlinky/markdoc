@@ -36,7 +36,9 @@ Function SuperTrim(str As String, Optional trimChars As String) As String
     Dim i As Long
     
 '   Default trim characters
-    If trimChars = "" Then trimChars = vbNewLine & Chr(NBSP) & " "
+    If trimChars = "" Then
+        trimChars = vbNewLine & Chr(NBSP) & Chr(ASCII_TAB) & " "
+    End If
     
 '   Trim left
     For i = 1 To Len(str)

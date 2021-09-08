@@ -34,21 +34,30 @@ End Property
 ' Interface Implementation
 '-------------------------------------------------------------------------------
 Public Sub IBlockLeaf_WriteContent()
-    Throw = Errs.NotImplementedException
+    WriteContent
 End Sub
 
 Public Sub IBlockLeaf_StyleContent()
-    Throw = Errs.NotImplementedException
+    StyleContent
 End Sub
 
 Public Sub IDocWritable_WriteContent()
-    Throw = Errs.NotImplementedException
+    WriteContent
 End Sub
 
 Public Sub IDocWritable_StyleContent()
-    Throw = Errs.NotImplementedException
+    StyleContent
 End Sub
 
 
 ' Methods
 '-------------------------------------------------------------------------------
+Public Sub WriteContent()
+'   This method MUST be called before StyleContent.
+    Throw = Errs.NotImplementedException
+End Sub
+
+Public Sub StyleContent()
+'   This method MUST be called after WriteContent.
+    Throw = Errs.NotImplementedException
+End Sub

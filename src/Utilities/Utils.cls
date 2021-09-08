@@ -14,28 +14,26 @@ Option Explicit
 '   Contains generic static helper functions.
 '-------------------------------------------------------------------------------
 
-Const NBSP As Long = 160
+Const ASCII_NBSP As Long = 160
+Const ASCII_TAB As Long = 9
 
 Public Function CountSubstr(str As String, substr As String) As Long
 '   Counts the number of times subStr is present in str.
     CountSubstr = (Len(str) - Len(Replace(str, substr, ""))) / Len(substr)
 End Function
 
-Public Function GetIndentationLevel(line As String) As Long
+Public Function GetIndentationLevel(line As String) As Integer
 '   Gets indent by counting spaces preceding any non-space character.
-'   TODO: Have this also take tab characters into account.
+'   Take tab characters into account.
+    line = Replace(line, Chr(ASCII_TAB), "    ")
+
     If Trim(line) = "" Then
         GetIndentationLevel = 0
         Exit Function
     End If
 
-    Dim i As Long    
-    For i = 1 to Len(line)
-        If Not Mid(line, i, 1) = " " Then
-            GetIndentationLevel = i / 4
-            Exit Function
-        End If
-    Next i
+'   Append a character so we can trim to find left indentation.
+    GetIndentationLevel = Fix((Len(line) - Len(Trim(line & ".")) + 1) / 4)
 End Function
 
 Function SuperTrim(str As String, Optional trimChars As String) As String
@@ -62,17 +60,18 @@ End Function
 
 Function CleanString(str As String, Optional dirtyChars As String, Optional cleanChars As String) As String
 '   Converts any single dirtyChar into a cleanChar.
-'   You cannot pass dirtyChars without cleanChars and they must be the same length.
+'   dirtyChars and cleanChars must be the same length.
     If Len(dirtyChars) = Len(cleanChars) Then Throw = UtilsBadArguments
     
 '   Set up defaults if nothing passed
     If dirtyChars = "" Then
-        dirtyChars = Chr(NBSP)
+        dirtyChars = Chr(ASCII_NBSP)
         cleanChars = " "
     End If
     
     Dim i As Long
-    For i = 1 To Len(dirtyChars)
+'   Replace each dirtyChar with the corresponding cleanChar    
+    For i = 1 To Len(dirtyChars)    
         str = Replace(str, Mid(dirtyChars, i, 1), Mid(cleanChars, i, 1))
     Next i
     CleanString = str

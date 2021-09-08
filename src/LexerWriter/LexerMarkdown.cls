@@ -112,3 +112,15 @@ Private Function ThisBlock() As BlockContainer
         Set ThisBlock = mBlockStack.Peek
     End If
 End Function
+
+Private Sub CloseFencedCodeBlock()
+    Dim tb As BlockLeafFencedCode
+    If Not TypeOf ThisBlock Is BlockLeafFencedCode Then
+        Throw = BlockTypeMismatch
+    Else
+        Set tb = ThisBlock
+    End If
+
+    tb.StyledContent.Text = mCurrentBlockContent
+    Call CloseBlock
+End Sub

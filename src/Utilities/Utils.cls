@@ -26,9 +26,7 @@ Public Function GetIndentationLevel(line As String) As Long
         Exit Function
     End If
 
-    Dim c As String * 1
-    Dim i As Long
-    
+    Dim i As Long    
     For i = 1 to Len(line)
         If Not Mid(line, i, 1) = " " Then
             GetIndentationLevel = i / 4

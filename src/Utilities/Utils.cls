@@ -24,13 +24,8 @@ End Function
 
 Public Function GetIndentationLevel(line As String) As Integer
 '   Gets indent by counting spaces preceding any non-space character.
-'   Take tab characters into account.
     line = Replace(line, Chr(ASCII_TAB), "    ")
-
-    If Trim(line) = "" Then
-        GetIndentationLevel = 0
-        Exit Function
-    End If
+    If Trim(line) = "" Then Exit Function
 
 '   Append a character so we can trim to find left indentation.
     GetIndentationLevel = Fix((Len(line) - Len(Trim(line & ".")) + 1) / 4)

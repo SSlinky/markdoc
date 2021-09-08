@@ -95,7 +95,8 @@ End Function
 
 ' Private Helpers
 Private Function CloseBlock() As IBlockContainer
-'   Return the next ancestor from the stack
+'   Return the next ancestor from the stack.
+    mCurrentBlockContent = ""
     Set CloseBlock = mBlockStack.Pop
 End Function
 

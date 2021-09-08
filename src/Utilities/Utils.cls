@@ -14,6 +14,7 @@ Option Explicit
 '   Contains generic static helper functions.
 '-------------------------------------------------------------------------------
 
+Const NBSP As Long = 160
 
 Public Function CountSubstr(str As String, substr As String) As Long
     CountSubstr = (Len(str) - Len(Replace(str, substr, ""))) / Len(substr)
@@ -38,7 +39,6 @@ End Function
 
 Function SuperTrim(str As String, Optional trimChars As String) As String
 '   Removes any character in trimChars from the start or end of the line.
-    Const NBSP As Long = 160
     Dim i As Long
     
 '   Default trim characters
@@ -60,11 +60,24 @@ Function SuperTrim(str As String, Optional trimChars As String) As String
 End Function
 
 Function CleanString(str As String, Optional dirtyChars As String, Optional cleanChars As String) As String
-'   Converts any dirtyChar into a cleanChar.
+'   Converts any single dirtyChar into a cleanChar.
 '   You cannot pass dirtyChars without cleanChars and they must be the same length.
-    If Len(dirtyChars) = Len(cleanChars) Then Throw = UtilsBadArguments
+   If Len(dirtyChars) = Len(cleanChars) Then Throw = UtilsBadArguments
+    
+'   Set up defaults if nothing passed
+    If dirtyChars = "" Then
+        dirtyChars = Chr(NBSP)
+        cleanChars = " "
+    End If
+    
+    Dim i As Long
+    For i = 1 To Len(dirtyChars)
+        str = Replace(str, Mid(dirtyChars, i, 1), Mid(cleanChars, i, 1))
+    Next i
+    CleanString = str
 End Function
 
 Function StrIn(str As String, subStr As String) As Boolean
+'   Helper for Instr for when you don't care where subStr is.
     StrIn = Instr(str, subStr) > 0
 End Function

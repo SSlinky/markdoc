@@ -73,12 +73,15 @@ End Sub
 ' Parser Helpers
 '-------------------------------------------------------------------------------
 Function ParseLineType(line As String) As String
+    Dim cleanLine As String
+    cleanLine = Utils.CleanString(line)
+
     Select Case True
 '       Parsing from inside fenced code block.
         Case Is = IsInFencedCodeBlock
             Select Case True
                 Case Is = IsFencedCodeBlockEnd(line)
-                    Call CloseFencedCodeBlock
+                    CloseBlockLeaf
                 Case Else
             End Select
 '       Parsing from inside indented code block.
@@ -124,6 +127,7 @@ End Function
 Private Function IsInListBlock() As Boolean
 End Function
 
+
 ' Private Helpers
 '-------------------------------------------------------------------------------
 Private Function CloseBlock() As IBlockContainer
@@ -148,23 +152,24 @@ Private Function OpenSiblingBlock() As BlockContainer
     Set OpenSiblingBlock = CloseBlock.OpenChildBlock
 End Function
 
-Private Function ThisBlock() As BlockContainer
+Private Function ThisBlock() As IBlock
 '   Returns the current block container.
     Dim tb As Variant
     Set tb = mBlockStack.Peek
-    If TypeOf tb Is BlockContainer Then
+    If TypeOf tb Is IBlock Then
         Set ThisBlock = mBlockStack.Peek
     End If
 End Function
 
-Private Sub CloseFencedCodeBlock()
-    Dim tb As BlockLeafFencedCode
-    If Not TypeOf ThisBlock Is BlockLeafFencedCode Then
+Private Sub CloseBlockLeaf()
+'   Closes the current block if it is a leaf.
+    Dim tb As IBlockLeaf
+    If Not TypeOf ThisBlock Is IBlockLeaf Then
         Throw = BlockTypeMismatch
     Else
         Set tb = ThisBlock
     End If
 
     tb.StyledContent.Text = mCurrentBlockContent
-    Call CloseBlock
+    CloseBlock
 End Sub

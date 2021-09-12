@@ -42,12 +42,6 @@ Public Sub ParseTree()
 
 End Sub
 
-Function ParseLineType(line As String) As String
-    Select Case True
-        Case Is = IsFencedCodeBlockStart
-    End Select
-End Function
-
 
 ' Constructor
 '-------------------------------------------------------------------------------

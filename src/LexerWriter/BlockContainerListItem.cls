@@ -39,11 +39,11 @@ End Property
 
 ' Interface Implementation
 '-------------------------------------------------------------------------------
-Public Sub IBlockLeaf_WriteContent()
+Public Sub IBlockContainer_WriteContent()
     WriteContent
 End Sub
 
-Public Sub IBlockLeaf_StyleContent()
+Public Sub IBlockContainer_StyleContent()
     StyleContent
 End Sub
 

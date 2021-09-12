@@ -66,18 +66,22 @@ Function ParseLineType(line As String) As String
 '       Parsing from inside fenced code block.
         Case Is = IsInFencedCodeBlock
             Select Case True
-                Case Is = IsFencedCodeBlockEnd(line)
+                Case Is = IsFencedCodeBlockEnd(cleanLine)
                     CloseBlockLeaf
                 Case Else
             End Select
+
 '       Parsing from inside indented code block.
         Case Is = IsInIndentedCodeBlock
+
 '       Parsing from inside list block.
         Case Is = IsInListBlock
+'           Will need to account for indentation level changes.
+
 '       Parsing from inside a paragraph.
         Case Else
             Select Case True
-                Case Is = IsFencedCodeBlockStart(line)
+                Case Is = IsFencedCodeBlockStart(cleanLine)
 '                   Set content of current.
 '                   Open a sibling.
                 Case Else

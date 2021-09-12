@@ -78,3 +78,26 @@ Function StrIn(str As String, subStr As String) As Boolean
 '   Helper for Instr for when you don't care where subStr is.
     StrIn = Instr(str, subStr) > 0
 End Function
+
+
+'   Block helpers
+'-------------------------------------------------------------------------------
+Public Sub CBlockLeafParagraph(block As IBlock)
+'   Casts a block of any type to a BlockLeafParagraph.
+'   This may cause loss of data as paragraphs do not have children.
+    Dim rtn As IBlockLeaf
+    Set rtn = New BlockLeafParagraph
+
+    If TypeOf block Is IBlockLeaf Then
+'       Copy across the leaf content.
+        Dim leaf As IBlockLeaf
+        Set leaf = block
+        rtn.Content = leaf.Content
+        Set block = rtn
+    ElseIf TypeOf block Is IBlockContainer Then
+'       Containers have no content.
+        Set block = rtn
+    Else
+        Throw = Errs.BlockTypeMismatch
+    End If
+End Sub

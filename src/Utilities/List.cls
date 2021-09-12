@@ -47,7 +47,7 @@ Public Property Get Peek() As Variant
     Else
         Pop = mBase.Item(1)
     End If
-End If
+End Property
 
 Public Property Get Count() As Long
     Count = mBase.Count
@@ -86,16 +86,16 @@ Private Sub ReverseCollection()
     Dim cnt As Long
     cnt = mBase.Count - 1
     If cnt <= 0 Then Exit Sub
-    
+
     Dim tBase As New Collection
     tBase.Add mBase.Item(1)
     mBase.Remove 1
-    
+
     Dim i As Long
     For i = 1 To cnt
         tBase.Add mBase.Item(1), Before:=1
         mBase.Remove 1
     Next i
-    
+
     Set mBase = tBase
 End Sub

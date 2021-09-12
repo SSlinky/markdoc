@@ -17,9 +17,12 @@ Option Explicit
 Const ASCII_NBSP As Long = 160
 Const ASCII_TAB As Long = 9
 
-Public Function CountSubstr(str As String, substr As String) As Long
+
+'   String manipulation and interrogation.
+'-------------------------------------------------------------------------------
+Public Function CountSubstr(str As String, subStr As String) As Long
 '   Counts the number of times subStr is present in str.
-    CountSubstr = (Len(str) - Len(Replace(str, substr, ""))) / Len(substr)
+    CountSubstr = (Len(str) - Len(Replace(str, subStr, ""))) / Len(subStr)
 End Function
 
 Public Function GetIndentationLevel(line As String) As Integer
@@ -37,7 +40,7 @@ Function SuperTrim(str As String, Optional trimChars As String) As String
     
 '   Default trim characters
     If trimChars = "" Then
-        trimChars = vbNewLine & Chr(NBSP) & Chr(ASCII_TAB) & " "
+        trimChars = vbNewLine & Chr(ASCII_NBSP) & Chr(ASCII_TAB) & " "
     End If
     
 '   Trim left
@@ -55,7 +58,10 @@ Function SuperTrim(str As String, Optional trimChars As String) As String
     SuperTrim = str
 End Function
 
-Function CleanString(str As String, Optional dirtyChars As String, Optional cleanChars As String) As String
+Function CleanString(str As String, _
+    Optional dirtyChars As String, _
+    Optional cleanChars As String) As String
+
 '   Converts any single dirtyChar into a cleanChar.
 '   dirtyChars and cleanChars must be the same length.
     If Len(dirtyChars) = Len(cleanChars) Then Throw = UtilsBadArguments
@@ -67,8 +73,8 @@ Function CleanString(str As String, Optional dirtyChars As String, Optional clea
     End If
     
     Dim i As Long
-'   Replace each dirtyChar with the corresponding cleanChar    
-    For i = 1 To Len(dirtyChars)    
+'   Replace each dirtyChar with the corresponding cleanChar
+    For i = 1 To Len(dirtyChars)
         str = Replace(str, Mid(dirtyChars, i, 1), Mid(cleanChars, i, 1))
     Next i
     CleanString = str
@@ -76,7 +82,7 @@ End Function
 
 Function StrIn(str As String, subStr As String) As Boolean
 '   Helper for Instr for when you don't care where subStr is.
-    StrIn = Instr(str, subStr) > 0
+    StrIn = InStr(str, subStr) > 0
 End Function
 
 

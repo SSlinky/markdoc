@@ -24,24 +24,24 @@ Sub fhawl()
 End Sub
 
 Sub test_InlineSection_WriteAndStyleContent()
-    Dim inSec As InlineSection
-    Set inSec = New InlineSection
-    
-    With inSec
-        .Text = "So strong and emphasised!"
-        With .CharacterStyles
-            .Push "Normal"
-            .Push "Emphasis"
-            .Push "Strong"
-        End With
-        .ISection_WriteContent
-        .ISection_StyleContent
-    End With
+'    Dim inSec As InlineSection
+'    Set inSec = New InlineSection
+'
+'    With inSec
+'        .Text = "So strong and emphasised!"
+'        With .CharacterStyles
+'            .Push "Normal"
+'            .Push "Emphasis"
+'            .Push "Strong"
+'        End With
+'        .ISection_WriteContent
+'        .ISection_StyleContent
+'    End With
 End Sub
 
 Sub test_InterfaceRaisesError()
-    Dim sect As New ISection
-    sect.WriteContent
+'    Dim sect As New ISection
+'    sect.WriteContent
 End Sub
 
 Sub test_Exception()
@@ -53,7 +53,7 @@ Sub test_FileReader()
     fn = ThisDocument.Path & "\README.md"
     
     Dim fr As IIo
-    Set fr = New FileReader
+    Set fr = New IoFileReader
     
     fr.SetReference fn
     Debug.Print "next", fr.NextLine
@@ -75,7 +75,7 @@ Sub test_FileReader_Eof()
     fn = ThisDocument.Path & "\README.md"
     
     Dim fr As IIo
-    Set fr = New FileReader
+    Set fr = New IoFileReader
     fr.SetReference fn
     
     Do While Not fr.EOF
@@ -94,7 +94,7 @@ Sub test_ClassMutability()
     x.Children.Push New BlockContainerQuote
     
     Debug.Print TypeName(x), "Children: " & x.Children.Count
-    Set x = CBlock(x, New BlockLeafBlankLine)
+    Set x = CBlockContainer(x, New BlockLeafBlankLine)
     
     Debug.Print TypeName(x), "Children: " & x.Children.Count
 End Sub
@@ -107,7 +107,7 @@ Function CBlockContainer(castObject As IBlockContainer, asObject As IBlockContai
         Loop
     End With
     
-    Set CBlock = asObject
+    Set CBlockContainer = asObject
 End Function
 
 Sub test_ListStyle()
@@ -142,3 +142,44 @@ Sub test_ListStyle()
     Loop
     
 End Sub
+
+Function IsFencedCodeBlockStart(line As String) As Boolean
+'   Must include a ~ or a `
+    If InStr(line, "~") + InStr(line, "`") = 0 Then Exit Function
+    
+'   Simple detect code block fence. This will need to be improved later to
+'   account for indentation level.
+    Dim i As Long
+    Dim p As Long
+    Dim firstDetect As Long
+    
+    Dim c As String * 1
+    Dim f As String * 1
+    
+    
+    For i = 1 To Len(line)
+        c = Mid(line, i, 1)
+        Select Case c
+            Case Is = " "
+'               Check the fence character
+                If Not f = Chr(0) Then Exit For
+            Case Is = "~", "`"
+                Select Case f
+                    Case Is = Chr(0)
+                        f = c
+                        p = i
+                    Case Is = c
+                    Case Else
+                        Exit For
+                End Select
+            Case Else
+                Exit For
+        End Select
+    Next i
+    
+    If p = 0 Then Exit Function
+    If i - p < 3 Then Exit Function
+    
+    Debug.Print Mid(line, p, i - p), p - 1
+    IsFencedCodeBlockStart = True
+End Function

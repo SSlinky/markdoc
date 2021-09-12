@@ -114,6 +114,12 @@ Private Function IsFencedCodeBlockStart(line As String) As Boolean
     
 End Function
 
+Private Function IsFencedCodeBlockEnd(line As String) As Boolean
+'   Cannot be the end of a fenced code block if we're already in one.
+    If Not IsInFencedCodeBlock Then Exit Function
+
+End Function
+
 
 ' Parser State
 '-------------------------------------------------------------------------------

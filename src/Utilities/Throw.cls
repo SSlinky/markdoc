@@ -22,10 +22,13 @@ Public Enum Errs
     NotImplementedException
     InterfaceUsedAsObject
 
-'   Block    
+'   Block
     BlockTypeMismatch
 
-'   Utility    
+'   File Reader
+    FileReaderEOF
+    
+'   Utility
     UtilsBadArguments
 End Enum
 
@@ -37,6 +40,8 @@ Private Function ErrsLookup(errType As Errs) As String
             ErrsLookup = "Interface cannot be concrete type."
         Case Is = Errs.BlockTypeMismatch
             ErrsLookup = "Block type mismatch."
+        Case Is = Errs.FileReaderEOF
+            ErrsLookup = "End of file."
         Case Is = Errs.UtilsBadArguments
             ErrsLookup = "Arguments passed not valid."
         Case Else

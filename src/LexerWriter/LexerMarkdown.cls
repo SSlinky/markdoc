@@ -136,15 +136,18 @@ Private Function CloseBlock() As IBlockContainer
     Set CloseBlock = mBlockStack.Pop
 End Function
 
-Private Function OpenChildBlock(currentBlock As IBlockContainer) As BlockContainer
+Private Function OpenChildBlock() As BlockContainer
 '   Create a new block container as a child of the current block.
-    Dim nb As IBlockContainer
-    Set nb = New BlockContainer
-    currentBlock.Children.Push nb
-    
-'   Push the current block onto the stack and return a new block.
-    mBlockStack.Push currentBlock
-    Set OpenChildBlock = New BlockContainer
+    Dim newChildBlock As New BlockContainer
+    Dim currentBlock As IContainerBlock
+
+'   This will raise an error if we do not have a container block
+    Set currentBlock = ThisBlock
+
+'   Associate with current, push to stack
+    currentBlock.Children.Push newChildBlock
+    mBlockStack.Push newChildBlock
+    Set OpenChildBlock = newChildBlock
 End Function
 
 Private Function OpenSiblingBlock() As BlockContainer

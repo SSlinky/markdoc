@@ -19,7 +19,8 @@ Private mBlockStack As List
 Private mCurrentBlockContent As String
 
 Private mFencedCodeFence As String
-private mIndentationLevel as Long   
+Private mFencedCodeIndent As Long
+Private mIndentationLevel As Long
 
 
 'Properties
@@ -97,6 +98,43 @@ Private Function IsFencedCodeBlockStart(line As String) As Boolean
 '   Cannot be the start of a fenced code block if we're already in one.
     If IsInFencedCodeBlock Then Exit Function
     
+'   Must include a ~ or a `
+    If InStr(line, "~") + InStr(line, "`") = 0 Then Exit Function
+    
+'   Simple detect code block fence. This will need to be improved later to
+'   account for indentation level.
+    Dim i As Long
+    Dim p As Long           ' Position first detected
+    Dim c As String * 1     ' Current character
+    Dim f As String * 1     ' Fence character
+    
+    
+    For i = 1 To Len(line)
+        c = Mid(line, i, 1)
+        Select Case c
+            Case Is = " "
+'               Check the fence character
+                If Not f = Chr(0) Then Exit For
+            Case Is = "~", "`"
+                Select Case f
+                    Case Is = Chr(0)
+                        f = c
+                        p = i
+                    Case Is = c
+                    Case Else
+                        Exit For
+                End Select
+            Case Else
+                Exit For
+        End Select
+    Next i
+    
+    If p = 0 Then Exit Function
+    If i - p < 3 Then Exit Function
+    
+    mFencedCodeFence = Mid(line, p, i - p)
+    mFencedCodeIndent = p - 1
+    IsFencedCodeBlockStart = True
 End Function
 
 Private Function IsFencedCodeBlockEnd(line As String) As Boolean

@@ -205,3 +205,24 @@ Private Sub CloseBlockLeaf()
     tb.StyledContent.Text = mCurrentBlockContent
     CloseBlock
 End Sub
+
+Private Sub SetThisBlockContent()
+'   Sets the content for the current block.
+'
+'   If it is not already a leaf of some sort, it is cast to a paragraph.
+'   This is based on the assumption that all other kinds will have been
+'   detected and cast by this point. Containers do not have content.
+
+    Dim block As IBlock
+    Set block = ThisBlock
+    
+    If TypeOf block Is IBlockLeaf Then
+        Dim leaf As IBlockLeaf
+        Set leaf = block
+        leaf.Content = mCurrentBlockContent
+    ElseIf TypeOf block Is IBlockContainer Then
+        CBlockLeafParagraph block
+    Else
+        Throw = Errs.BlockTypeMismatch
+    End If
+End Sub

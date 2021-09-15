@@ -11,6 +11,7 @@ Option Explicit
 Implements IBlock
 Implements IBlockLeaf
 Implements IDocWritable
+Implements IBlockContent
 
 '-------------------------------------------------------------------------------
 '   Class: BlockLeafFencedCode
@@ -49,6 +50,15 @@ End Sub
 Public Sub IDocWritable_StyleContent()
     StyleContent
 End Sub
+
+Public Property Let IBlockContent_ContentText(var As String)
+    If Len(mContentText) > 0 Then mContentText = mContentText & vbNewLine
+    mContentText = mContentText & var
+End Property
+
+Public Property Get IBlockContent_ContentText() As String
+    ContentText = mContentText
+End Property
 
 
 ' Methods

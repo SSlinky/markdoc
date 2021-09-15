@@ -9,6 +9,7 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Option Explicit
 Implements IBlock
+Implements IBlockContent
 Implements IBlockContainer
 
 '-------------------------------------------------------------------------------
@@ -32,7 +33,7 @@ Implements IBlockContainer
 
 
 Private mChildren As New List
-
+Private mContentText As String
 
 ' Interface Implementation
 '-------------------------------------------------------------------------------
@@ -50,3 +51,12 @@ Public Sub IBlockContainer_StyleContent()
 '   This class should be converted to a specific container type.
     Throw = Errs.NotImplementedException
 End Sub
+
+Public Property Let IBlockContent_ContentText(var As String)
+    If Len(mContentText) > 0 Then mContentText = mContentText & vbNewLine
+    mContentText = mContentText & var
+End Property
+
+Public Property Get IBlockContent_ContentText() As String
+    ContentText = mContentText
+End Property

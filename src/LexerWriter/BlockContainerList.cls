@@ -30,33 +30,17 @@ Implements IDocWritable
 '      block cannot be started in this format but a quote can. *shrug*
 '-------------------------------------------------------------------------------
 
-
-Private mChildren As New List
-
-
 ' Properties
 '-------------------------------------------------------------------------------
-Public Property Get IBlockContainer_Children() As List
-    Set IBlockContainer_Children = mChildren
+Private mChildren As List
+Public Property Get Children() As List,
+    Set Children = mChildren
 End Property
 
-
-' Interface Implementation
+' Constructor
 '-------------------------------------------------------------------------------
-Public Sub IBlockContainer_WriteContent()
-    WriteContent
-End Sub
-
-Public Sub IBlockContainer_StyleContent()
-    StyleContent
-End Sub
-
-Public Sub IDocWritable_WriteContent()
-    WriteContent
-End Sub
-
-Public Sub IDocWritable_StyleContent()
-    StyleContent
+Private Sub Class_Initialize()
+    Set mChildren = New List
 End Sub
 
 
@@ -87,4 +71,27 @@ Public Sub StyleContent()
         Set docWritable = mChildren.Pop
         docWritable.StyleContent
     Loop
+End Sub
+
+
+' Interface Implementation
+'-------------------------------------------------------------------------------
+Public Property Get IBlockContainer_Children() As List
+    Set IBlockContainer_Children = Children
+End Property
+
+Public Sub IBlockContainer_WriteContent()
+    WriteContent
+End Sub
+
+Public Sub IBlockContainer_StyleContent()
+    StyleContent
+End Sub
+
+Public Sub IDocWritable_WriteContent()
+    WriteContent
+End Sub
+
+Public Sub IDocWritable_StyleContent()
+    StyleContent
 End Sub

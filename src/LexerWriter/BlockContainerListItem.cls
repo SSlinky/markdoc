@@ -26,19 +26,40 @@ Implements IDocWritable
 '      initial list item. The numbers of subsequent list items are disregarded.
 '-------------------------------------------------------------------------------
 
-
-Private mChildren As New List
-
-
 ' Properties
 '-------------------------------------------------------------------------------
-Public Property Get IBlockContainer_Children() As List
-    Set IBlockContainer_Children = mChildren
+Private mChildren As List
+Public Property Get Children() As List,
+    Set Children = mChildren
 End Property
+
+
+' Constructor
+'-------------------------------------------------------------------------------
+Private Sub Class_Initialize()
+    Set mChildren = New List
+End Sub
+
+
+' Methods
+'-------------------------------------------------------------------------------
+Public Sub WriteContent()
+'   This method MUST be called before StyleContent.
+    Throw = Errs.NotImplementedException
+End Sub
+
+Public Sub StyleContent()
+'   This method MUST be called after WriteContent.
+    Throw = Errs.NotImplementedException
+End Sub
 
 
 ' Interface Implementation
 '-------------------------------------------------------------------------------
+Public Property Get IBlockContainer_Children() As List
+    Set IBlockContainer_Children = Children
+End Property
+
 Public Sub IBlockContainer_WriteContent()
     WriteContent
 End Sub
@@ -53,16 +74,4 @@ End Sub
 
 Public Sub IDocWritable_StyleContent()
     StyleContent
-End Sub
-
-' Methods
-'-------------------------------------------------------------------------------
-Public Sub WriteContent()
-'   This method MUST be called before StyleContent.
-    Throw = Errs.NotImplementedException
-End Sub
-
-Public Sub StyleContent()
-'   This method MUST be called after WriteContent.
-    Throw = Errs.NotImplementedException
 End Sub

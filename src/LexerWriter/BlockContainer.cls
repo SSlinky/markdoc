@@ -31,20 +31,48 @@ Implements IBlockContainer
 '   these can be generated from their contents.
 '-------------------------------------------------------------------------------
 
-
-Private mChildren As New List
+' Properties
+'-------------------------------------------------------------------------------
 Private mContentText As String
+Public Property Let ContentText(var As String)
+    If Len(mContentText) > 0 Then mContentText = mContentText & vbNewLine
+    mContentText = mContentText & var
+End Property
+
+Public Property Get ContentText() As String
+    ContentText = mContentText
+End Property
+
+Private mChildren As List
+Public Property Get Children() As List
+    Set Children = mChildren
+End Property
+
+
+' Constructor
+'-------------------------------------------------------------------------------
+Private Sub Class_Initialize()
+    Set mChildren = New List
+End Sub
+
+
+' Methods
+'-------------------------------------------------------------------------------
+Public Sub WriteContent()
+    Throw = Errs.NotImplementedException
+End Sub
+
 
 ' Interface Implementation
 '-------------------------------------------------------------------------------
 Public Property Get IBlockContainer_Children() As List
 '   Get accessor to the container's children.
-    Throw = Errs.InterfaceUsedAsObject
+    Set IBlockContainer_Children = Children
 End Property
 
 Public Sub IBlockContainer_WriteContent()
 '   This class should be converted to a specific container type.
-    Throw = Errs.NotImplementedException
+    WriteContent
 End Sub
 
 Public Sub IBlockContainer_StyleContent()
@@ -53,10 +81,9 @@ Public Sub IBlockContainer_StyleContent()
 End Sub
 
 Public Property Let IBlockContent_ContentText(var As String)
-    If Len(mContentText) > 0 Then mContentText = mContentText & vbNewLine
-    mContentText = mContentText & var
+    ContentText = var
 End Property
 
 Public Property Get IBlockContent_ContentText() As String
-    ContentText = mContentText
+    IBlockContent_ContentText = ContentText
 End Property

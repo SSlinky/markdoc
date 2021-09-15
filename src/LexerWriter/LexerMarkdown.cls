@@ -30,7 +30,19 @@ Public Property Get BlockStack() As List
 End Property
 
 
-' Public Methods
+' Constructor
+'-------------------------------------------------------------------------------
+Private Sub Class_Initialize()
+    Set mBlockStack = New List
+    mBlockStack.SetStandardStyle
+
+'   Push the document level block onto the stack.
+    mBlockStack.Push New BlockContainer
+    OpenChildBlock
+End Sub
+
+
+' Methods
 '-------------------------------------------------------------------------------
 Public Sub ParseMarkdown(textStream As IIo)
 '   Phase 1: Parse the text stream into blocks.
@@ -44,21 +56,76 @@ Public Sub ParseTree()
 End Sub
 
 
-' Constructor
+' Helpers
 '-------------------------------------------------------------------------------
-Private Sub Class_Initialize()
-    Set mBlockStack = New List
-    mBlockStack.SetStandardStyle
+Private Function CloseBlock() As IBlockContainer
+'   Return the next ancestor from the stack.
+    mCurrentBlockContent = ""
+    Set CloseBlock = mBlockStack.Pop
+End Function
 
-'   Push the document level block onto the stack.
-    mBlockStack.Push New BlockContainer
-    OpenChildBlock
+Private Function OpenChildBlock() As BlockContainer
+'   Create a new block container as a child of the current block.
+    Dim newChildBlock As New BlockContainer
+    Dim currentBlock As IContainerBlock
+
+'   This will raise an error if we do not have a container block
+    Set currentBlock = ThisBlock
+
+'   Associate with current, push to stack
+    currentBlock.Children.Push newChildBlock
+    mBlockStack.Push newChildBlock
+    Set OpenChildBlock = newChildBlock
+End Function
+
+Private Function OpenSiblingBlock() As BlockContainer
+'   Return a new block container as a child of the current parent.
+    Set OpenSiblingBlock = CloseBlock.OpenChildBlock
+End Function
+
+Private Function ThisBlock() As IBlock
+'   Returns the current block container.
+    Dim tb As Variant
+    Set tb = mBlockStack.Peek
+    If TypeOf tb Is IBlock Then
+        Set ThisBlock = mBlockStack.Peek
+    End If
+End Function
+
+Private Sub CloseBlockLeaf()
+'   Closes the current block if it is a leaf.
+    Dim tb As IBlockLeaf
+    If Not TypeOf ThisBlock Is IBlockLeaf Then
+        Throw = BlockTypeMismatch
+    Else
+        Set tb = ThisBlock
+    End If
+
+    tb.StyledContent.Text = mCurrentBlockContent
+    CloseBlock
 End Sub
 
+Private Sub SetThisBlockContent()
+'   Sets the content for the current block.
+'
+'   If it is not already a leaf of some sort, it is cast to a paragraph.
+'   This is based on the assumption that all other kinds will have been
+'   detected and cast by this point.
 
-' Parser Helpers
+    Dim block As IBlock
+    Set block = ThisBlock
+    
+    If TypeOf block Is IBlockContainer Then
+'       Cast to paragraph.   
+        CBlockLeafParagraph block
+    Else
+        Throw = Errs.BlockTypeMismatch
+    End If
+End Sub
+
+' Helpers: Parser
 '-------------------------------------------------------------------------------
-Function ParseLineType(line As String) As String
+Private Function ParseLineType(line As String) As String
     Dim cleanLine As String
     cleanLine = Utils.CleanString(line)
 
@@ -148,7 +215,7 @@ Private Function IsFencedCodeBlockEnd(line As String) As Boolean
 End Function
 
 
-' Parser State
+' Helpers: Parser State
 '-------------------------------------------------------------------------------
 Private Function IsInFencedCodeBlock() As Boolean
     IsInFencedCodeBlock = Not mFencedCodeFence = ""
@@ -159,74 +226,3 @@ End Function
 
 Private Function IsInListBlock() As Boolean
 End Function
-
-
-' Private Helpers
-'-------------------------------------------------------------------------------
-Private Function CloseBlock() As IBlockContainer
-'   Return the next ancestor from the stack.
-    mCurrentBlockContent = ""
-    Set CloseBlock = mBlockStack.Pop
-End Function
-
-Private Function OpenChildBlock() As BlockContainer
-'   Create a new block container as a child of the current block.
-    Dim newChildBlock As New BlockContainer
-    Dim currentBlock As IContainerBlock
-
-'   This will raise an error if we do not have a container block
-    Set currentBlock = ThisBlock
-
-'   Associate with current, push to stack
-    currentBlock.Children.Push newChildBlock
-    mBlockStack.Push newChildBlock
-    Set OpenChildBlock = newChildBlock
-End Function
-
-Private Function OpenSiblingBlock() As BlockContainer
-'   Return a new block container as a child of the current parent.
-    Set OpenSiblingBlock = CloseBlock.OpenChildBlock
-End Function
-
-Private Function ThisBlock() As IBlock
-'   Returns the current block container.
-    Dim tb As Variant
-    Set tb = mBlockStack.Peek
-    If TypeOf tb Is IBlock Then
-        Set ThisBlock = mBlockStack.Peek
-    End If
-End Function
-
-Private Sub CloseBlockLeaf()
-'   Closes the current block if it is a leaf.
-    Dim tb As IBlockLeaf
-    If Not TypeOf ThisBlock Is IBlockLeaf Then
-        Throw = BlockTypeMismatch
-    Else
-        Set tb = ThisBlock
-    End If
-
-    tb.StyledContent.Text = mCurrentBlockContent
-    CloseBlock
-End Sub
-
-Private Sub SetThisBlockContent()
-'   Sets the content for the current block.
-'
-'   If it is not already a leaf of some sort, it is cast to a paragraph.
-'   This is based on the assumption that all other kinds will have been
-'   detected and cast by this point. Containers do not have content.
-
-    Dim block As IBlock
-    Set block = ThisBlock
-    
-    If TypeOf block Is IBlockLeaf Then
-        Dim leaf As IBlockLeaf
-        Set leaf = block
-        leaf.Content = mCurrentBlockContent
-    ElseIf TypeOf block Is IBlockContainer Then
-        CBlockLeafParagraph block
-    Else
-        Throw = Errs.BlockTypeMismatch
-    End If
-End Sub

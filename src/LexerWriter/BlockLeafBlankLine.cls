@@ -15,9 +15,33 @@ Implements IBlockContent
 
 ' Properties
 '-------------------------------------------------------------------------------
-Public Property Let IBlockLeaf_Content(textContent As String)
-    Throw = Errs.NotImplementedexception
+Private mContentText As String
+Public Property Let ContentText(var As String)
+    If Len(mContentText) > 0 Then mContentText = mContentText & vbNewLine
+    mContentText = mContentText & var
 End Property
+
+Public Property Get ContentText() As String
+    ContentText = mContentText
+End Property
+
+
+' Constructor
+'-------------------------------------------------------------------------------
+Private Sub Class_Initialize()
+    
+End Sub
+
+
+' Methods
+'-------------------------------------------------------------------------------
+Public Sub WriteContent()
+    Throw = Errs.NotImplementedexception
+End Sub
+
+Public Sub StyleContent()
+Debug.Print "styling BlockLeafBlankLine" '    Throw = Errs.NotImplementedexception
+End Sub
 
 
 ' Interface Implementation
@@ -38,22 +62,15 @@ Public Sub IDocWritable_StyleContent()
     StyleContent
 End Sub
 
+Public Property Let IBlockLeaf_ContentText(var As String)
+    ContentText = var
+End Property
+
 Public Property Let IBlockContent_ContentText(var As String)
-    If Len(mContentText) > 0 Then mContentText = mContentText & vbNewLine
-    mContentText = mContentText & var
+    ContentText = var
 End Property
 
 Public Property Get IBlockContent_ContentText() As String
-    ContentText = mContentText
+    IBlockContent_ContentText = ContentText
 End Property
 
-
-' Methods
-'-------------------------------------------------------------------------------
-Public Sub WriteContent()
-    Throw = Errs.NotImplementedexception
-End Sub
-
-Public Sub StyleContent()
-Debug.Print "styling BlockLeafBlankLine" '    Throw = Errs.NotImplementedexception
-End Sub

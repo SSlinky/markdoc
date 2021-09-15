@@ -14,7 +14,6 @@ Option Explicit
 '   Blocks that can hold text content should implement this interface.
 '-------------------------------------------------------------------------------
 
-
 Public Property Let ContentText(var As String)
     Throw = Errs.InterfaceUsedAsObject
 End Property

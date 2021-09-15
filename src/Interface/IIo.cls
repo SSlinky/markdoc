@@ -16,7 +16,6 @@ Option Explicit
 '   e.g. file, direct text, or http get.
 '-------------------------------------------------------------------------------
 
-
 Public Function NextLine() As String
 '   Returns the next line to be read and advances the pointer.
     Throw = Errs.InterfaceUsedAsObject

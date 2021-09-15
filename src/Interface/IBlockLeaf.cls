@@ -15,7 +15,7 @@ Option Explicit
 '   depending on the type, may include a collection of inline blocks.
 '-------------------------------------------------------------------------------
 
-Public Property Let Content(textContent As String)
+Public Property Let ContentText(textContent As String)
     Throw = Errs.InterfaceUsedAsObject
 End Property
 

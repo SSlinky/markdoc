@@ -18,7 +18,6 @@ Option Explicit
 '   these methods so there is no need to implement a separate interface.
 '-------------------------------------------------------------------------------
 
-
 Public Sub WriteContent()
     Throw = Errs.InterfaceUsedAsObject
 End Sub

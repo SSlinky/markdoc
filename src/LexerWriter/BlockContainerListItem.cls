@@ -29,7 +29,7 @@ Implements IDocWritable
 ' Properties
 '-------------------------------------------------------------------------------
 Private mChildren As List
-Public Property Get Children() As List,
+Public Property Get Children() As List
     Set Children = mChildren
 End Property
 

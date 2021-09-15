@@ -19,6 +19,10 @@ Public Property Let ContentText(textContent As String)
     Throw = Errs.InterfaceUsedAsObject
 End Property
 
+Public Property Get ContentText() As String
+    Throw = Errs.InterfaceUsedAsObject
+End Property
+
 Public Sub WriteContent()
     Throw = Errs.InterfaceUsedAsObject
 End Sub

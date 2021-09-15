@@ -98,7 +98,7 @@ Public Sub CBlockLeafParagraph(block As IBlock)
 '       Copy across the leaf content.
         Dim leaf As IBlockLeaf
         Set leaf = block
-        rtn.Content = leaf.Content
+        rtn.Content = leaf.ContentText
         Set block = rtn
     ElseIf TypeOf block Is IBlockContainer Then
 '       Containers have no content.

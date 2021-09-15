@@ -75,6 +75,10 @@ Public Property Let IBlockLeaf_ContentText(var As String)
     ContentText = var
 End Property
 
+Public Property Get IBlockLeaf_ContentText() As String
+    IBlockLeaf_ContentText = ContentText
+End Property
+
 Public Property Let IBlockContent_ContentText(var As String)
     ContentText = var
 End Property

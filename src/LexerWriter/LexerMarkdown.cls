@@ -67,7 +67,7 @@ End Function
 Private Function OpenChildBlock() As BlockContainer
 '   Create a new block container as a child of the current block.
     Dim newChildBlock As New BlockContainer
-    Dim currentBlock As IContainerBlock
+    Dim currentBlock As IBlockContainer
 
 '   This will raise an error if we do not have a container block
     Set currentBlock = ThisBlock

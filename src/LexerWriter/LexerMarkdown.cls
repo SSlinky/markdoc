@@ -44,7 +44,7 @@ End Sub
 
 ' Methods
 '-------------------------------------------------------------------------------
-Public Sub ParseMarkdown(textStream As IIo)
+Public Sub ParseMarkdown(textStream As IIO)
 '   Phase 1: Parse the text stream into blocks.
 
 
@@ -58,13 +58,13 @@ End Sub
 
 ' Helpers
 '-------------------------------------------------------------------------------
-Private Function CloseBlock() As IBlockContainer
-'   Return the next ancestor from the stack.
-    mCurrentBlockContent = ""
-    Set CloseBlock = mBlockStack.Pop
-End Function
+Private Sub CloseBlock()
+'   Pops the current block and discards the reference
+    Dim discard As IBlock
+    Set discard = mBlockStack.Pop
+End Sub
 
-Private Function OpenChildBlock() As BlockContainer
+Private Sub OpenChildBlock()
 '   Create a new block container as a child of the current block.
     Dim newChildBlock As New BlockContainer
     Dim currentBlock As IBlockContainer
@@ -75,13 +75,13 @@ Private Function OpenChildBlock() As BlockContainer
 '   Associate with current, push to stack
     currentBlock.Children.Push newChildBlock
     mBlockStack.Push newChildBlock
-    Set OpenChildBlock = newChildBlock
-End Function
+End Sub
 
-Private Function OpenSiblingBlock() As BlockContainer
-'   Return a new block container as a child of the current parent.
-    Set OpenSiblingBlock = CloseBlock.OpenChildBlock
-End Function
+Private Sub OpenSiblingBlock()
+'   Close the current block and open a child of the same parent.
+    CloseBlock
+    OpenChildBlock
+End Sub
 
 Private Function ThisBlock() As IBlock
 '   Returns the current block container.
@@ -101,6 +101,7 @@ Private Sub CloseBlockLeaf()
         Set tb = ThisBlock
     End If
 
+'   Currently throws - need to update interface
     tb.StyledContent.Text = mCurrentBlockContent
     CloseBlock
 End Sub
@@ -116,8 +117,8 @@ Private Sub SetThisBlockContent()
     Set block = ThisBlock
     
     If TypeOf block Is IBlockContainer Then
-'       Cast to paragraph.   
-        CBlockLeafParagraph block
+'       Cast to paragraph.
+        Utils.CBlockLeafParagraph block
     Else
         Throw = Errs.BlockTypeMismatch
     End If

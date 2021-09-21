@@ -205,6 +205,23 @@ Function TinyLTrim(line As String) As String
     End If
 End Function
 
+'   Long Helpers
+'-------------------------------------------------------------------------------
+Public Function LBetween(n As Long, a As Long, b As Long) As Boolean
+'   Returns True if n is between or equal to a and b
+'
+'   Args:
+'       n: The number to test.
+'       b: The lower bound.
+'       c: The upper bound.
+'
+'   Returns:
+'       True if n between or equal to a or b.
+'
+    LBetween = n >= a And n <= b   
+End Function
+
+
 '   Block helpers
 '-------------------------------------------------------------------------------
 Public Sub CBlockLeafParagraph(block As IBlock)

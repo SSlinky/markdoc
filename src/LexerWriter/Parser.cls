@@ -37,18 +37,24 @@ Public Function IsCodeBlockFence( _
     If Len(line) < 3 Then Exit Function
 
 '   Mode 1: Currently in fence block.
+    Dim countFence As Long
+    Dim fenceChar  As String
+
     If Not fence = vbNullString Then
+'       Check fence matches left side of line    
         If Left(line, Len(fence)) = fence Then
-            fence = vbNullString
-            IsCodeBlockFence = True
+'           Check entire line only fence characters.
+            fenceChar = Left(fence, 1)
+            countFence = Utils.CountSubstr(Trim(line), fenceChar)
+            If countFence = Len(Trim(line)) Then
+                fence = vbNullString
+                IsCodeBlockFence = True
+            End If
         End If
         Exit Function
     End If
 
 '   Mode 2: Not currently in fence block.
-    Dim countFence As Long
-    Dim fenceChar  As String
-
     fenceChar = Left(line, 1)
     If Utils.StrIn(VALID_FENCE_CHARS, fenceChar) Then
 '       Count contiguous fence characters.

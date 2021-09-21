@@ -27,10 +27,12 @@ Public Enum Errs
 
 '   File Reader
     FileReaderEOF
+
+'   Parser
+    ParserIndentLevelOutsideRange
     
 '   Utility
-    StringIndentMixedType
-    StringIndentNotBlank
+    UtilsStringIndentNotBlank
     UtilsBadArguments
 End Enum
 
@@ -44,7 +46,9 @@ Private Function ErrsLookup(errType As Errs) As String
             ErrsLookup = "Block type mismatch."
         Case Is = Errs.FileReaderEOF
             ErrsLookup = "End of file."
-        Case Is = Errs.StringIndentNotBlank
+        Case Is = Errs.ParserIndentLevelOutsideRange
+            ErrsLookup = "Cannot set new indentation level."
+        Case Is = Errs.UtilsStringIndentNotBlank
             ErrsLookup = "String indentation must be white space."
         Case Is = Errs.UtilsBadArguments
             ErrsLookup = "Arguments passed not valid."

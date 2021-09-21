@@ -128,7 +128,20 @@ End Sub
 '-------------------------------------------------------------------------------
 Private Function ParseLineType(line As String) As String
     Dim cleanLine As String
+    Dim unindentLine As String
+    Dim thisIndentLevel As Long
+
+'   Clean line and test its indentation level.
     cleanLine = Utils.CleanString(line)
+    thisIndentLevel = Utils.GetIndentationLevel(unindentLine)
+
+'   Handle indentation level changes.
+    If Not thisIndentLevel = mIndentationLevel Then
+
+    End If
+
+'   Get an unindented version of the line to parse.
+    unindentLine = Utils.UnindentLine(cleanLine)
 
     Select Case True
 '       Parsing from inside fenced code block.
@@ -164,6 +177,20 @@ Private Sub ParseAddToCurrent(line As String)
     End If
 End Sub
 
+Private Sub HandleIndentationChange(newIndentLevel As Long)
+'   Handles opening and closing of blocks based on an indentation level change.
+'
+'   Args:
+'       newIndentLevel: The new indentation level.
+'
+'   Raises:
+'       ParserIndentLevelOutsideRange thrown when newIndentationLevel < 0.
+'
+'   Throw if indentation level less than 0.
+    If Not LBetween(newIndentLevel, 0, mIndentationLevel + 4) Then
+        Throw = Errs.ParserIndentLevelOutsideRange
+    End If
+End Sub
 
 ' Helpers: Parser State
 '-------------------------------------------------------------------------------

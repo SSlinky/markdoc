@@ -81,7 +81,7 @@ Function CleanString(str As String, _
 End Function
 
 Function StrIn(str As String, subStr As String) As Boolean
-'   Helper for Instr for when you don't care where subStr is.
+'   Helper for InStr for when you don't care where subStr is.
     StrIn = InStr(str, subStr) > 0
 End Function
 

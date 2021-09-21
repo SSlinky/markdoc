@@ -85,6 +85,28 @@ Function StrIn(str As String, subStr As String) As Boolean
     StrIn = InStr(str, subStr) > 0
 End Function
 
+Function TinyTrim(line As String) As String
+'   Removes up to the first three spaces from the left of line.
+'
+'   Args:
+'       line: The line of text to trim.
+'
+'   Returns:
+'       The line, minus up to three spaces on from the left side.
+
+    Dim i As Long
+    For i = 1 To 3
+        If Mid(line, i, 1) <> " " Then
+            Exit For
+        End If
+    Next i
+
+    If i = 1 Then
+        TinyTrim = line
+    Else
+        TinyTrim = Mid(line, i)
+    End If
+End Function
 
 '   Block helpers
 '-------------------------------------------------------------------------------

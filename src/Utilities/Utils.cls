@@ -85,7 +85,7 @@ Function StrIn(str As String, subStr As String) As Boolean
     StrIn = InStr(str, subStr) > 0
 End Function
 
-Function TinyTrim(line As String) As String
+Function TinyLTrim(line As String) As String
 '   Removes up to the first three spaces from the left of line.
 '
 '   Args:

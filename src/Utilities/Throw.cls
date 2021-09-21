@@ -29,6 +29,8 @@ Public Enum Errs
     FileReaderEOF
     
 '   Utility
+    StringIndentMixedType
+    StringIndentNotBlank
     UtilsBadArguments
 End Enum
 
@@ -42,6 +44,8 @@ Private Function ErrsLookup(errType As Errs) As String
             ErrsLookup = "Block type mismatch."
         Case Is = Errs.FileReaderEOF
             ErrsLookup = "End of file."
+        Case Is = Errs.StringIndentNotBlank
+            ErrsLookup = "String indentation must be white space."
         Case Is = Errs.UtilsBadArguments
             ErrsLookup = "Arguments passed not valid."
         Case Else

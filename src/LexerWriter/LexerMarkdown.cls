@@ -44,7 +44,7 @@ End Sub
 
 ' Methods
 '-------------------------------------------------------------------------------
-Public Sub ParseMarkdown(textStream As IIO)
+Public Sub ParseMarkdown(textStream As IIo)
 '   Phase 1: Parse the text stream into blocks.
 
 

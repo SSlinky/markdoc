@@ -134,7 +134,7 @@ Private Function ParseLineType(line As String) As String
 '       Parsing from inside fenced code block.
         Case Is = IsInFencedCodeBlock
             Select Case True
-                Case Is = IsFencedCodeBlockEnd(cleanLine)
+                Case Is = Parser.IsCodeBlockFence(cleanLine, mFencedCodeFence)
                     CloseBlockLeaf
                 Case Else
             End Select
@@ -149,7 +149,7 @@ Private Function ParseLineType(line As String) As String
 '       Parsing from inside a paragraph.
         Case Else
             Select Case True
-                Case Is = IsFencedCodeBlockStart(cleanLine)
+                Case Is = Parser.IsCodeBlockFence(cleanLine, mFencedCodeFence)
 '                   Set content of current.
 '                   Open a sibling.
                 Case Else

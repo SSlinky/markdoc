@@ -133,11 +133,9 @@ Private Function ParseLineType(line As String) As String
     Select Case True
 '       Parsing from inside fenced code block.
         Case Is = IsInFencedCodeBlock
-            Select Case True
-                Case Is = Parser.IsCodeBlockFence(cleanLine, mFencedCodeFence)
-                    CloseBlockLeaf
-                Case Else
-            End Select
+            If Parser.IsCodeBlockFence(cleanLine, mFencedCodeFence) Then
+                CloseBlockLeaf
+            End If
 
 '       Parsing from inside indented code block.
         Case Is = IsInIndentedCodeBlock

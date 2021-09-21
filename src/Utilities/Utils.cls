@@ -46,7 +46,7 @@ Public Function UnindentLine(line As String, indentLevel As Long) As String
 '       The string with the indentation removed.
 '
 '   Raises:
-'       StringIndentNotBlank when the indented section not tabs or spaces.
+'       UtilsStringIndentNotBlank when the indented section not tabs or spaces.
 '       UtilsBadArguments when indentLevel below zero or longer than line.
 
 '   Don't do work if there's no work.
@@ -81,10 +81,10 @@ Public Function UnindentLine(line As String, indentLevel As Long) As String
 '           Replace tabs with four spaces.            
             Case Is = Chr(ASCII_TAB):
                 line = InsertReplace(line, "    ", i, 1)
-                
+
 '           Throw for any other character.                
             Case Else:
-                Throw = Errs.StringIndentNotBlank
+                Throw = Errs.UtilsStringIndentNotBlank
                 UnindentLine = line
                 Exit Function
         End Select

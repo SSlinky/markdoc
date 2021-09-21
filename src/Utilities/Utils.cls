@@ -34,6 +34,103 @@ Public Function GetIndentationLevel(line As String) As Integer
     GetIndentationLevel = Fix((Len(line) - Len(Trim(line & ".")) + 1) / 4)
 End Function
 
+Public Function UnindentLine(line As String, indentLevel As Long) As String
+'   Removes indentation from a line so that it can be parsed as if it was
+'   at base indent level.
+'
+'   Args:
+'       line: The text to remove indentation from.
+'       indentLevel: The level of indentation to remove.
+'
+'   Returns:
+'       The string with the indentation removed.
+'
+'   Raises:
+'       StringIndentNotBlank when the indented section not tabs or spaces.
+'       UtilsBadArguments when indentLevel below zero or longer than line.
+
+'   Don't do work if there's no work.
+    If indentLevel = 0 Then
+        UnindentLine = line
+        Exit Function
+    End If
+
+'   Throw if there's no line or the indent level is less than 0.
+    If line = vbNullString or indentLevel < 0 Then
+        Throw = Errs.UtilsBadArguments
+        UnindentLine = line
+        Exit Function
+    End If
+
+    dim i As Long
+    dim c As String
+    
+    For i = 1 To indentLevel
+'       Throw if we hit the end of the line.    
+        If i > Len(line) Then
+            Throw = Errs.UtilsBadArguments
+            UnindentLine = line
+            Exit Function
+        End If
+
+        c = Mid(line, i, 1)
+        Select Case c
+'           Iterate only when we hit a space.        
+            Case Is = " ":
+
+'           Replace tabs with four spaces.            
+            Case Is = Chr(ASCII_TAB):
+                line = InsertReplace(line, "    ", i, 1)
+                
+'           Throw for any other character.                
+            Case Else:
+                Throw = Errs.StringIndentNotBlank
+                UnindentLine = line
+                Exit Function
+        End Select
+    Next i
+
+    UnindentLine = Mid(line, i)
+End Function
+
+Public Function InsertReplace( _
+    str As String, subStr As String, pos As Long, length As Long) As String
+'   Inserts a substring into a string replacing a section starting
+'   at pos for length characters. This function updates your pos and length
+'   arguments if they will cause an exception to be thrown.
+'
+'   Args:
+'       str: The string to perform the replacement on.
+'       subStr: The substring to insert.
+'       pos: The position start to replace.
+'       length: The position length to replace.
+'
+'   Returns:
+'       str with subStr replace inserted into the correct place.
+
+    If length < 0 Then
+        pos = pos + length
+        length = Abs(length)
+    End If
+
+    If pos < 0 Then
+        length = length + pos
+        pos = 0
+        If length < 0 Then length = 0
+    End If
+
+    Select Case True
+        Case Is = pos = 0 And length = 0:
+            InsertReplace = subStr & str
+        Case Is = pos >= Len(str):
+            InsertReplace = str & subStr
+        Case Is = pos = 0:
+            InsertReplace = subStr & Mid(str, length)
+        Case Else:
+            InsertReplace = Left(str, pos - 1) & subStr & Mid(str, pos + length)
+    End Select
+End Function
+
 Function SuperTrim(str As String, Optional trimChars As String) As String
 '   Removes any character in trimChars from the start or end of the line.
     Dim i As Long

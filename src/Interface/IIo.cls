@@ -16,7 +16,12 @@ Option Explicit
 '   e.g. file, direct text, or http get.
 '-------------------------------------------------------------------------------
 
-Public Function NextLine() As String
+Public Property EoF() As Boolean
+'   Returns True if the entire contents has been read.
+    Throw = Errs.InterfaceUsedAsObject
+End Property
+
+Public Function ReadNextLine() As String
 '   Returns the next line to be read and advances the pointer.
     Throw = Errs.InterfaceUsedAsObject
 End Function
@@ -26,12 +31,7 @@ Public Function PeekNextLine() As String
     Throw = Errs.InterfaceUsedAsObject
 End Function
 
-Public Function EOF() As Boolean
-'   Returns True if the entire contents has been read.
-    Throw = Errs.InterfaceUsedAsObject
-End Function
-
-Public Sub SetReference(fileOrTextReference As String)
+Public Sub Open(fileOrTextReference As String)
 '   Sets a reference to the text stream.
     Throw = Errs.InterfaceUsedAsObject
 End Sub

@@ -122,7 +122,7 @@ Private Sub SetThisBlockContent()
     
     If TypeOf block Is IBlockContainer Then
 '       Cast to paragraph.
-        Utils.CBlockLeafParagraph block
+        Utils.CBlockLeaf block, new BlockLeafParagraph
     Else
         Throw = Errs.BlockTypeMismatch
     End If
@@ -173,9 +173,6 @@ Private Function ParseLineType(line As String) As String
                     ParseAddToCurrent line
             End Select
     End Select
-
-'   Finally, set the previous line to the current line.    
-    mPreviousLine = line
 End Function
 
 Private Sub ParseAddToCurrent(line As String)
@@ -188,6 +185,10 @@ End Sub
 
 Private Sub HandleIndentationChange(newIndentLevel As Long)
 '   Handles opening and closing of blocks based on an indentation level change.
+'   Would prefer this was broken into small pure functions in Parser.
+'   I'm thinking this whole function should be binned. Should all happen from inside case statement.
+'
+'   Yep. Hundred per cent. Bin it.
 '
 '   Args:
 '       newIndentLevel: The new indentation level.
@@ -195,7 +196,11 @@ Private Sub HandleIndentationChange(newIndentLevel As Long)
 '   Raises:
 '       ParserIndentLevelOutsideRange thrown when newIndentLevel < 0.
 '
+'   Fenced code blocks uber alles.
+    If IsInFencedCodeBlock Then Exit Sub
+
 '   Throw if indentation level less than 0.
+    If thisIndentLevel < 0 Then Throw = Errs.ParserIndentLevelOutsideRange
     If newIndentLevel < 0 Then Throw = Errs.ParserIndentLevelOutsideRange
 
 '   LISTS
@@ -203,6 +208,7 @@ Private Sub HandleIndentationChange(newIndentLevel As Long)
 '   - Text at any indent level is considered a continuation of the previous
 '     list item (same line) if the previous line is not blank.
 '   CODE
+'   - New code blocks only start when the previous line is blank.
 '   - Text less than four indents from previous line marks a new paragraph
 '     unless it is blank, in which case it is a continuation of the block.
 
@@ -211,11 +217,19 @@ Private Sub HandleIndentationChange(newIndentLevel As Long)
 '       If it's less than three, do nothing.
         If newIndentLevel <= mIndentLevel + 3 Then Exit Sub
 
-'       Four indents is a new 
+'       Test for new code block
+        If Not IsInIndentedCodeBlock And mPreviousLine = vbNullString Then
+            OpenSiblingBlock
+            Utils.CBlockLeaf ThisBlock, new BlockLeafParagraph
+        End If
+
+'       Four indents is a new code block if not already in one.
     End If
 
 '   Left indent the blocks.
     Do While mIndentLevel > newIndentLevel
+'       Blank lines do not interrupt an existing indented code block.    
+        If IsInIndentedCodeBlock And mLine = vbNullString Then Exit Do
         exit do
     Loop
 End Sub
@@ -227,6 +241,8 @@ Private Function IsInFencedCodeBlock() As Boolean
 End Function
 
 Private Function IsInIndentedCodeBlock() As Boolean
+'   True if the current code block is an indented code block.
+    IsInIndentedCodeBlock = TypeOf ThisBlock Is IndentedCodeBlock
 End Function
 
 Private Function IsInListBlock() As Boolean

@@ -20,8 +20,8 @@ Private mCurrentBlockContent As String
 
 Private mFencedCodeFence As String
 Private mFencedCodeIndent As Long
-Private mIndentationLevel As Long
-
+Private mIndentLevel As Long
+Private mPreviousLine As String
 
 'Properties
 '-------------------------------------------------------------------------------
@@ -133,15 +133,17 @@ Private Function ParseLineType(line As String) As String
 
 '   Clean line and test its indentation level.
     cleanLine = Utils.CleanString(line)
-    thisIndentLevel = Utils.GetIndentationLevel(unindentLine)
+    thisIndentLevel = Utils.GetIndentLevel(unindentLine)
 
-'   Handle indentation level changes.
-    If Not thisIndentLevel = mIndentationLevel Then
-
+'   Handle indentation level changes (blank lines don't update indent).
+    If TypeOf ThisBlock Is IIndentBlock And  Not Trim(cleanLine) = "" Then
+        If Not thisIndentLevel = mIndentLevel Then
+            HandleIndentationChange thisIndentLevel
+        End If
     End If
 
 '   Get an unindented version of the line to parse.
-    unindentLine = Utils.UnindentLine(cleanLine)
+    unindentLine = Utils.UnindentLine(cleanLine, mIndentLevel)
 
     Select Case True
 '       Parsing from inside fenced code block.
@@ -167,6 +169,9 @@ Private Function ParseLineType(line As String) As String
                     ParseAddToCurrent line
             End Select
     End Select
+
+'   Finally, set the previous line to the current line.    
+    mPreviousLine = line
 End Function
 
 Private Sub ParseAddToCurrent(line As String)
@@ -184,12 +189,31 @@ Private Sub HandleIndentationChange(newIndentLevel As Long)
 '       newIndentLevel: The new indentation level.
 '
 '   Raises:
-'       ParserIndentLevelOutsideRange thrown when newIndentationLevel < 0.
+'       ParserIndentLevelOutsideRange thrown when newIndentLevel < 0.
 '
 '   Throw if indentation level less than 0.
-    If newIndentLevel < 0 Then
-        Throw = Errs.ParserIndentLevelOutsideRange
+    If newIndentLevel < 0 Then Throw = Errs.ParserIndentLevelOutsideRange
+
+'   LISTS
+'   - Only start a new list level if the previous line is blank.
+'   - Text at any indent level is considered a continuation of the previous
+'     list item (same line) if the previous line is not blank.
+'   CODE
+'   - Text less than four indents from previous line marks a new paragraph
+'     unless it is blank, in which case it is a continuation of the block.
+
+'   Right indent the block.
+    If newIndentLevel > mIndentLevel Then
+'       If it's less than three, do nothing.
+        If newIndentLevel <= mIndentLevel + 3 Then Exit Sub
+
+'       Four indents is a new 
     End If
+
+'   Left indent the blocks.
+    Do While mIndentLevel > newIndentLevel
+        exit do
+    Loop
 End Sub
 
 ' Helpers: Parser State

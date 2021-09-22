@@ -14,7 +14,6 @@ Option Explicit
 '   Parses and tokenises markdown.
 '-------------------------------------------------------------------------------
 
-
 Private mBlockStack As List
 Private mCurrentBlockContent As String
 
@@ -22,6 +21,8 @@ Private mFencedCodeFence As String
 Private mFencedCodeIndent As Long
 Private mIndentLevel As Long
 Private mPreviousLine As String
+Private mLine As String
+
 
 'Properties
 '-------------------------------------------------------------------------------
@@ -46,8 +47,11 @@ End Sub
 '-------------------------------------------------------------------------------
 Public Sub ParseMarkdown(textStream As IIo)
 '   Phase 1: Parse the text stream into blocks.
-
-
+    Do While Not textStream.EoF
+        mLine = textStream.ReadNextLine
+        ParseLineType mLine
+        mPreviousLine = line
+    Loop
 End Sub
 
 Public Sub ParseTree()

@@ -28,6 +28,7 @@ Public Property Get EoF() As Boolean
     IIo_EOF = EoF(mFile)
 End Property
 
+
 ' Methods
 '-------------------------------------------------------------------------------
 Public Function ReadNextLine() As String
@@ -60,6 +61,7 @@ Public Sub Open(fileName As String)
 '   Interface implementation to open a file
     OpenFile fileName
 End Sub
+
 
 ' Interface Implementation
 '-------------------------------------------------------------------------------

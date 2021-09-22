@@ -20,7 +20,33 @@ Private mFileIsOpen As Boolean
 Private mNextLine As String
 Private mFileName As String
 
-Public Function IIo_NextLine() As String
+
+' Properties
+'-------------------------------------------------------------------------------
+Public Property Get EoF() As Boolean
+'   Returns True if the entire contents has been read.
+    IIo_EOF = EoF(mFile)
+End Property
+
+' Methods
+'-------------------------------------------------------------------------------
+Public Function ReadNextLine() As String
+'   Reads the next line in the file.
+    If IIo_EOF Then Throw = Errs.FileReaderEOF
+    Dim s As String
+    Line Input #mFile, s
+    ReadNextLine = s
+End Function
+
+Public Function PeekNextLine() As String
+'   Returns the next line to be read without advancing the pointer.
+    If mNextLine = "" Then
+        mNextLine = ReadNextLine
+    End If
+    IIo_PeekNextLine = mNextLine
+End Function
+
+Public Function ReadNextLine() As String
 '   Returns the next line to be read and advances the pointer.
     If Not mNextLine = "" Then
         IIo_NextLine = mNextLine
@@ -30,56 +56,25 @@ Public Function IIo_NextLine() As String
     End If
 End Function
 
-Public Function IIo_PeekNextLine() As String
-'   Returns the next line to be read without advancing the pointer.
-    If mNextLine = "" Then
-        mNextLine = ReadNextLine
-    End If
-    IIo_PeekNextLine = mNextLine
-End Function
-
-Private Function ReadNextLine() As String
-'   Reads the next line in the file.
-    If IIo_EOF Then Throw = Errs.FileReaderEOF
-    Dim s As String
-    Line Input #mFile, s
-    ReadNextLine = s
-End Function
-
-Public Function IIo_EOF() As Boolean
-'   Returns True if the entire contents has been read.
-    IIo_EOF = EOF(mFile)
-End Function
-
-Public Sub IIo_SetReference(fileName As String)
+Public Sub Open(fileName As String)
 '   Interface implementation to open a file
     OpenFile fileName
 End Sub
 
-Public Sub OpenFile(fileName As String)
-'   Opens a file ReadOnly for reading.
-    If mFileIsOpen Then CloseFile
+' Interface Implementation
+'-------------------------------------------------------------------------------
+Public Property Get IIo_EoF() As Boolean
+    IIo_EoF = EoF
+End Property
 
-    mFileName = fileName
-    mFile = FreeFile
-
-    Logger.Log "Opening (" & mFile & "): " & mFileName
-
-    Open mFileName For Input Access Read As #mFile
-    mFileIsOpen = True
+Public Sub IIo_Open(fileName As String)
+    Call Open(fileName)
 End Sub
 
-Public Sub CloseFile()
-'   Closes the file if it is open.
-    If Not mFileIsOpen Then Exit Sub
-    Logger.Log "Closing (" & mFile & "): " & mFileName
+Public Function IIo_PeekNextLine() As String
+    IIo_PeekNextLine = PeekNextLine
+End Function
 
-    Close #mFile
-    mFileIsOpen = False
-End Sub
-
-Private Sub Class_Terminate()
-'   Ensure file is closed before terminating.
-'   Not even sure this is required, tbh.
-    CloseFile
-End Sub
+Public Function IIo_ReadNextLine() As String
+    IIo_ReadNextLine = ReadNextLine
+End Function

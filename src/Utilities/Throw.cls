@@ -23,6 +23,7 @@ Public Enum Errs
     InterfaceUsedAsObject
 
 '   Block
+    BlockNotCreated
     BlockTypeMismatch
 
 '   File Reader
@@ -42,6 +43,8 @@ Private Function ErrsLookup(errType As Errs) As String
             ErrsLookup = "Not yet implemented."
         Case Is = Errs.InterfaceUsedAsObject
             ErrsLookup = "Interface cannot be concrete type."
+        Case Is = Errs.BlockNotCreated
+            ErrsLookup = "Block must be created using Create method."
         Case Is = Errs.BlockTypeMismatch
             ErrsLookup = "Block type mismatch."
         Case Is = Errs.FileReaderEOF

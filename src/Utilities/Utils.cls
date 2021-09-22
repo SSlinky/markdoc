@@ -224,21 +224,19 @@ End Function
 
 '   Block helpers
 '-------------------------------------------------------------------------------
-Public Sub CBlockLeafParagraph(block As IBlock)
-'   Casts a block of any type to a BlockLeafParagraph.
+Public Sub CBlockLeafParagraph(block As IBlock, castToBlock As IBlockLeaf)
+'   Casts a block of any type to an IBlockLeaf of type castToBlock.
 '   This may cause loss of data as paragraphs do not have children.
-    Dim rtn As IBlockLeaf
-    Set rtn = New BlockLeafParagraph
 
     If TypeOf block Is IBlockLeaf Then
 '       Copy across the leaf content.
         Dim leaf As IBlockLeaf
         Set leaf = block
-        rtn.Content = leaf.ContentText
-        Set block = rtn
+        castToBlock.Content = leaf.ContentText
+        Set block = castToBlock
     ElseIf TypeOf block Is IBlockContainer Then
 '       Containers have no content.
-        Set block = rtn
+        Set block = castToBlock
     Else
         Throw = Errs.BlockTypeMismatch
     End If

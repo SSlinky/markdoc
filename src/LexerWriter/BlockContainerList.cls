@@ -9,6 +9,7 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Option Explicit
 Implements IBlock
+Implements IBlockList
 Implements IBlockContainer
 Implements IDocWritable
 
@@ -36,6 +37,17 @@ Private mChildren As List
 Public Property Get Children() As List
     Set Children = mChildren
 End Property
+
+Private mIndentLevel As Long
+Public Property Let IndentLevel(var As Long)
+'   Can only be set once. Closest thing we'll get to a readonly modifier.
+    If mIndentLevel = 0 Then mIndentLevel = var
+End Property
+
+Public Property Get IndentLevel() As Long
+    IndentLevel = mIndentLevel
+End Property
+
 
 ' Constructor
 '-------------------------------------------------------------------------------
@@ -95,3 +107,15 @@ End Sub
 Public Sub IDocWritable_StyleContent()
     StyleContent
 End Sub
+
+Public Property Get IBlockList_Children() As List
+    Throw = Errs.NotImplementedException
+End Property
+
+Public Property Let IBlockList_IndentLevel(var As Long)
+    IndentLevel = var
+End Property
+
+Public Property Get IBlockList_IndentLevel() As Long
+    IBlockList_IndentLevel = IndentLevel
+End Property

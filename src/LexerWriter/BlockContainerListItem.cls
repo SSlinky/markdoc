@@ -9,6 +9,7 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Option Explicit
 Implements IBlock
+Implements IBlockListItem
 Implements IBlockContainer
 Implements IDocWritable
 
@@ -30,26 +31,50 @@ Implements IDocWritable
 '-------------------------------------------------------------------------------
 Private mChildren As List
 Public Property Get Children() As List
+    If Not mIsCreated Then Throw = Errs.BlockNotCreated
     Set Children = mChildren
+End Property
+
+Private mParent As IBlockList
+Public Property Get Parent() As IBlockList,
+    If Not mIsCreated Then Throw = Errs.BlockNotCreated
+    Set Parent = mParent
+End Property
+
+Private mIsCreated As Boolean
+Public Property Get IsCreated() As Boolean
+    If Not mIsCreated Then Throw = Errs.BlockNotCreated
+    IsCreated = mIsCreated
+End Property
+
+Public Property Get IndentLevel() As Long
+    If Not mIsCreated Then Throw = Errs.BlockNotCreated
+    IndentLevel = Parent.IndentLevel
 End Property
 
 
 ' Constructor
 '-------------------------------------------------------------------------------
 Private Sub Class_Initialize()
-    Set mChildren = New List
 End Sub
 
+Public Sub Create(parentBlockList As IBlockList)
+    Set mChildren = New List
+    Set mParent = parentBlockList
+    mIsCreated = True
+End Sub
 
 ' Methods
 '-------------------------------------------------------------------------------
 Public Sub WriteContent()
 '   This method MUST be called before StyleContent.
+    If Not mIsCreated Then Throw = Errs.BlockNotCreated
     Throw = Errs.NotImplementedException
 End Sub
 
 Public Sub StyleContent()
 '   This method MUST be called after WriteContent.
+    If Not mIsCreated Then Throw = Errs.BlockNotCreated
     Throw = Errs.NotImplementedException
 End Sub
 
@@ -75,3 +100,11 @@ End Sub
 Public Sub IDocWritable_StyleContent()
     StyleContent
 End Sub
+
+Public Property Get IBlockListItem_Parent() As List
+    Set IBlockListItem_Parent = Parent
+End Property
+
+Public Property Get IBlockListItem_IndentLevel() As Long
+    IBlockListItem_IndentLevel = IndentLevel
+End Property

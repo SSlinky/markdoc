@@ -187,7 +187,7 @@ Private Sub HandleIndentationChange(newIndentLevel As Long)
 '       ParserIndentLevelOutsideRange thrown when newIndentationLevel < 0.
 '
 '   Throw if indentation level less than 0.
-    If Not LBetween(newIndentLevel, 0, mIndentationLevel + 4) Then
+    If newIndentLevel < 0 Then
         Throw = Errs.ParserIndentLevelOutsideRange
     End If
 End Sub

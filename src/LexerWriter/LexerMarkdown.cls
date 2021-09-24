@@ -151,17 +151,20 @@ Private Function ParseLineType(line As String) As String
 
     Select Case True
 '       Parsing from inside fenced code block.
-        Case Is = IsInFencedCodeBlock
+        Case Is = IsInFencededLeaf
             If Parser.IsCodeBlockFence(cleanLine, mFencedCodeFence) Then
                 CloseBlockLeaf
             End If
 
 '       Parsing from inside indented code block.
-        Case Is = IsInIndentedCodeBlock
+        Case Is = IsInIndentedLeaf
 
 '       Parsing from inside list block.
         Case Is = IsInListBlock
 '           Will need to account for indentation level changes.
+'           Probably need to move this outside the Select Case since things
+'           can be both in a list and in a paragraph / code block / whatever.
+'           Getting kicked out of a list level will also end any leaf block, including code.
 
 '       Parsing from inside a paragraph.
         Case Else
@@ -197,7 +200,7 @@ Private Sub HandleIndentationChange(newIndentLevel As Long)
 '       ParserIndentLevelOutsideRange thrown when newIndentLevel < 0.
 '
 '   Fenced code blocks uber alles.
-    If IsInFencedCodeBlock Then Exit Sub
+    If IsInFencededLeaf Then Exit Sub
 
 '   Throw if indentation level less than 0.
     If thisIndentLevel < 0 Then Throw = Errs.ParserIndentLevelOutsideRange
@@ -218,7 +221,7 @@ Private Sub HandleIndentationChange(newIndentLevel As Long)
         If newIndentLevel <= mIndentLevel + 3 Then Exit Sub
 
 '       Test for new code block
-        If Not IsInIndentedCodeBlock And mPreviousLine = vbNullString Then
+        If Not IsInIndentedLeaf And mPreviousLine = vbNullString Then
             OpenSiblingBlock
             Utils.CBlockLeaf ThisBlock, new BlockLeafParagraph
         End If
@@ -229,20 +232,20 @@ Private Sub HandleIndentationChange(newIndentLevel As Long)
 '   Left indent the blocks.
     Do While mIndentLevel > newIndentLevel
 '       Blank lines do not interrupt an existing indented code block.    
-        If IsInIndentedCodeBlock And mLine = vbNullString Then Exit Do
+        If IsInIndentedLeaf And mLine = vbNullString Then Exit Do
         exit do
     Loop
 End Sub
 
 ' Helpers: Parser State
 '-------------------------------------------------------------------------------
-Private Function IsInFencedCodeBlock() As Boolean
-    IsInFencedCodeBlock = Not mFencedCodeFence = ""
+Private Function IsInFencededLeaf() As Boolean
+    IsInFencededLeaf = Not mFencedCodeFence = ""
 End Function
 
-Private Function IsInIndentedCodeBlock() As Boolean
+Private Function IsInIndentedLeaf() As Boolean
 '   True if the current code block is an indented code block.
-    IsInIndentedCodeBlock = TypeOf ThisBlock Is IndentedCodeBlock
+    IsInIndentedLeaf = TypeOf ThisBlock Is IndentedCodeBlock
 End Function
 
 Private Function IsInListBlock() As Boolean

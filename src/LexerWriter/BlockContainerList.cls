@@ -31,14 +31,19 @@ Implements IDocWritable
 '      block cannot be started in this format but a quote can. *shrug*
 '-------------------------------------------------------------------------------
 
-' Properties
+
+' Private Backing Store
 '-------------------------------------------------------------------------------
 Private mChildren As List
+Private mIndentLevel As Long
+
+
+' Properties
+'-------------------------------------------------------------------------------
 Public Property Get Children() As List
     Set Children = mChildren
 End Property
 
-Private mIndentLevel As Long
 Public Property Let IndentLevel(var As Long)
 '   Can only be set once. Closest thing we'll get to a readonly modifier.
     If mIndentLevel = 0 Then mIndentLevel = var
@@ -118,4 +123,12 @@ End Property
 
 Public Property Get IBlockList_IndentLevel() As Long
     IBlockList_IndentLevel = IndentLevel
+End Property
+
+Public Property Let IBlock_IndentationLevel(var As Long)
+    IndentationLevel = var
+End Property
+
+Public Property Get IBlock_IndentationLevel() As Long
+    IBlock_IndentationLevel = IndentationLevel
 End Property

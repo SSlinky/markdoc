@@ -27,24 +27,34 @@ Implements IDocWritable
 '      initial list item. The numbers of subsequent list items are disregarded.
 '-------------------------------------------------------------------------------
 
-' Properties
+
+' Private Backing Store
 '-------------------------------------------------------------------------------
 Private mChildren As List
+Private mParent As IBlockList
+Private mIsCreated As Boolean
+Private mContentText As String
+
+
+' Properties
+'-------------------------------------------------------------------------------
 Public Property Get Children() As List
     If Not mIsCreated Then Throw = Errs.BlockNotCreated
     Set Children = mChildren
 End Property
 
-Private mParent As IBlockList
 Public Property Get Parent() As IBlockList,
     If Not mIsCreated Then Throw = Errs.BlockNotCreated
     Set Parent = mParent
 End Property
 
-Private mIsCreated As Boolean
 Public Property Get IsCreated() As Boolean
     If Not mIsCreated Then Throw = Errs.BlockNotCreated
     IsCreated = mIsCreated
+End Property
+
+Public Property Let IndentLevel(var As Long)
+    ' Do nothing or throw...?
 End Property
 
 Public Property Get IndentLevel() As Long
@@ -107,4 +117,12 @@ End Property
 
 Public Property Get IBlockListItem_IndentLevel() As Long
     IBlockListItem_IndentLevel = IndentLevel
+End Property
+
+Public Property Let IBlock_IndentationLevel(var As Long)
+    IndentationLevel = var
+End Property
+
+Public Property Get IBlock_IndentationLevel() As Long
+    IBlock_IndentationLevel = IndentationLevel
 End Property

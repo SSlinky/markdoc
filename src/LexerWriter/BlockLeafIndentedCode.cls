@@ -27,9 +27,14 @@ Private Type StyledContent
 End Type
 
 
-' Properties
+' Private Backing Store
 '-------------------------------------------------------------------------------
 Private mContentText As String
+Private mIndentLevel As Long
+
+
+' Properties
+'-------------------------------------------------------------------------------
 Public Property Let ContentText(var As String)
     If Len(mContentText) > 0 Then mContentText = mContentText & vbNewLine
     mContentText = mContentText & var
@@ -37,6 +42,14 @@ End Property
 
 Public Property Get ContentText() As String
     ContentText = mContentText
+End Property
+
+Public Property Let IndentLevel(var As Long)
+    mIndentLevel = var
+End Property
+
+Public Property Get IndentLevel() As Long
+    IndentLevel = mIndentLevel
 End Property
 
 
@@ -85,4 +98,12 @@ End Property
 
 Public Property Get IBlockContent_ContentText() As String
     IBlockContent_ContentText = ContentText
+End Property
+
+Public Property Let IBlock_IndentationLevel(var As Long)
+    IndentationLevel = var
+End Property
+
+Public Property Get IBlock_IndentationLevel() As Long
+    IBlock_IndentationLevel = IndentationLevel
 End Property

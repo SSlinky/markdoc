@@ -12,5 +12,13 @@ Option Explicit
 '-------------------------------------------------------------------------------
 '   Interface: IBlock
 '   Basic block type that all container and leaf blocks implement.
-'   Does nothing except enable type checking.
 '-------------------------------------------------------------------------------
+
+
+Public Property Let IndentationLevel(var As Long)
+    Throw = Errs.InterfaceUsedAsObject
+End Property
+
+Public Property Get IndentationLevel() As Long
+    Throw = Errs.InterfaceUsedAsObject
+End Property

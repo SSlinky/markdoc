@@ -39,9 +39,23 @@ Implements IDocWritable
 '   Nothing else counts as a block quote.
 '-------------------------------------------------------------------------------
 
-' Properties
+
+' Private Backing Store
 '-------------------------------------------------------------------------------
 Private mChildren As List
+Private mIndentLevel As Long
+
+
+' Properties
+'-------------------------------------------------------------------------------
+Public Property Let IndentLevel(var As Long)
+    mIndentLevel = var
+End Property
+
+Public Property Get IndentLevel() As Long
+    IndentLevel = mIndentLevel
+End Property
+
 Public Property Get Children() As List
     Set Children = mChildren
 End Property
@@ -105,3 +119,11 @@ End Sub
 Public Sub IDocWritable_StyleContent()
     StyleContent
 End Sub
+
+Public Property Let IBlock_IndentationLevel(var As Long)
+    IndentationLevel = var
+End Property
+
+Public Property Get IBlock_IndentationLevel() As Long
+    IBlock_IndentationLevel = IndentationLevel
+End Property

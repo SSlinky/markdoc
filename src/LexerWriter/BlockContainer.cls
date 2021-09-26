@@ -31,9 +31,16 @@ Implements IBlockContainer
 '   these can be generated from their contents.
 '-------------------------------------------------------------------------------
 
+
+' Private Backing Store
+'-------------------------------------------------------------------------------
+Private mChildren As List
+Private mContentText As String
+Private mIndentationLevel As Long
+
+
 ' Properties
 '-------------------------------------------------------------------------------
-Private mContentText As String
 Public Property Let ContentText(var As String)
     If Len(mContentText) > 0 Then mContentText = mContentText & vbNewLine
     mContentText = mContentText & var
@@ -43,9 +50,16 @@ Public Property Get ContentText() As String
     ContentText = mContentText
 End Property
 
-Private mChildren As List
 Public Property Get Children() As List
     Set Children = mChildren
+End Property
+
+Public Property Let IndentationLevel(var As Long)
+    mIndentationLevel = var
+End Property
+
+Public Property Get IndentationLevel() As Long
+    IndentationLevel = mIndentationLevel
 End Property
 
 
@@ -86,4 +100,12 @@ End Property
 
 Public Property Get IBlockContent_ContentText() As String
     IBlockContent_ContentText = ContentText
+End Property
+
+Public Property Let IBlock_IndentationLevel(var As Long)
+    IndentationLevel = var
+End Property
+
+Public Property Get IBlock_IndentationLevel() As Long
+    IBlock_IndentationLevel = IndentationLevel
 End Property

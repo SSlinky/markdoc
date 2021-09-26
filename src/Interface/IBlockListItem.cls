@@ -14,6 +14,7 @@ Option Explicit
 '   A list item is a child of a list. It contains a link back to its parent.
 '-------------------------------------------------------------------------------
 
+
 Public Property Get Parent() As List
 '   Getter for the item's parent object.
     Throw = Errs.InterfaceUsedAsObject

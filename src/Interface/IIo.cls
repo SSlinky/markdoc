@@ -16,6 +16,7 @@ Option Explicit
 '   e.g. file, direct text, or http get.
 '-------------------------------------------------------------------------------
 
+
 Public Property EoF() As Boolean
 '   Returns True if the entire contents has been read.
     Throw = Errs.InterfaceUsedAsObject

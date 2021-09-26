@@ -14,6 +14,7 @@ Option Explicit
 '   An interface that describes base Section methods
 '-------------------------------------------------------------------------------
 
+
 Public Sub WriteContent()
     Throw = Errs.InterfaceUsedAsObject
 End Sub

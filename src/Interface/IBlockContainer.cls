@@ -26,6 +26,7 @@ Option Explicit
 '   these can be generated from their contents.
 '-------------------------------------------------------------------------------
 
+
 Public Property Get Children() As List
 '   Get accessor to the container's children.
     Throw = Errs.InterfaceUsedAsObject

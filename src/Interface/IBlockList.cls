@@ -15,6 +15,7 @@ Option Explicit
 '   All items in the list must be of the same type and indentation level.
 '-------------------------------------------------------------------------------
 
+
 Public Property Get Children() As List
 '   Getter for the container's children.
     Throw = Errs.InterfaceUsedAsObject

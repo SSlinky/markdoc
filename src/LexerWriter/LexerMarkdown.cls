@@ -140,6 +140,10 @@ Private Function ParseLineType(line As String) As String
     thisIndentLevel = Utils.GetIndentLevel(unindentLine)
 
 '   Handle indentation level changes (blank lines don't update indent).
+'   Indentation level now kept on blocks themselves. This should just get
+'   the parsed line indentation level and handle from there.
+'       e.g. if level is less than current block, current block is closed
+'       and next one is checked (unless blank line, of course).
     If TypeOf ThisBlock Is IIndentBlock And  Not Trim(cleanLine) = "" Then
         If Not thisIndentLevel = mIndentLevel Then
             HandleIndentationChange thisIndentLevel

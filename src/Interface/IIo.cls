@@ -17,7 +17,7 @@ Option Explicit
 '-------------------------------------------------------------------------------
 
 
-Public Property EoF() As Boolean
+Public Property Get EoF() As Boolean
 '   Returns True if the entire contents has been read.
     Throw = Errs.InterfaceUsedAsObject
 End Property

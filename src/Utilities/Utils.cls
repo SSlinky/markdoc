@@ -224,7 +224,7 @@ End Function
 
 '   Block helpers
 '-------------------------------------------------------------------------------
-Public Sub CBlockLeafParagraph(block As IBlock, castToBlock As IBlockLeaf)
+Public Sub CBlockLeaf(block As IBlock, castToBlock As IBlockLeaf)
 '   Casts a block of any type to an IBlockLeaf of type castToBlock.
 '   This may cause loss of data as paragraphs do not have children.
 

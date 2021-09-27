@@ -135,57 +135,98 @@ End Sub
 
 ' Helpers: Parser
 '-------------------------------------------------------------------------------
-Private Function ParseLineType(line As String) As String
+Private Sub ParseLineType(line As String)
+'   Prepares the line and calls ParseLineTypeAction
+'
+'   Args:
+'       line: The raw line as it is read from the source.
+
     Dim cleanLine As String
     Dim unindentLine As String
     Dim thisIndentLevel As Long
 
-'   Clean line and test its indentation level.
+'   Clean, get indentation, and unindent line.
     cleanLine = Utils.CleanString(line)
-    thisIndentLevel = Utils.GetIndentLevel(unindentLine)
 
-'   Handle indentation level changes (blank lines don't update indent).
-'   Indentation level now kept on blocks themselves. This should just get
-'   the parsed line indentation level and handle from there.
-'       e.g. if level is less than current block, current block is closed
-'       and next one is checked (unless blank line, of course).
-    If TypeOf ThisBlock Is IIndentBlock And  Not Trim(cleanLine) = "" Then
-        If Not thisIndentLevel = mIndentLevel Then
-            HandleIndentationChange thisIndentLevel
-        End If
+    If Trim(cleanLine) = vbNullString Then
+        thisIndentLevel = ThisBlock.IndentationLevel
+    Else
+        unindentLine = Utils.UnindentLine(cleanLine, ThisBlock.IndentationLevel)
+        thisIndentLevel = Utils.GetIndentLevel(unindentLine)
     End If
 
-'   Get an unindented version of the line to parse.
-    unindentLine = Utils.UnindentLine(cleanLine, mIndentLevel)
+    ParseLineTypeAction cleanLine, unindentLine, thisIndentLevel
+End Sub
+
+Private Sub ParseLineTypeAction( _
+    lineCleaned As String, _
+    lineUnindented As String, _
+    indentLevel As Long)
+'   Performs the parse action depending on current state.
+'   This sub can call itself recursively if more than one action relevant.
+'
+'   Args:
+'       lineCleaned: The cleaned version of the original line.
+'       lineUnindented: The unindented version of the cleaned line.
+'       indentLevel: The indent level in spaces of the line.
+'
+'   Raises:
+'
+    Dim thisContentBlock As IBlockContent
+
+'   An indentation level reduction will always kick us out of the block.
+'   Except when the 
+    If indentLevel < ThisBlock.IndentationLevel Then
+        CloseBlockLeaf
+        ParseLineTypeAction lineCleaned, lineUnindented, indentLevel
+    End If
 
     Select Case True
 '       Parsing from inside fenced code block.
-        Case Is = IsInFencededLeaf
+        Case Is = IsInFencededCodeLeaf
+'           Check for a close fence string.
             If Parser.IsCodeBlockFence(cleanLine, mFencedCodeFence) Then
                 CloseBlockLeaf
+'           Nothing else pulls us out of this block type.                
+            Else
+                Set thisContentBlock = ThisBlock
+                thisFencedCodeBlock.ContentText = lineUnindented
             End If
 
 '       Parsing from inside indented code block.
-        Case Is = IsInIndentedLeaf
-
-'       Parsing from inside list block.
-        Case Is = IsInListBlock
-'           Will need to account for indentation level changes.
-'           Probably need to move this outside the Select Case since things
-'           can be both in a list and in a paragraph / code block / whatever.
-'           Getting kicked out of a list level will also end any leaf block, including code.
+        Case Is = IsInIndentedCodeLeaf
+            Set thisContentBlock = ThisBlock
+            thisFencedCodeBlock.ContentText = lineUnindented
 
 '       Parsing from inside a paragraph.
-        Case Else
-            Select Case True
-                Case Is = Parser.IsCodeBlockFence(cleanLine, mFencedCodeFence)
-'                   Set content of current.
-'                   Open a sibling.
-                Case Else
-                    ParseAddToCurrent line
-            End Select
-    End Select
-End Function
+        Case Is = IsInParagraphLeaf
+'           Blank lines break the paragraph.
+            If unindentLine = vbNullString Then
+                OpenSiblingBlock
+                Utils.CBlockLeaf ThisBlock, New BlockLeafBlankLine
+'           A code fence breaks the paragraph.
+            ElseIf Parser.IsCodeBlockFence(unindentLine, mFencedCodeFence)
+                OpenSiblingBlock
+                Utils.CBlockLeaf ThisBlock, New BlockLeafFencedCode
+                ThisBlock.ContentText = unindentLine
+'           A new list breaks the paragraph.
+            ElseIf Parser.IsListItem(unindentLine)
+
+'           Nothing else pulls us out of this block type.
+            Else
+                Set thisContentBlock = ThisBlock
+                thisFencedCodeBlock.ContentText = lineUnindented
+            End If        
+
+'       Parsing from inside a block of blank lines.
+        Case Is = IsInBlankLineLeaf
+'           Non-blank line should open an unknown sibling block for parsing.
+            If Not unindentLine = vbNullString Then
+                OpenSiblingBlock
+                ParseLineTypeAction lineCleaned, lineUnindented, indentLevel
+            End If
+    End Select 
+End Sub
 
 Private Sub ParseAddToCurrent(line As String)
     If mCurrentBlockContent = "" Then
@@ -195,66 +236,34 @@ Private Sub ParseAddToCurrent(line As String)
     End If
 End Sub
 
-Private Sub HandleIndentationChange(newIndentLevel As Long)
-'   Handles opening and closing of blocks based on an indentation level change.
-'   Would prefer this was broken into small pure functions in Parser.
-'   I'm thinking this whole function should be binned. Should all happen from inside case statement.
-'
-'   Yep. Hundred per cent. Bin it.
-'
-'   Args:
-'       newIndentLevel: The new indentation level.
-'
-'   Raises:
-'       ParserIndentLevelOutsideRange thrown when newIndentLevel < 0.
-'
-'   Fenced code blocks uber alles.
-    If IsInFencededLeaf Then Exit Sub
-
-'   Throw if indentation level less than 0.
-    If thisIndentLevel < 0 Then Throw = Errs.ParserIndentLevelOutsideRange
-    If newIndentLevel < 0 Then Throw = Errs.ParserIndentLevelOutsideRange
-
-'   LISTS
-'   - Only start a new list level if the previous line is blank.
-'   - Text at any indent level is considered a continuation of the previous
-'     list item (same line) if the previous line is not blank.
-'   CODE
-'   - New code blocks only start when the previous line is blank.
-'   - Text less than four indents from previous line marks a new paragraph
-'     unless it is blank, in which case it is a continuation of the block.
-
-'   Right indent the block.
-    If newIndentLevel > mIndentLevel Then
-'       If it's less than three, do nothing.
-        If newIndentLevel <= mIndentLevel + 3 Then Exit Sub
-
-'       Test for new code block
-        If Not IsInIndentedLeaf And mPreviousLine = vbNullString Then
-            OpenSiblingBlock
-            Utils.CBlockLeaf ThisBlock, new BlockLeafParagraph
-        End If
-
-'       Four indents is a new code block if not already in one.
-    End If
-
-'   Left indent the blocks.
-    Do While mIndentLevel > newIndentLevel
-'       Blank lines do not interrupt an existing indented code block.    
-        If IsInIndentedLeaf And mLine = vbNullString Then Exit Do
-        exit do
-    Loop
-End Sub
 
 ' Helpers: Parser State
 '-------------------------------------------------------------------------------
-Private Function IsInFencededLeaf() As Boolean
-    IsInFencededLeaf = Not mFencedCodeFence = ""
+Private Function IsInFencededCodeLeaf() As Boolean
+    IsInFencededCodeLeaf = Not mFencedCodeFence = ""
 End Function
 
-Private Function IsInIndentedLeaf() As Boolean
+Private Function IsInIndentedCodeLeaf() As Boolean
 '   True if the current code block is an indented code block.
-    IsInIndentedLeaf = TypeOf ThisBlock Is IndentedCodeBlock
+    IsInIndentedCodeLeaf = TypeOf ThisBlock Is IndentedCodeBlock
+End Function
+
+Private Function IsInParagraphLeaf() As Boolean
+'   Parser state flag is in paragraph.
+'
+'   Returns:
+'       True if the current block is a BlockLeafParagraph
+
+    IsInParagraphLeaf = TypeOf ThisBlock Is BlockLeafParagraph
+End Function
+
+Private Function IsInBlankLineLeaf() As Boolean
+'   Parser state flag is in blank lines.
+'
+'   Returns:
+'       True if the current block is a BlockLeafParagraph
+
+    IsInBlankLineLeaf = TypeOf ThisBlock Is BlockLeafBlankLine
 End Function
 
 Private Function IsInListBlock() As Boolean

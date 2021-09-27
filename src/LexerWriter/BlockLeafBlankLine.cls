@@ -13,34 +13,39 @@ Implements IBlockLeaf
 Implements IDocWritable
 Implements IBlockContent
 
+'-------------------------------------------------------------------------------
+'   Class: BlockLeafBlankLine
+'   This block type exists to collect blank lines. It does not have any visible
+'   effect on the output other than to reduce multiple blank lines into a single
+'   break.
+'-------------------------------------------------------------------------------
+
 ' Properties
 '-------------------------------------------------------------------------------
-Private mContentText As String
 Public Property Let ContentText(var As String)
-    If Len(mContentText) > 0 Then mContentText = mContentText & vbNewLine
-    mContentText = mContentText & var
+'   Do nothing.
 End Property
 
 Public Property Get ContentText() As String
-    ContentText = mContentText
+'   Do nothing.
 End Property
 
 
 ' Constructor
 '-------------------------------------------------------------------------------
 Private Sub Class_Initialize()
-    
+'   Do nothing.
 End Sub
 
 
 ' Methods
 '-------------------------------------------------------------------------------
 Public Sub WriteContent()
-    Throw = Errs.NotImplementedexception
+'   Do nothing.
 End Sub
 
 Public Sub StyleContent()
-Debug.Print "styling BlockLeafBlankLine" '    Throw = Errs.NotImplementedexception
+'   Do nothing.
 End Sub
 
 
@@ -77,4 +82,3 @@ End Property
 Public Property Get IBlockContent_ContentText() As String
     IBlockContent_ContentText = ContentText
 End Property
-

@@ -83,8 +83,13 @@ End Sub
 
 Private Sub OpenSiblingBlock()
 '   Close the current block and open a child of the same parent.
+    Dim indetLevel As Long
+
     CloseBlock
+    indentLevel = ThisBlock.IndentationLevel
+
     OpenChildBlock
+    ThisBlock.IndentationLevel = indentLevel
 End Sub
 
 Private Function ThisBlock() As IBlock

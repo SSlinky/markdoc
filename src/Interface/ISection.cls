@@ -15,7 +15,7 @@ Option Explicit
 '-------------------------------------------------------------------------------
 
 
-Public Sub WriteContent()
+Public Sub WriteContent(toDoc As Document)
     Throw = Errs.InterfaceUsedAsObject
 End Sub
 

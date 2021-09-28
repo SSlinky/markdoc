@@ -24,7 +24,7 @@ Public Property Get ContentText() As String
     Throw = Errs.InterfaceUsedAsObject
 End Property
 
-Public Sub WriteContent()
+Public Sub WriteContent(toDoc As Document)
     Throw = Errs.InterfaceUsedAsObject
 End Sub
 

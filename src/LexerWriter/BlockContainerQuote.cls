@@ -70,7 +70,7 @@ End Sub
 
 ' Methods
 '-------------------------------------------------------------------------------
-Public Sub WriteContent()
+Public Sub WriteContent(toDoc As Document)
 '   This method MUST be called before StyleContent.
 
 '   Writes the document by recursively calling the WriteContent method
@@ -104,7 +104,7 @@ Public Property Get IBlockContainer_Children() As List
     Set IBlockContainer_Children = Children
 End Property
 
-Public Sub IBlockContainer_WriteContent()
+Public Sub IBlockContainer_WriteContent(toDoc As Document)
     WriteContent
 End Sub
 
@@ -112,7 +112,7 @@ Public Sub IBlockContainer_StyleContent()
     StyleContent
 End Sub
 
-Public Sub IDocWritable_WriteContent()
+Public Sub IDocWritable_WriteContent(toDoc As Document)
     WriteContent
 End Sub
 

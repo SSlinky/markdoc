@@ -32,7 +32,7 @@ Public Property Get Children() As List
     Throw = Errs.InterfaceUsedAsObject
 End Property
 
-Public Sub WriteContent()
+Public Sub WriteContent(toDoc As Document)
 '   This method MUST be called before StyleContent.
     Throw = Errs.InterfaceUsedAsObject
 End Sub

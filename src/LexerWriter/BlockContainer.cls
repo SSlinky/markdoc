@@ -72,7 +72,7 @@ End Sub
 
 ' Methods
 '-------------------------------------------------------------------------------
-Public Sub WriteContent()
+Public Sub WriteContent(toDoc As Document)
     Throw = Errs.NotImplementedException
 End Sub
 
@@ -84,7 +84,7 @@ Public Property Get IBlockContainer_Children() As List
     Set IBlockContainer_Children = Children
 End Property
 
-Public Sub IBlockContainer_WriteContent()
+Public Sub IBlockContainer_WriteContent(toDoc As Document)
 '   This class should be converted to a specific container type.
     WriteContent
 End Sub

@@ -40,7 +40,7 @@ End Sub
 
 ' Methods
 '-------------------------------------------------------------------------------
-Public Sub WriteContent()
+Public Sub WriteContent(toDoc As Document)
 '   Do nothing.
 End Sub
 
@@ -51,7 +51,7 @@ End Sub
 
 ' Interface Implementation
 '-------------------------------------------------------------------------------
-Public Sub IBlockLeaf_WriteContent()
+Public Sub IBlockLeaf_WriteContent(toDoc As Document)
     WriteContent
 End Sub
 
@@ -59,7 +59,7 @@ Public Sub IBlockLeaf_StyleContent()
     StyleContent
 End Sub
 
-Public Sub IDocWritable_WriteContent()
+Public Sub IDocWritable_WriteContent(toDoc As Document)
     WriteContent
 End Sub
 

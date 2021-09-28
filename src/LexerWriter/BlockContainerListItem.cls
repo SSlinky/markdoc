@@ -76,7 +76,7 @@ End Sub
 
 ' Methods
 '-------------------------------------------------------------------------------
-Public Sub WriteContent()
+Public Sub WriteContent(toDoc As Document)
 '   This method MUST be called before StyleContent.
     If Not mIsCreated Then Throw = Errs.BlockNotCreated
     Throw = Errs.NotImplementedException
@@ -95,7 +95,7 @@ Public Property Get IBlockContainer_Children() As List
     Set IBlockContainer_Children = Children
 End Property
 
-Public Sub IBlockContainer_WriteContent()
+Public Sub IBlockContainer_WriteContent(toDoc As Document)
     WriteContent
 End Sub
 
@@ -103,7 +103,7 @@ Public Sub IBlockContainer_StyleContent()
     StyleContent
 End Sub
 
-Public Sub IDocWritable_WriteContent()
+Public Sub IDocWritable_WriteContent(toDoc As Document)
     WriteContent
 End Sub
 

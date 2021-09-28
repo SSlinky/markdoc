@@ -312,6 +312,3 @@ Private Function IsInBlankLineLeaf() As Boolean
 
     IsInBlankLineLeaf = TypeOf ThisBlock Is BlockLeafBlankLine
 End Function
-
-Private Function IsInListBlock() As Boolean
-End Function

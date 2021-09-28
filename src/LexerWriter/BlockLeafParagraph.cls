@@ -60,7 +60,7 @@ Public Sub WriteContent(toDoc As Document)
     Throw = Errs.NotImplementedException
 End Sub
 
-Public Sub StyleContent()
+Public Sub StyleContent(styleDoc As Document)
 '   This method MUST be called after WriteContent.
     Throw = Errs.NotImplementedException
 End Sub
@@ -72,7 +72,7 @@ Public Sub IBlockLeaf_WriteContent(toDoc As Document)
     WriteContent
 End Sub
 
-Public Sub IBlockLeaf_StyleContent()
+Public Sub IBlockLeaf_StyleContent(styleDoc As Document)
     StyleContent
 End Sub
 
@@ -80,7 +80,7 @@ Public Sub IDocWritable_WriteContent(toDoc As Document)
     WriteContent
 End Sub
 
-Public Sub IDocWritable_StyleContent()
+Public Sub IDocWritable_StyleContent(styleDoc As Document)
     StyleContent
 End Sub
 

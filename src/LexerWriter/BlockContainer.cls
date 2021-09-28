@@ -89,7 +89,7 @@ Public Sub IBlockContainer_WriteContent(toDoc As Document)
     WriteContent
 End Sub
 
-Public Sub IBlockContainer_StyleContent()
+Public Sub IBlockContainer_StyleContent(styleDoc As Document)
 '   This class should be converted to a specific container type.
     Throw = Errs.NotImplementedException
 End Sub

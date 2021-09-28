@@ -37,7 +37,7 @@ Public Sub WriteContent(toDoc As Document)
     Throw = Errs.InterfaceUsedAsObject
 End Sub
 
-Public Sub StyleContent()
+Public Sub StyleContent(styleDoc As Document)
 '   This method MUST be called after WriteContent.
     Throw = Errs.InterfaceUsedAsObject
 End Sub

@@ -19,6 +19,6 @@ Public Sub WriteContent(toDoc As Document)
     Throw = Errs.InterfaceUsedAsObject
 End Sub
 
-Public Sub StyleContent()
+Public Sub StyleContent(styleDoc As Document)
     Throw = Errs.InterfaceUsedAsObject
 End Sub

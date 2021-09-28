@@ -82,7 +82,7 @@ Public Sub WriteContent(toDoc As Document)
     Throw = Errs.NotImplementedException
 End Sub
 
-Public Sub StyleContent()
+Public Sub StyleContent(styleDoc As Document)
 '   This method MUST be called after WriteContent.
     If Not mIsCreated Then Throw = Errs.BlockNotCreated
     Throw = Errs.NotImplementedException
@@ -99,7 +99,7 @@ Public Sub IBlockContainer_WriteContent(toDoc As Document)
     WriteContent
 End Sub
 
-Public Sub IBlockContainer_StyleContent()
+Public Sub IBlockContainer_StyleContent(styleDoc As Document)
     StyleContent
 End Sub
 
@@ -107,7 +107,7 @@ Public Sub IDocWritable_WriteContent(toDoc As Document)
     WriteContent
 End Sub
 
-Public Sub IDocWritable_StyleContent()
+Public Sub IDocWritable_StyleContent(styleDoc As Document)
     StyleContent
 End Sub
 

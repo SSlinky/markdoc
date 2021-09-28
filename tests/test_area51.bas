@@ -23,7 +23,7 @@ Sub fhawl()
     Debug.Print r.Text
 End Sub
 
-Sub test_InlineSection_WriteAndStyleContent()
+Sub test_InlineSection_WriteAndStyleContent(styleDoc As Document)
 '    Dim inSec As InlineSection
 '    Set inSec = New InlineSection
 '

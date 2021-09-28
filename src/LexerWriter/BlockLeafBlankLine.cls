@@ -44,7 +44,7 @@ Public Sub WriteContent(toDoc As Document)
 '   Do nothing.
 End Sub
 
-Public Sub StyleContent()
+Public Sub StyleContent(styleDoc As Document)
 '   Do nothing.
 End Sub
 
@@ -55,7 +55,7 @@ Public Sub IBlockLeaf_WriteContent(toDoc As Document)
     WriteContent
 End Sub
 
-Public Sub IBlockLeaf_StyleContent()
+Public Sub IBlockLeaf_StyleContent(styleDoc As Document)
     StyleContent
 End Sub
 
@@ -63,7 +63,7 @@ Public Sub IDocWritable_WriteContent(toDoc As Document)
     WriteContent
 End Sub
 
-Public Sub IDocWritable_StyleContent()
+Public Sub IDocWritable_StyleContent(styleDoc As Document)
     StyleContent
 End Sub
 

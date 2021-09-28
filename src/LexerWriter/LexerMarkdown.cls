@@ -15,7 +15,6 @@ Option Explicit
 '-------------------------------------------------------------------------------
 
 Private mBlockStack As List
-Private mCurrentBlockContent As String
 
 Private mFencedCodeFence As String
 Private mFencedCodeIndent As Long
@@ -241,14 +240,6 @@ Private Sub ParseLineTypeAction( _
                 ParseLineTypeAction lineCleaned, lineUnindented, indentLevel
             End If
     End Select 
-End Sub
-
-Private Sub ParseAddToCurrent(line As String)
-    If mCurrentBlockContent = "" Then
-        mCurrentBlockContent = line
-    Else
-        mCurrentBlockContent = mCurrentBlockContent & vbNewLine & line
-    End If
 End Sub
 
 Private Sub ParseBlockTree(block As IBlock)

@@ -34,9 +34,11 @@ End Property
 ' Constructor
 '-------------------------------------------------------------------------------
 Private Sub Class_Initialize()
+'   Initialise the block stack.
     Set mBlockStack = New List
     mBlockStack.SetStandardStyle
 
+'   Initialise the links reference dictionary.
     Set mLinkReference = CreateObject("Scripting.Dictionary")
 
 '   Push the document level block onto the stack.

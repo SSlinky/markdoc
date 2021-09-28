@@ -14,7 +14,6 @@ Option Explicit
 '   Allows for better logging later.
 '-------------------------------------------------------------------------------
 
-
 Public Enum Level
     Information
     Debugging
@@ -22,6 +21,9 @@ Public Enum Level
     Exception
 End Enum
 
+
+' Methods
+'-------------------------------------------------------------------------------
 Private Function LevelLookup(logLevel As Level) As String
     Select Case logLevel
         Case Is = Level.Information
@@ -36,7 +38,6 @@ Private Function LevelLookup(logLevel As Level) As String
             LevelLookup = ">>BAD LOOKUP>>: "
     End Select
 End Function
-
 
 Public Sub Log(logValue As String, Optional logLevel As Level)
     Debug.Print LevelLookup(logLevel) & logValue

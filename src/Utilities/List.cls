@@ -15,21 +15,23 @@ Option Explicit
 '   Adds Push and Pop methods and exposes the base collection.
 '-------------------------------------------------------------------------------
 
+' Private Backing Store
+'-------------------------------------------------------------------------------
 Private mBase As Collection
 Private mIsTapeStyle As Boolean
 
-Private Sub Class_Initialize()
-    Set mBase = New Collection
-    mIsTapeStyle = True
-End Sub
 
-Public Sub Push(obj As Variant)
-    If mIsTapeStyle Or mBase.Count = 0 Then
-        mBase.Add obj
-    Else
-        mBase.Add obj, Before:=1
-    End If
-End Sub
+' Properties
+'-------------------------------------------------------------------------------
+Public Property Get IsTapeStyle() As Boolean
+'   Sets pushing and popping to FILO
+    IsTapeStyle = mIsTapeStyle
+End Property
+
+Public Property Get IsStandardStyle() As Boolean
+'   Sets pushing and popping to FIFO
+    IsStandardStyle = Not mIsTapeStyle
+End Property
 
 Public Property Get Pop() As Variant
     If IsObject(mBase.Item(1)) Then
@@ -57,6 +59,25 @@ Public Property Get Items() As Collection
     Set Items = mBase
 End Property
 
+
+' Constructor
+'-------------------------------------------------------------------------------
+Private Sub Class_Initialize()
+    Set mBase = New Collection
+    mIsTapeStyle = True
+End Sub
+
+
+' Methods
+'-------------------------------------------------------------------------------
+Public Sub Push(obj As Variant)
+    If mIsTapeStyle Or mBase.Count = 0 Then
+        mBase.Add obj
+    Else
+        mBase.Add obj, Before:=1
+    End If
+End Sub
+
 Public Sub SetTapeStyle()
     If Not mIsTapeStyle Then
         ReverseCollection
@@ -71,17 +92,9 @@ Public Sub SetStandardStyle()
     End If
 End Sub
 
-Public Property Get IsTapeStyle() As Boolean
-'   Sets pushing and popping to FILO
-    IsTapeStyle = mIsTapeStyle
-End Property
 
-Public Property Get IsStandardStyle() As Boolean
-'   Sets pushing and popping to FIFO
-    IsStandardStyle = Not mIsTapeStyle
-End Property
-
-
+' Helpers
+'-------------------------------------------------------------------------------
 Private Sub ReverseCollection()
     Dim cnt As Long
     cnt = mBase.Count - 1

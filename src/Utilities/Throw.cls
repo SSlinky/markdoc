@@ -37,6 +37,20 @@ Public Enum Errs
     UtilsBadArguments
 End Enum
 
+
+' Properties
+'-------------------------------------------------------------------------------
+Public Property Let Exception(errType As Errs)
+    Dim errDesc As String
+    errDesc = ErrsLookup(errType)
+    
+    Logger.Log errDesc, Level.Exception
+    Err.Raise vbObjectError + errType + 1, Description:=errDesc
+End Property
+
+
+' Helpers
+'-------------------------------------------------------------------------------
 Private Function ErrsLookup(errType As Errs) As String
     Select Case errType
         Case Is = Errs.NotImplementedException
@@ -59,11 +73,3 @@ Private Function ErrsLookup(errType As Errs) As String
             ErrsLookup = "Internal error " & errType & "."
     End Select
 End Function
-
-Public Property Let Exception(errType As Errs)
-    Dim errDesc As String
-    errDesc = ErrsLookup(errType)
-    
-    Logger.Log errDesc, Level.Exception
-    Err.Raise vbObjectError + errType + 1, Description:=errDesc
-End Property

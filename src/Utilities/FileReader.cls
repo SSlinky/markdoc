@@ -15,6 +15,8 @@ Implements IIo
 '   Reads the contents of a file line by line.
 '-------------------------------------------------------------------------------
 
+' Private Backing Store
+'-------------------------------------------------------------------------------
 Private mFile As Integer
 Private mFileIsOpen As Boolean
 Private mNextLine As String

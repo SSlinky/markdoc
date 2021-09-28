@@ -33,15 +33,6 @@ Public Property Get IsStandardStyle() As Boolean
     IsStandardStyle = Not mIsTapeStyle
 End Property
 
-Public Property Get Pop() As Variant
-    If IsObject(mBase.Item(1)) Then
-        Set Pop = mBase.Item(1)
-    Else
-        Pop = mBase.Item(1)
-    End If
-    mBase.Remove 1
-End Property
-
 Public Property Get Peek() As Variant
 '   Same as Pop but doesn't remove the object.
     If IsObject(mBase.Item(1)) Then
@@ -77,6 +68,15 @@ Public Sub Push(obj As Variant)
         mBase.Add obj, Before:=1
     End If
 End Sub
+
+Public Function Pop() As Variant
+    If IsObject(mBase.Item(1)) Then
+        Set Pop = mBase.Item(1)
+    Else
+        Pop = mBase.Item(1)
+    End If
+    mBase.Remove 1
+End Function
 
 Public Sub SetTapeStyle()
     If Not mIsTapeStyle Then

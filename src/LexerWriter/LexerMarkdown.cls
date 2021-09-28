@@ -61,6 +61,18 @@ Public Sub ParseTree()
     ParseBlockTree docLevelBlock
 End Sub
 
+Public Sub WriteDocument()
+'   Writes the parsed markdown to a new document.
+
+    Dim mkdwn As BlockContainer
+    Set mkdwn = mBlockStack.Items(mBlockStack.Count)
+
+    Dim doc As Document
+    Set doc = Application.Documents.Add
+    
+    mkdwn.WriteContent(doc)
+End Sub
+
 
 ' Helpers
 '-------------------------------------------------------------------------------

@@ -56,7 +56,9 @@ End Sub
 
 Public Sub ParseTree()
 '   Phase 2: Parse the leaf blocks.
-
+    Dim doc As BlockContainer
+    Set doc = mBlockStack.Items(mBlockStack.Count)
+    ParseBlock doc
 End Sub
 
 
@@ -234,6 +236,38 @@ Private Sub ParseAddToCurrent(line As String)
     Else
         mCurrentBlockContent = mCurrentBlockContent & vbNewLine & line
     End If
+End Sub
+
+Private Sub ParseBlock(block As IBlock)
+'   Parses the block content if it's a leaf and calls this method
+'   recursively on its children. You should only need to pass the
+'   document level block to this sub.
+'
+'   Args:
+'       block: The block with content or children to be parsed.
+'
+'   Raises:
+'       BlockTypeMismatch if passed an object that is neither
+'       IBlockContainer nor IBlockContent.
+
+    If TypeOf block Is IBlockContainer Then
+        Dim container As IBlockContainer
+        Dim child As IBlock
+
+        Set container = block
+        For Each childc In container.Children
+            ParseBlock child
+        Next child
+
+    ElseIf TypeOf block Is IBlockContent Then
+        Dim content As IBlockContent
+        Set content = block
+        Debug.Print("Parsing... " & content.ContentText)
+    
+    Else
+        Throw = BlockTypeMismatch
+    End If
+
 End Sub
 
 

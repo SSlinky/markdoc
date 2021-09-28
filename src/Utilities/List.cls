@@ -24,12 +24,16 @@ Private mIsTapeStyle As Boolean
 ' Properties
 '-------------------------------------------------------------------------------
 Public Property Get IsTapeStyle() As Boolean
-'   Sets pushing and popping to FILO
+'   Pushing and popping is FILO.
+'    - New items are pushed after last item.
+'    - First item is popped.
     IsTapeStyle = mIsTapeStyle
 End Property
 
 Public Property Get IsStandardStyle() As Boolean
-'   Sets pushing and popping to FIFO
+'   Pushing and popping is FIFO.
+'    - New items are pushed before first item.
+'    - First item is popped.
     IsStandardStyle = Not mIsTapeStyle
 End Property
 
@@ -62,6 +66,7 @@ End Sub
 ' Methods
 '-------------------------------------------------------------------------------
 Public Sub Push(obj As Variant)
+'   Adds an item to the list before first or after last, depending on style.
     If mIsTapeStyle Or mBase.Count = 0 Then
         mBase.Add obj
     Else
@@ -70,6 +75,7 @@ Public Sub Push(obj As Variant)
 End Sub
 
 Public Function Pop() As Variant
+'   Returns the first item, popping it from the list.
     If IsObject(mBase.Item(1)) Then
         Set Pop = mBase.Item(1)
     Else
@@ -79,6 +85,7 @@ Public Function Pop() As Variant
 End Function
 
 Public Sub SetTapeStyle()
+'   Sets pushing and popping to FILO
     If Not mIsTapeStyle Then
         ReverseCollection
         mIsTapeStyle = True
@@ -86,6 +93,7 @@ Public Sub SetTapeStyle()
 End Sub
 
 Public Sub SetStandardStyle()
+'   Sets pushing and popping to FIFO
     If mIsTapeStyle Then
         ReverseCollection
         mIsTapeStyle = False

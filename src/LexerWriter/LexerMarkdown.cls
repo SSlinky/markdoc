@@ -71,6 +71,7 @@ Public Sub WriteDocument()
     Set doc = Application.Documents.Add
     
     mkdwn.WriteContent(doc)
+    mkdwn.StyleContent(doc)
 End Sub
 
 

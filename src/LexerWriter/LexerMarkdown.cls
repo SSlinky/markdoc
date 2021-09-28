@@ -283,11 +283,18 @@ End Sub
 ' Helpers: Parser State
 '-------------------------------------------------------------------------------
 Private Function IsInFencededCodeLeaf() As Boolean
-    IsInFencededCodeLeaf = Not mFencedCodeFence = ""
+'   Parser state flag is in fenced code.
+'
+'   Returns:
+'       True if the current block is a BlockLeafParagraph
+    IsInIndentedCodeLeaf = TypeOf ThisBlock Is FencedCodeBlock
 End Function
 
 Private Function IsInIndentedCodeLeaf() As Boolean
-'   True if the current code block is an indented code block.
+'   Parser state flag is in indented code.
+'
+'   Returns:
+'       True if the current code block is an indented code block.
     IsInIndentedCodeLeaf = TypeOf ThisBlock Is IndentedCodeBlock
 End Function
 

@@ -15,6 +15,7 @@ Option Explicit
 '-------------------------------------------------------------------------------
 
 Private mBlockStack As List
+Private mLinkReference As Object
 
 Private mFencedCodeFence As String
 Private mFencedCodeIndent As Long
@@ -35,6 +36,8 @@ End Property
 Private Sub Class_Initialize()
     Set mBlockStack = New List
     mBlockStack.SetStandardStyle
+
+    Set mLinkReference = CreateObject("Scripting.Dictionary")
 
 '   Push the document level block onto the stack.
     mBlockStack.Push New BlockContainer

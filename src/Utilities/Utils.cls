@@ -18,7 +18,7 @@ Const ASCII_NBSP As Long = 160
 Const ASCII_TAB As Long = 9
 
 
-'   String manipulation and interrogation.
+'   String manipulation.
 '-------------------------------------------------------------------------------
 Public Function CountSubstr(str As String, subStr As String) As Long
 '   Counts the number of times subStr is present in str.
@@ -177,11 +177,6 @@ Function CleanString(str As String, _
     CleanString = str
 End Function
 
-Function StrIn(str As String, subStr As String) As Boolean
-'   Helper for InStr for when you don't care where subStr is.
-    StrIn = InStr(str, subStr) > 0
-End Function
-
 Function TinyLTrim(line As String) As String
 '   Removes up to the first three spaces from the left of line.
 '
@@ -205,6 +200,28 @@ Function TinyLTrim(line As String) As String
     End If
 End Function
 
+
+'   String interrogation.
+'-------------------------------------------------------------------------------
+Function StrIn(str As String, subStr As String) As Boolean
+'   Helper for InStr for when you don't care where subStr is.
+    StrIn = InStr(str, subStr) > 0
+End Function
+
+Public Function EndsWithNewLine(str As String) As Boolean
+'   Tests the passed in string to see if it ends in a new line.
+'
+'   Args:
+'       str: The string to be tested.
+'
+'   Returns:
+'       True if str ends in a carriage return or line feed.
+
+    Select Case Right(str, 1)
+        Case Is vbCr, vbLf
+            EndsWithNewLine = True
+    End Select
+End Function
 
 '   Long Helpers
 '-------------------------------------------------------------------------------

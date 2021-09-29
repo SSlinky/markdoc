@@ -236,6 +236,12 @@ Private Sub ParseLineTypeAction( _
                 OpenSiblingBlock
                 ParseLineTypeAction lineCleaned, lineUnindented, indentLevel
             End If
+        
+'       Parse from inside an unknown block type.
+        Case Else
+            Dim newBlockType As BlockType
+            newBlockType = Parser.ParseUnknownBlockLine(lineUnindented)
+
     End Select 
 End Sub
 

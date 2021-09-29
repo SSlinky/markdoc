@@ -47,7 +47,7 @@ Public Function ReadNextLine() As String
         ReadNextLine = mNextLine
         mNextLine = ""
     Else
-        ReadNextLine = ReadNextLine
+        ReadNextLine = IoReadNextLine
     End If
 End Function
 
@@ -80,8 +80,7 @@ Private Function IoReadNextLine() As String
 '   Reads the next line in the file.
     If IsEoF Then Throw = Errs.FileReaderEOF
     Dim s As String
-    Line Input #mFile, s
-    IoReadNextLine = s
+    Line Input #mFile, IoReadNextLine
 End Function
 
 
@@ -102,4 +101,3 @@ End Function
 Public Function IIo_ReadNextLine() As String
     IIo_ReadNextLine = ReadNextLine
 End Function
-

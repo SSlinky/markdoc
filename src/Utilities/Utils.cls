@@ -147,7 +147,7 @@ Function CleanString(str As String, _
 
 '   Converts any single dirtyChar into a cleanChar.
 '   dirtyChars and cleanChars must be the same length.
-    If Len(dirtyChars) = Len(cleanChars) Then Throw = UtilsBadArguments
+    If Not Len(dirtyChars) = Len(cleanChars) Then Throw = UtilsBadArguments
     
 '   Set up defaults if nothing passed
     If dirtyChars = "" Then

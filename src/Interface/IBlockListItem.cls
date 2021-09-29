@@ -2,7 +2,7 @@ VERSION 1.0 CLASS
 BEGIN
   MultiUse = -1  'True
 END
-Attribute VB_Name = "IBlockList"
+Attribute VB_Name = "IBlockListItem"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
@@ -20,7 +20,7 @@ Public Property Get Parent() As List
     Throw = Errs.InterfaceUsedAsObject
 End Property
 
-Public Property Get IndentLevel() As Long
+Public Property Get IndentationLevel() As Long
 '   Getter for the number of characters this list is indented as an
 '   offset from its parent object. This property links back to the parent.
     Throw = Errs.InterfaceUsedAsObject

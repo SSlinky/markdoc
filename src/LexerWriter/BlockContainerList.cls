@@ -44,13 +44,13 @@ Public Property Get Children() As List
     Set Children = mChildren
 End Property
 
-Public Property Let IndentLevel(var As Long)
+Public Property Let IndentationLevel(var As Long)
 '   Can only be set once. Closest thing we'll get to a readonly modifier.
     If mIndentLevel = 0 Then mIndentLevel = var
 End Property
 
-Public Property Get IndentLevel() As Long
-    IndentLevel = mIndentLevel
+Public Property Get IndentationLevel() As Long
+    IndentationLevel = mIndentLevel
 End Property
 
 
@@ -72,7 +72,7 @@ Public Sub WriteContent(toDoc As Document)
 
     Dim docWritable As IDocWritable
     For Each docWritable In mChildren.Items
-        docWritable.WriteContent
+        docWritable.WriteContent toDoc
     Next
 End Sub
 
@@ -86,7 +86,7 @@ Public Sub StyleContent(styleDoc As Document)
     Dim docWritable As IDocWritable
     Do While mChildren.Items.Count > 0
         Set docWritable = mChildren.Pop
-        docWritable.StyleContent
+        docWritable.StyleContent styleDoc
     Loop
 End Sub
 
@@ -98,31 +98,31 @@ Public Property Get IBlockContainer_Children() As List
 End Property
 
 Public Sub IBlockContainer_WriteContent(toDoc As Document)
-    WriteContent
+    WriteContent toDoc
 End Sub
 
 Public Sub IBlockContainer_StyleContent(styleDoc As Document)
-    StyleContent
+    StyleContent styleDoc
 End Sub
 
 Public Sub IDocWritable_WriteContent(toDoc As Document)
-    WriteContent
+    WriteContent toDoc
 End Sub
 
 Public Sub IDocWritable_StyleContent(styleDoc As Document)
-    StyleContent
+    StyleContent styleDoc
 End Sub
 
 Public Property Get IBlockList_Children() As List
     Throw = Errs.NotImplementedException
 End Property
 
-Public Property Let IBlockList_IndentLevel(var As Long)
-    IndentLevel = var
+Public Property Let IBlockList_IndentationLevel(var As Long)
+    IndentationLevel = var
 End Property
 
-Public Property Get IBlockList_IndentLevel() As Long
-    IBlockList_IndentLevel = IndentLevel
+Public Property Get IBlockList_IndentationLevel() As Long
+    IBlockList_IndentationLevel = IndentationLevel
 End Property
 
 Public Property Let IBlock_IndentationLevel(var As Long)

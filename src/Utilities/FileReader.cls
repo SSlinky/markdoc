@@ -25,43 +25,35 @@ Private mFileName As String
 
 ' Properties
 '-------------------------------------------------------------------------------
-Public Property Get EoF() As Boolean
+Public Property Get IsEoF() As Boolean
 '   Returns True if the entire contents has been read.
-    IIo_EOF = EoF(mFile)
+    IsEoF = EOF(mFile)
 End Property
 
 
 ' Methods
 '-------------------------------------------------------------------------------
-Public Function ReadNextLine() As String
-'   Reads the next line in the file.
-    If IIo_EOF Then Throw = Errs.FileReaderEOF
-    Dim s As String
-    Line Input #mFile, s
-    ReadNextLine = s
-End Function
-
 Public Function PeekNextLine() As String
 '   Returns the next line to be read without advancing the pointer.
     If mNextLine = "" Then
         mNextLine = ReadNextLine
     End If
-    IIo_PeekNextLine = mNextLine
+    PeekNextLine = mNextLine
 End Function
 
 Public Function ReadNextLine() As String
 '   Returns the next line to be read and advances the pointer.
     If Not mNextLine = "" Then
-        IIo_NextLine = mNextLine
+        ReadNextLine = mNextLine
         mNextLine = ""
     Else
-        IIo_NextLine = ReadNextLine
+        ReadNextLine = ReadNextLine
     End If
 End Function
 
-Public Sub Open(fileName As String)
+Public Sub OpenStream(fileName As String)
 '   Interface implementation to open a file
-    If mFileIsOpen Then CloseFile
+    If mFileIsOpen Then CloseStream
 
     mFileName = fileName
     mFile = FreeFile
@@ -72,7 +64,7 @@ Public Sub Open(fileName As String)
     mFileIsOpen = True
 End Sub
 
-Public Sub CloseFile()
+Public Sub CloseStream()
 '   Closes the file if it is open.
     If Not mFileIsOpen Then Exit Sub
     Logger.Log "Closing (" & mFile & "): " & mFileName
@@ -82,14 +74,25 @@ Public Sub CloseFile()
 End Sub
 
 
+' Helpers
+'-------------------------------------------------------------------------------
+Private Function IoReadNextLine() As String
+'   Reads the next line in the file.
+    If IsEoF Then Throw = Errs.FileReaderEOF
+    Dim s As String
+    Line Input #mFile, s
+    IoReadNextLine = s
+End Function
+
+
 ' Interface Implementation
 '-------------------------------------------------------------------------------
-Public Property Get IIo_EoF() As Boolean
-    IIo_EoF = EoF
+Public Property Get IIo_EOF() As Boolean
+    IIo_EOF = IsEoF
 End Property
 
-Public Sub IIo_Open(fileName As String)
-    Call Open(fileName)
+Public Sub IIo_OpenStream(fileName As String)
+    OpenStream fileName
 End Sub
 
 Public Function IIo_PeekNextLine() As String
@@ -99,3 +102,4 @@ End Function
 Public Function IIo_ReadNextLine() As String
     IIo_ReadNextLine = ReadNextLine
 End Function
+

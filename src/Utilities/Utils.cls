@@ -20,20 +20,6 @@ Const ASCII_TAB As Long = 9
 
 '   String manipulation.
 '-------------------------------------------------------------------------------
-Public Function CountSubstr(str As String, subStr As String) As Long
-'   Counts the number of times subStr is present in str.
-    CountSubstr = (Len(str) - Len(Replace(str, subStr, ""))) / Len(subStr)
-End Function
-
-Public Function GetIndentationLevel(line As String) As Integer
-'   Gets indent by counting spaces preceding any non-space character.
-    line = Replace(line, Chr(ASCII_TAB), "    ")
-    If Trim(line) = "" Then Exit Function
-
-'   Append a character so we can trim to find left indentation.
-    GetIndentationLevel = Fix((Len(line) - Len(Trim(line & ".")) + 1) / 4)
-End Function
-
 Public Function UnindentLine(line As String, indentLevel As Long) As String
 '   Removes indentation from a line so that it can be parsed as if it was
 '   at base indent level.
@@ -194,15 +180,29 @@ Function TinyLTrim(line As String) As String
     Next i
 
     If i = 1 Then
-        TinyTrim = line
+        TinyLTrim = line
     Else
-        TinyTrim = Mid(line, i)
+        TinyLTrim = Mid(line, i)
     End If
 End Function
 
 
 '   String interrogation.
 '-------------------------------------------------------------------------------
+Public Function CountSubstr(str As String, subStr As String) As Long
+'   Counts the number of times subStr is present in str.
+    CountSubstr = (Len(str) - Len(Replace(str, subStr, ""))) / Len(subStr)
+End Function
+
+Public Function GetIndentationLevel(line As String) As Integer
+'   Gets indent by counting spaces preceding any non-space character.
+    line = Replace(line, Chr(ASCII_TAB), "    ")
+    If Trim(line) = "" Then Exit Function
+
+'   Append a character so we can trim to find left indentation.
+    GetIndentationLevel = Fix((Len(line) - Len(Trim(line & ".")) + 1) / 4)
+End Function
+
 Function StrIn(str As String, subStr As String) As Boolean
 '   Helper for InStr for when you don't care where subStr is.
     StrIn = InStr(str, subStr) > 0
@@ -218,7 +218,7 @@ Public Function EndsWithNewLine(str As String) As Boolean
 '       True if str ends in a carriage return or line feed.
 
     Select Case Right(str, 1)
-        Case Is vbCr, vbLf
+        Case Is = vbCr, vbLf
             EndsWithNewLine = True
     End Select
 End Function
@@ -242,7 +242,7 @@ End Function
 
 '   Block helpers
 '-------------------------------------------------------------------------------
-Public Sub CBlockLeaf(block As IBlock, castToBlock As IBlockLeaf)
+Public Sub CBlockLeaf(block As IBlockContent, castToBlock As IBlockLeaf)
 '   Casts a block of any type to an IBlockLeaf of type castToBlock.
 '   This may cause loss of data as paragraphs do not have children.
 
@@ -250,7 +250,7 @@ Public Sub CBlockLeaf(block As IBlock, castToBlock As IBlockLeaf)
 '       Copy across the leaf content.
         Dim leaf As IBlockLeaf
         Set leaf = block
-        castToBlock.Content = leaf.ContentText
+        castToBlock.ContentText = leaf.ContentText
         Set block = castToBlock
     ElseIf TypeOf block Is IBlockContainer Then
 '       Containers have no content.

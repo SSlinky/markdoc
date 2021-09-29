@@ -17,7 +17,7 @@ Option Explicit
 '-------------------------------------------------------------------------------
 
 
-Public Property Get EoF() As Boolean
+Public Property Get EOF() As Boolean
 '   Returns True if the entire contents has been read.
     Throw = Errs.InterfaceUsedAsObject
 End Property
@@ -32,7 +32,7 @@ Public Function PeekNextLine() As String
     Throw = Errs.InterfaceUsedAsObject
 End Function
 
-Public Sub Open(fileOrTextReference As String)
+Public Sub OpenStream(fileOrTextReference As String)
 '   Sets a reference to the text stream.
     Throw = Errs.InterfaceUsedAsObject
 End Sub

@@ -48,12 +48,12 @@ Private mIndentLevel As Long
 
 ' Properties
 '-------------------------------------------------------------------------------
-Public Property Let IndentLevel(var As Long)
+Public Property Let IndentationLevel(var As Long)
     mIndentLevel = var
 End Property
 
-Public Property Get IndentLevel() As Long
-    IndentLevel = mIndentLevel
+Public Property Get IndentationLevel() As Long
+    IndentationLevel = mIndentLevel
 End Property
 
 Public Property Get Children() As List
@@ -79,7 +79,7 @@ Public Sub WriteContent(toDoc As Document)
 
     Dim docWritable As IDocWritable
     For Each docWritable In mChildren.Items
-        docWritable.WriteContent
+        docWritable.WriteContent toDoc
     Next
 End Sub
 
@@ -93,7 +93,7 @@ Public Sub StyleContent(styleDoc As Document)
     Dim docWritable As IDocWritable
     Do While mChildren.Items.Count > 0
         Set docWritable = mChildren.Pop
-        docWritable.StyleContent
+        docWritable.StyleContent styleDoc
     Loop
 End Sub
 
@@ -105,19 +105,19 @@ Public Property Get IBlockContainer_Children() As List
 End Property
 
 Public Sub IBlockContainer_WriteContent(toDoc As Document)
-    WriteContent
+    WriteContent toDoc
 End Sub
 
 Public Sub IBlockContainer_StyleContent(styleDoc As Document)
-    StyleContent
+    StyleContent styleDoc
 End Sub
 
 Public Sub IDocWritable_WriteContent(toDoc As Document)
-    WriteContent
+    WriteContent toDoc
 End Sub
 
 Public Sub IDocWritable_StyleContent(styleDoc As Document)
-    StyleContent
+    StyleContent styleDoc
 End Sub
 
 Public Property Let IBlock_IndentationLevel(var As Long)

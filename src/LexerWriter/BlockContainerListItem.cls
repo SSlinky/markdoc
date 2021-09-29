@@ -43,7 +43,7 @@ Public Property Get Children() As List
     Set Children = mChildren
 End Property
 
-Public Property Get Parent() As IBlockList,
+Public Property Get Parent() As IBlockList
     If Not mIsCreated Then Throw = Errs.BlockNotCreated
     Set Parent = mParent
 End Property
@@ -53,13 +53,13 @@ Public Property Get IsCreated() As Boolean
     IsCreated = mIsCreated
 End Property
 
-Public Property Let IndentLevel(var As Long)
+Public Property Let IndentationLevel(var As Long)
     ' Do nothing or throw...?
 End Property
 
-Public Property Get IndentLevel() As Long
+Public Property Get IndentationLevel() As Long
     If Not mIsCreated Then Throw = Errs.BlockNotCreated
-    IndentLevel = Parent.IndentLevel
+    IndentationLevel = Parent.IndentationLevel
 End Property
 
 
@@ -96,27 +96,27 @@ Public Property Get IBlockContainer_Children() As List
 End Property
 
 Public Sub IBlockContainer_WriteContent(toDoc As Document)
-    WriteContent
+    WriteContent toDoc
 End Sub
 
 Public Sub IBlockContainer_StyleContent(styleDoc As Document)
-    StyleContent
+    StyleContent styleDoc
 End Sub
 
 Public Sub IDocWritable_WriteContent(toDoc As Document)
-    WriteContent
+    WriteContent toDoc
 End Sub
 
 Public Sub IDocWritable_StyleContent(styleDoc As Document)
-    StyleContent
+    StyleContent styleDoc
 End Sub
 
 Public Property Get IBlockListItem_Parent() As List
     Set IBlockListItem_Parent = Parent
 End Property
 
-Public Property Get IBlockListItem_IndentLevel() As Long
-    IBlockListItem_IndentLevel = IndentLevel
+Public Property Get IBlockListItem_IndentationLevel() As Long
+    IBlockListItem_IndentationLevel = IndentationLevel
 End Property
 
 Public Property Let IBlock_IndentationLevel(var As Long)

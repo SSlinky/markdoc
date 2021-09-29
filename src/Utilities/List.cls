@@ -40,9 +40,9 @@ End Property
 Public Property Get Peek() As Variant
 '   Same as Pop but doesn't remove the object.
     If IsObject(mBase.Item(1)) Then
-        Set Pop = mBase.Item(1)
+        Set Peek = mBase.Item(1)
     Else
-        Pop = mBase.Item(1)
+        Peek = mBase.Item(1)
     End If
 End Property
 

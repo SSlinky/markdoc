@@ -54,7 +54,7 @@ Public Sub ParseMarkdown(textStream As IIo)
     Do While Not textStream.EoF
         mLine = textStream.ReadNextLine
         ParseLineType mLine
-        mPreviousLine = line
+        mPreviousLine = mLine
     Loop
 End Sub
 
@@ -74,8 +74,8 @@ Public Sub WriteDocument()
     Dim doc As Document
     Set doc = Application.Documents.Add
     
-    mkdwn.WriteContent(doc)
-    mkdwn.StyleContent(doc)
+    mkdwn.WriteContent doc
+    mkdwn.StyleContent doc
 End Sub
 
 
@@ -102,13 +102,13 @@ End Sub
 
 Private Sub OpenSiblingBlock()
 '   Close the current block and open a child of the same parent.
-    Dim indetLevel As Long
+    Dim indlev As Long
 
     CloseBlock
-    indentLevel = ThisBlock.IndentationLevel
+    indlev = ThisBlock.IndentationLevel
 
     OpenChildBlock
-    ThisBlock.IndentationLevel = indentLevel
+    ThisBlock.IndentationLevel = indlev
 End Sub
 
 Private Function ThisBlock() As IBlock
@@ -120,19 +120,15 @@ Private Function ThisBlock() As IBlock
     End If
 End Function
 
-Private Sub CloseBlockLeaf()
-'   Closes the current block if it is a leaf.
-    Dim tb As IBlockLeaf
-    If Not TypeOf ThisBlock Is IBlockLeaf Then
-        Throw = BlockTypeMismatch
-    Else
-        Set tb = ThisBlock
-    End If
+Private Function ThisContentBlock() As IBlockContent
+'   Gets the current block container as an IBlockContent
+'   which enables use of the interface methods.
+'   Returns:
+'       The current block.
 
-'   Currently throws - need to update interface
-    tb.StyledContent.Text = mCurrentBlockContent
-    CloseBlock
-End Sub
+    Set ThisContentBlock = ThisBlock
+    
+End Function
 
 Private Sub SetThisBlockContent()
 '   Sets the content for the current block.
@@ -171,7 +167,7 @@ Private Sub ParseLineType(line As String)
         thisIndentLevel = ThisBlock.IndentationLevel
     Else
         unindentLine = Utils.UnindentLine(cleanLine, ThisBlock.IndentationLevel)
-        thisIndentLevel = Utils.GetIndentLevel(unindentLine)
+        thisIndentLevel = Utils.GetIndentationLevel(unindentLine)
     End If
 
     ParseLineTypeAction cleanLine, unindentLine, thisIndentLevel
@@ -191,7 +187,6 @@ Private Sub ParseLineTypeAction( _
 '
 '   Raises:
 '
-    Dim thisContentBlock As IBlockContent
 
 '   An indentation level reduction will always kick us out of the block.
 '   Except when the 
@@ -204,43 +199,40 @@ Private Sub ParseLineTypeAction( _
 '       Parsing from inside fenced code block.
         Case Is = IsInFencededCodeLeaf
 '           Check for a close fence string.
-            If Parser.IsCodeBlockFence(cleanLine, mFencedCodeFence) Then
+            If Parser.IsCodeBlockFence(lineCleaned, mFencedCodeFence) Then
                 CloseBlockLeaf
 '           Nothing else pulls us out of this block type.                
             Else
-                Set thisContentBlock = ThisBlock
-                thisFencedCodeBlock.ContentText = lineUnindented
+                ThisContentBlock.ContentText = lineUnindented
             End If
 
 '       Parsing from inside indented code block.
         Case Is = IsInIndentedCodeLeaf
-            Set thisContentBlock = ThisBlock
-            thisFencedCodeBlock.ContentText = lineUnindented
+            ThisContentBlock.ContentText = lineUnindented
 
 '       Parsing from inside a paragraph.
         Case Is = IsInParagraphLeaf
 '           Blank lines break the paragraph.
-            If unindentLine = vbNullString Then
+            If lineUnindented = vbNullString Then
                 OpenSiblingBlock
                 Utils.CBlockLeaf ThisBlock, New BlockLeafBlankLine
 '           A code fence breaks the paragraph.
-            ElseIf Parser.IsCodeBlockFence(unindentLine, mFencedCodeFence)
+            ElseIf Parser.IsCodeBlockFence(lineUnindented, mFencedCodeFence) Then
                 OpenSiblingBlock
                 Utils.CBlockLeaf ThisBlock, New BlockLeafFencedCode
-                ThisBlock.ContentText = unindentLine
-'           A new list breaks the paragraph.
-            ElseIf Parser.IsListItem(unindentLine)
+                ThisContentBlock.ContentText = lineUnindented
+'           A new list breaks the paragraph. NOT YET IMPLEMENTED
+            ' ElseIf Parser.IsListItem(lineUnindented) Then
 
 '           Nothing else pulls us out of this block type.
             Else
-                Set thisContentBlock = ThisBlock
-                thisFencedCodeBlock.ContentText = lineUnindented
+                ThisContentBlock.ContentText = lineUnindented
             End If        
 
 '       Parsing from inside a block of blank lines.
         Case Is = IsInBlankLineLeaf
 '           Non-blank line should open an unknown sibling block for parsing.
-            If Not unindentLine = vbNullString Then
+            If Not lineUnindented = vbNullString Then
                 OpenSiblingBlock
                 ParseLineTypeAction lineCleaned, lineUnindented, indentLevel
             End If
@@ -264,7 +256,7 @@ Private Sub ParseBlockTree(block As IBlock)
         Dim child As IBlock
 
         Set container = block
-        For Each childc In container.Children
+        For Each child In container.Children
             ParseBlockTree child
         Next child
 
@@ -287,7 +279,7 @@ Private Function IsInFencededCodeLeaf() As Boolean
 '
 '   Returns:
 '       True if the current block is a BlockLeafParagraph
-    IsInIndentedCodeLeaf = TypeOf ThisBlock Is FencedCodeBlock
+    IsInFencededCodeLeaf = TypeOf ThisBlock Is BlockLeafFencedCode
 End Function
 
 Private Function IsInIndentedCodeLeaf() As Boolean
@@ -295,7 +287,7 @@ Private Function IsInIndentedCodeLeaf() As Boolean
 '
 '   Returns:
 '       True if the current code block is an indented code block.
-    IsInIndentedCodeLeaf = TypeOf ThisBlock Is IndentedCodeBlock
+    IsInIndentedCodeLeaf = TypeOf ThisBlock Is BlockLeafIndentedCode
 End Function
 
 Private Function IsInParagraphLeaf() As Boolean

@@ -21,13 +21,13 @@ Public Property Get Children() As List
     Throw = Errs.InterfaceUsedAsObject
 End Property
 
-Public Property Let IndentLevel(var As Long)
+Public Property Let IndentationLevel(var As Long)
 '   Setter for the number of characters this list is indented as an
 '   offset from its parent object.
     Throw = Errs.InterfaceUsedAsObject
 End Property
 
-Public Property Get IndentLevel() As Long
+Public Property Get IndentationLevel() As Long
 '   Getter for the number of characters this list is indented as an
 '   offset from its parent object.
     Throw = Errs.InterfaceUsedAsObject

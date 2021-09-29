@@ -44,12 +44,12 @@ Public Property Get ContentText() As String
     ContentText = mContentText
 End Property
 
-Public Property Let IndentLevel(var As Long)
+Public Property Let IndentationLevel(var As Long)
     mIndentLevel = var
 End Property
 
-Public Property Get IndentLevel() As Long
-    IndentLevel = mIndentLevel
+Public Property Get IndentationLevel() As Long
+    IndentationLevel = mIndentLevel
 End Property
 
 
@@ -69,19 +69,19 @@ End Sub
 ' Interface Implementation
 '-------------------------------------------------------------------------------
 Public Sub IBlockLeaf_WriteContent(toDoc As Document)
-    WriteContent
+    WriteContent toDoc
 End Sub
 
 Public Sub IBlockLeaf_StyleContent(styleDoc As Document)
-    StyleContent
+    StyleContent styleDoc
 End Sub
 
 Public Sub IDocWritable_WriteContent(toDoc As Document)
-    WriteContent
+    WriteContent toDoc
 End Sub
 
 Public Sub IDocWritable_StyleContent(styleDoc As Document)
-    StyleContent
+    StyleContent styleDoc
 End Sub
 
 Public Property Let IBlockLeaf_ContentText(var As String)

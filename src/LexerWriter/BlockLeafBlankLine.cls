@@ -30,6 +30,14 @@ Public Property Get ContentText() As String
 '   Do nothing.
 End Property
 
+Public Property Let IndentationLevel(var As Long)
+'   Do nothing.
+End Property
+
+Public Property Get IndentationLevel() As Long
+'   Do nothing.
+End Property
+
 
 ' Constructor
 '-------------------------------------------------------------------------------
@@ -52,19 +60,19 @@ End Sub
 ' Interface Implementation
 '-------------------------------------------------------------------------------
 Public Sub IBlockLeaf_WriteContent(toDoc As Document)
-    WriteContent
+    WriteContent toDoc
 End Sub
 
 Public Sub IBlockLeaf_StyleContent(styleDoc As Document)
-    StyleContent
+    StyleContent styleDoc
 End Sub
 
 Public Sub IDocWritable_WriteContent(toDoc As Document)
-    WriteContent
+    WriteContent toDoc
 End Sub
 
 Public Sub IDocWritable_StyleContent(styleDoc As Document)
-    StyleContent
+    StyleContent styleDoc
 End Sub
 
 Public Property Let IBlockLeaf_ContentText(var As String)
@@ -81,4 +89,12 @@ End Property
 
 Public Property Get IBlockContent_ContentText() As String
     IBlockContent_ContentText = ContentText
+End Property
+
+Public Property Let IBlock_IndentationLevel(var As Long)
+    IndentationLevel = var
+End Property
+
+Public Property Get IBlock_IndentationLevel() As Long
+    IBlock_IndentationLevel = IndentationLevel
 End Property

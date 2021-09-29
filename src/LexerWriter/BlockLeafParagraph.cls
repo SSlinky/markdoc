@@ -7,7 +7,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
-Option Explicit
+OOption Explicit
 Implements IBlock
 Implements IBlockLeaf
 Implements IDocWritable
@@ -20,19 +20,12 @@ Implements IBlockContent
 '   Content and style may be spread over a series of
 '-------------------------------------------------------------------------------
 
-
-Private Type StyledContent
-    Text As String
-    Range As Range
-End Type
-
-
 ' Private Backing Store
 '-------------------------------------------------------------------------------
 Private mMyParagraph As Paragraph
 Private mContentText As String
 Private mIndentLevel As Long
-Private mInlineTexts As List
+Private mInlineConts As List
 
 
 ' Properties
@@ -46,12 +39,12 @@ Public Property Get ContentText() As String
     ContentText = mContentText
 End Property
 
-Public Property Let IndentLevel(var As Long)
+Public Property Let IndentationLevel(var As Long)
     mIndentLevel = var
 End Property
 
-Public Property Get IndentLevel() As Long
-    IndentLevel = mIndentLevel
+Public Property Get IndentationLevel() As Long
+    IndentationLevel = mIndentLevel
 End Property
 
 
@@ -63,29 +56,32 @@ Public Sub WriteContent(toDoc As Document)
 
     With toDoc
 '       Initialise new paragraph
-        If Len(.Content) > 1 Then
-            If Not Utils.EndsWithNewLine(.Content) Then
-                .Content.InsertAfter Text:=vbNewLine
+        If Len(.content) > 1 Then
+            If Not Utils.EndsWithNewLine(.content) Then
+                .content.InsertAfter Text:=vbNewLine
             End If
             .Paragraphs.Add
         End If
 
 '       Save the working paragraph for later styling.
-        Set mMyParagraph .Paragraphs(.Paragraphs.Count)
-
-'       Add content to the new paragraph.
-'       For now, just set directly and leave this place!
-        .Range(Len(.Content) - 1).Text = mContentText
-        Exit Sub
-        
-        Dim inlineText As StyledContent
-        For Each inlineText In mInlineTexts
-            With inlineText
-                Set .Range = .Range(Len(.Content) - 1)
-                .Range.Text = .Text
-            End With
-        Next inlineText
+        Set mMyParagraph = .Paragraphs(.Paragraphs.Count)
     End With
+
+'   Set ranges and write content to new paragraph.
+'   >>>>
+'   For now, directly set the content as inline content.
+'   This code should be removed as functionality developed.
+    Set mInlineConts = New List
+    mInlineConts.Push New InlineContent
+'   <<<<
+
+    Dim inlineCont As InlineContent
+    For Each inlineCont In mInlineConts
+        With inlineCont
+            Set .Range = toDoc.Range(Len(toDoc.content) - 1)
+            .Range.Text = .Text
+        End With
+    Next inlineCont
 End Sub
 
 Public Sub StyleContent(styleDoc As Document)
@@ -97,19 +93,19 @@ End Sub
 ' Interface Implementation
 '-------------------------------------------------------------------------------
 Public Sub IBlockLeaf_WriteContent(toDoc As Document)
-    WriteContent
+    WriteContent toDoc
 End Sub
 
 Public Sub IBlockLeaf_StyleContent(styleDoc As Document)
-    StyleContent
+    StyleContent styleDoc
 End Sub
 
 Public Sub IDocWritable_WriteContent(toDoc As Document)
-    WriteContent
+    WriteContent toDoc
 End Sub
 
 Public Sub IDocWritable_StyleContent(styleDoc As Document)
-    StyleContent
+    StyleContent styleDoc
 End Sub
 
 Public Property Let IBlockLeaf_ContentText(var As String)

@@ -36,7 +36,7 @@ Implements IBlockContainer
 '-------------------------------------------------------------------------------
 Private mChildren As List
 Private mContentText As String
-Private mIndentationLevel As Long
+Private mIndentLevel As Long
 
 
 ' Properties
@@ -55,11 +55,11 @@ Public Property Get Children() As List
 End Property
 
 Public Property Let IndentationLevel(var As Long)
-    mIndentationLevel = var
+    mIndentLevel = var
 End Property
 
 Public Property Get IndentationLevel() As Long
-    IndentationLevel = mIndentationLevel
+    IndentationLevel = mIndentLevel
 End Property
 
 
@@ -76,6 +76,9 @@ Public Sub WriteContent(toDoc As Document)
     Throw = Errs.NotImplementedException
 End Sub
 
+Public Sub StyleContent(styleDoc As Document)
+    Throw = Errs.NotImplementedException
+End Sub
 
 ' Interface Implementation
 '-------------------------------------------------------------------------------
@@ -86,7 +89,7 @@ End Property
 
 Public Sub IBlockContainer_WriteContent(toDoc As Document)
 '   This class should be converted to a specific container type.
-    WriteContent
+    WriteContent toDoc
 End Sub
 
 Public Sub IBlockContainer_StyleContent(styleDoc As Document)

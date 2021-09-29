@@ -72,3 +72,16 @@ Public Function IsCodeBlockFence( _
         End If
     End If
 End Function
+
+Public Function ParseUnknownBlockLine(line) As BlockType
+'   Parses a line as is without any assumptions.
+'   This line is typically the beginning of a new block.
+'
+'   Args:
+'       line: The line to be parsed.
+'
+'   Returns:
+'       The determined block type.
+
+    
+End Function

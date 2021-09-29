@@ -61,7 +61,24 @@ End Function
 
 Public Sub Open(fileName As String)
 '   Interface implementation to open a file
-    OpenFile fileName
+    If mFileIsOpen Then CloseFile
+
+    mFileName = fileName
+    mFile = FreeFile
+
+    Logger.Log "Opening (" & mFile & "): " & mFileName
+
+    Open mFileName For Input Access Read As #mFile
+    mFileIsOpen = True
+End Sub
+
+Public Sub CloseFile()
+'   Closes the file if it is open.
+    If Not mFileIsOpen Then Exit Sub
+    Logger.Log "Closing (" & mFile & "): " & mFileName
+
+    Close #mFile
+    mFileIsOpen = False
 End Sub
 
 

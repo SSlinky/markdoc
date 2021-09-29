@@ -29,8 +29,10 @@ End Type
 
 ' Private Backing Store
 '-------------------------------------------------------------------------------
+Private mMyParagraph As Paragraph
 Private mContentText As String
 Private mIndentLevel As Long
+Private mInlineTexts As List
 
 
 ' Properties
@@ -57,7 +59,33 @@ End Property
 '-------------------------------------------------------------------------------
 Public Sub WriteContent(toDoc As Document)
 '   This method MUST be called before StyleContent.
-    Throw = Errs.NotImplementedException
+    If mContentText = vbNullString Then Exit Sub
+
+    With toDoc
+'       Initialise new paragraph
+        If Len(.Content) > 1 Then
+            If Not Utils.EndsWithNewLine(.Content) Then
+                .Content.InsertAfter Text:=vbNewLine
+            End If
+            .Paragraphs.Add
+        End If
+
+'       Save the working paragraph for later styling.
+        Set mMyParagraph .Paragraphs(.Paragraphs.Count)
+
+'       Add content to the new paragraph.
+'       For now, just set directly and leave this place!
+        .Range(Len(.Content) - 1).Text = mContentText
+        Exit Sub
+        
+        Dim inlineText As StyledContent
+        For Each inlineText In mInlineTexts
+            With inlineText
+                Set .Range = .Range(Len(.Content) - 1)
+                .Range.Text = .Text
+            End With
+        Next inlineText
+    End With
 End Sub
 
 Public Sub StyleContent(styleDoc As Document)

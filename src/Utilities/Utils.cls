@@ -225,7 +225,7 @@ End Function
 
 '   Long Helpers
 '-------------------------------------------------------------------------------
-Public Function LBetween(n As Long, a As Long, b As Long) As Boolean
+Public Function Between(n As Long, a As Long, b As Long) As Boolean
 '   Returns True if n is between or equal to a and b
 '
 '   Args:

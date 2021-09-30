@@ -35,7 +35,7 @@ Public Property Set Range(var As Range)
     Set mRange = var
 End Property
 
-Public Property Get Range() As Range,
+Public Property Get Range() As Range
     Set Range = mRange
 End Property
 
@@ -43,6 +43,6 @@ Public Property Set Style(var As Style)
     Set mStyle = var
 End Property
 
-Public Property Get Style() As Style,
+Public Property Get Style() As Style
     Set Style = mStyle
 End Property

@@ -43,6 +43,7 @@ End Enum
 ' Properties
 '-------------------------------------------------------------------------------
 Public Property Let Exception(errType As Errs)
+    Attribute Item.VB_UserMemId = 0
     Dim errDesc As String
     Dim logLevel As Level
 

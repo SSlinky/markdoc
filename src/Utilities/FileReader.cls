@@ -31,6 +31,13 @@ Public Property Get IsEoF() As Boolean
 End Property
 
 
+' Constructor
+'-------------------------------------------------------------------------------
+Private Sub Class_Terminate()
+    CloseStream
+End Sub
+
+
 ' Methods
 '-------------------------------------------------------------------------------
 Public Function PeekNextLine() As String
@@ -58,10 +65,10 @@ Public Sub OpenStream(fileName As String)
     mFileName = fileName
     mFile = FreeFile
 
-    Logger.Log "Opening (" & mFile & "): " & mFileName, Level.Information
-    If IsEoF Then Throw = Errs.FileReaderWarnEmptyFile
-
     Open mFileName For Input Access Read As #mFile
+    Logger.Log "Opened (" & mFile & "): " & mFileName, Level.Information
+    If IsEoF Then Throw = Errs.FileReaderWarnEmptyFile
+    
     mFileIsOpen = True
 End Sub
 

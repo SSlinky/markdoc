@@ -262,7 +262,7 @@ Public Function Between(n As Long, a As Long, b As Long) As Boolean
 '   Returns:
 '       True if n between or equal to a or b.
 '
-    LBetween = n >= a And n <= b   
+    Between = n >= a And n <= b   
 End Function
 
 
@@ -277,8 +277,17 @@ Public Sub CBlockLeaf(block As IBlockContent, castToBlock As IBlockLeaf)
 '
     Logger.Log "Casting " & TypeName(block) & " to " & TypeName(castToBlock)
 
+    If TypeOf block Is BlockLeafHeading Then
+        If Not TypeOf castToBlock Is BlockLeafHeading Then
+            Dim hdg As BlockLeafHeading
+            Set hdg = block
+            If hdg.HeadingLevel > 0 Then
+                Throw = Errs.UtilsWarnDestructiveCast
+            End If
+        End If
+    End If
+
     If TypeOf block Is IBlockLeaf Then
-        If TypeOf block Is BlockLeafHeading And TypeOf castToBlock IsNot BlockLeafHeading Then Debug.Print ""
 '       Copy across the leaf content.
         Dim leaf As IBlockLeaf
         Set leaf = block

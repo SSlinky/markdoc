@@ -7,7 +7,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
-OOption Explicit
+Option Explicit
 Implements IBlock
 Implements IBlockLeaf
 Implements IDocWritable

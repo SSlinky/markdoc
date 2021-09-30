@@ -142,5 +142,5 @@ End Function
 
 Sub test_WarningLevel()
     Logger.Log "Default message level."
-    Throw.Exception = Errs.WarnEmptyFile
+    Throw.Exception = Errs.FileReaderWarnEmptyFile
 End Sub

@@ -223,6 +223,26 @@ Public Function EndsWithNewLine(str As String) As Boolean
     End Select
 End Function
 
+Public Function Regex(patternString As String, testString As String) As Object
+'   Executes a regex returning any and all matches.
+'   Funcionality can be moved to a dedicated class if more complexity required.
+'
+'   Args:
+'       patternString: The pattern to evaluate the testString with.
+'       testString: The string to be evaluated.
+'
+'   Returns:
+'       The regex match object which supports .Count and default method .Item(n)
+'
+    Dim re As Object
+    Set re = CreateObject("VBScript.RegExp")
+    With re
+        .Pattern = patternString
+        .Global = True
+        Set Regex = .Execute(testString)
+    End With
+End Function
+
 '   Long Helpers
 '-------------------------------------------------------------------------------
 Public Function Between(n As Long, a As Long, b As Long) As Boolean

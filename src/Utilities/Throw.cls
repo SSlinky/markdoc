@@ -19,8 +19,9 @@ Public Enum Errs
 '   have an equivalent description in ErrsLookup.
 
 '   Application
-    NotImplementedException
     InterfaceUsedAsObject
+    NotImplementedException
+    WarnNotImplementedException
 
 '   Block
     BlockNotCreated
@@ -64,10 +65,12 @@ End Property
 '-------------------------------------------------------------------------------
 Private Function ErrsLookup(errType As Errs) As String
     Select Case errType
-        Case Is = Errs.NotImplementedException
-            ErrsLookup = "Not yet implemented."
         Case Is = Errs.InterfaceUsedAsObject
             ErrsLookup = "Interface cannot be concrete type."
+        Case Is = Errs.WarnNotImplementedException
+            ErrsLookup = "Not yet implemented."
+        Case Is = Errs.NotImplementedException
+            ErrsLookup = "Not yet implemented."
         Case Is = Errs.BlockNotCreated
             ErrsLookup = "Block must be created using Create method."
         Case Is = Errs.BlockTypeMismatch
@@ -101,7 +104,8 @@ Private Function ErrsLevelLookup(errType As Errs) As Level
 '       A logger level.
 '
     Select Case errType
-        Case Is = Errs.FileReaderWarnEmptyFile, _
+        Case Is = Errs.WarnNotImplementedException, _
+                  Errs.FileReaderWarnEmptyFile, _
                   Errs.LexerWarnNothingToWrite, _
                   Errs.UtilsWarnDestructiveCast
             ErrsLevelLookup = Level.Warning

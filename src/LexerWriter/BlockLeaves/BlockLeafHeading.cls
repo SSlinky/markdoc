@@ -50,13 +50,13 @@ Public Property Get IndentationLevel() As Long
     IndentationLevel = mIndentLevel
 End Property
 
-Public Property Let Level(var As Long)
+Public Property Let HeadingLevel(var As Long)
     If Utils.Between(var, 0, 6) Then
         mHeadngLevel = var
     End If
 End Property
 
-Public Property Get Level() As Long
+Public Property Get HeadingLevel() As Long
     HeadngLevel = mHeadngLevel
 End Property
 

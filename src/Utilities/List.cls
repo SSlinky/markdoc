@@ -51,7 +51,15 @@ Public Property Get Count() As Long
 End Property
 
 Public Property Get Items() As Collection
+    Attribute Items.VB_UserMemId = 0
     Set Items = mBase
+End Property
+
+Public Property Get Enumerator() As IUnknown
+Attribute Enumerator.VB_Description = "Gets an enumerator that iterates through the List."
+Attribute Enumerator.VB_UserMemId = -4
+'Gets an enumerator that iterates through the List.
+    Set Enumerator = mBase.[_NewEnum]    
 End Property
 
 

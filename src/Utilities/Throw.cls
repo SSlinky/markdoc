@@ -30,6 +30,9 @@ Public Enum Errs
     FileReaderEOF
     FileReaderWarnEmptyFile
 
+'   Lexer
+    LexerWarnNothingToWrite    
+
 '   Parser
     ParserIndentLevelOutsideRange
     
@@ -43,7 +46,7 @@ End Enum
 ' Properties
 '-------------------------------------------------------------------------------
 Public Property Let Exception(errType As Errs)
-    Attribute Item.VB_UserMemId = 0
+    Attribute Exception.VB_UserMemId = 0
     Dim errDesc As String
     Dim logLevel As Level
 
@@ -73,6 +76,8 @@ Private Function ErrsLookup(errType As Errs) As String
             ErrsLookup = "End of file."
         Case Is = Errs.FileReaderWarnEmptyFile
             ErrsLookup = "File is empty."
+        Case Is = Errs.LexerWarnNothingToWrite
+            ErrsLookup = "Cannot write. No markdown parsed."
         Case Is = Errs.ParserIndentLevelOutsideRange
             ErrsLookup = "Cannot set new indentation level."
         Case Is = Errs.UtilsBadArguments
@@ -97,6 +102,7 @@ Private Function ErrsLevelLookup(errType As Errs) As Level
 '
     Select Case errType
         Case Is = Errs.FileReaderWarnEmptyFile, _
+                  Errs.LexerWarnNothingToWrite, _
                   Errs.UtilsWarnDestructiveCast
             ErrsLevelLookup = Level.Warning
         Case Else

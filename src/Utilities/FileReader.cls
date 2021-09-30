@@ -58,8 +58,8 @@ Public Sub OpenStream(fileName As String)
     mFileName = fileName
     mFile = FreeFile
 
-    Logger.Log "Opening (" & mFile & "): " & mFileName
-    If IsEoF Then Throw = Errs.WarnEmptyFile
+    Logger.Log "Opening (" & mFile & "): " & mFileName, Level.Information
+    If IsEoF Then Throw = Errs.FileReaderWarnEmptyFile
 
     Open mFileName For Input Access Read As #mFile
     mFileIsOpen = True
@@ -68,7 +68,7 @@ End Sub
 Public Sub CloseStream()
 '   Closes the file if it is open.
     If Not mFileIsOpen Then Exit Sub
-    Logger.Log "Closing (" & mFile & "): " & mFileName
+    Logger.Log "Closing (" & mFile & "): " & mFileName, Level.Information
 
     Close #mFile
     mFileIsOpen = False

@@ -85,6 +85,8 @@ Private Sub CloseBlock()
 '   Pops the current block and discards the reference
     Dim discard As IBlock
     Set discard = mBlockStack.Pop
+
+    Logger.Log "Closed block (" & mBlockStack.Count & ")"
 End Sub
 
 Private Sub OpenChildBlock()
@@ -98,6 +100,8 @@ Private Sub OpenChildBlock()
 '   Associate with current, push to stack
     currentBlock.Children.Push newChildBlock
     mBlockStack.Push newChildBlock
+
+    Logger.Log "Opened child block (" & mBlockStack.Count & ")"
 End Sub
 
 Private Sub OpenSiblingBlock()
@@ -109,6 +113,8 @@ Private Sub OpenSiblingBlock()
 
     OpenChildBlock
     ThisBlock.IndentationLevel = indlev
+
+    Logger.Log "Opened sibling block (" & mBlockStack.Count & ")"
 End Sub
 
 Private Function ThisBlock() As IBlock
@@ -310,7 +316,7 @@ Private Sub ParseBlockTree(block As IBlock)
         Logger.Log "Parsing... " & content.ContentText
     
     Else
-        Throw = BlockTypeMismatch
+        Throw = Errs.BlockTypeMismatch
     End If
 
 End Sub

@@ -235,12 +235,18 @@ Public Function Regex(patternString As String, testString As String) As Object
 '       The regex match object which supports .Count and default method .Item(n)
 '
     Dim re As Object
+    Dim mo As Object
+
     Set re = CreateObject("VBScript.RegExp")
     With re
         .Pattern = patternString
         .Global = True
-        Set Regex = .Execute(testString)
+        Set mo = .Execute(testString)
+        Set Regex = mo
     End With
+
+    Logger.Log "RegEx " & mo.Count & " matches " & _
+        patternString & " with " & testString
 End Function
 
 '   Long Helpers
@@ -264,8 +270,15 @@ End Function
 '-------------------------------------------------------------------------------
 Public Sub CBlockLeaf(block As IBlockContent, castToBlock As IBlockLeaf)
 '   Casts a block of any type to an IBlockLeaf of type castToBlock.
+'
+'   Args:
+'       block: The block to be cast.
+'       castToBlock: The block to cast to.
+'
+    Logger.Log "Casting " & TypeName(block) & " to " & TypeName(castToBlock)
 
     If TypeOf block Is IBlockLeaf Then
+        If TypeOf block Is BlockLeafHeading And TypeOf castToBlock IsNot BlockLeafHeading Then Debug.Print ""
 '       Copy across the leaf content.
         Dim leaf As IBlockLeaf
         Set leaf = block

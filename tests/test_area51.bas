@@ -1,185 +1,146 @@
 Attribute VB_Name = "test_area51"
 Option Explicit
 
-Sub fhawl()
-    Dim o As New List
-    Dim r As Range
-    Dim x As Range
-    
-    With ActiveDocument
-        Set r = .Range(0)
-        Set x = .Range(Len(.Content) - 1)
-        r = "content"
-        x = "xContentx"
-    End With
-    
-    o.Push "abc"
-    o.Push r
-    
-    Set r = Nothing
-    
-    o.Items.Remove 1
-    Set r = o.Pop
-    Debug.Print r.Text
-End Sub
-
-Sub test_InlineSection_WriteAndStyleContent(styleDoc As Document)
-'    Dim inSec As InlineSection
-'    Set inSec = New InlineSection
+Public Function ParseHeadingLevel(headingText As String) As Long
+'   Determines the heading level from the raw markdown text.
+'   The passed string is assumed to be a valid heading, therefore no checks
+'   are done so results may be unexpected if passing an unvalidated string.
 '
-'    With inSec
-'        .Text = "So strong and emphasised!"
-'        With .CharacterStyles
-'            .Push "Normal"
-'            .Push "Emphasis"
-'            .Push "Strong"
-'        End With
-'        .ISection_WriteContent
-'        .ISection_StyleContent
-'    End With
-End Sub
+'   Args:
+'       headingText: The raw markdown text that describes the heading.
+'
+'   Returns:
+'       The length of the first string of non-space characters.
 
-Sub test_InterfaceRaisesError()
-'    Dim sect As New ISection
-'    sect.WriteContent
-End Sub
+    ParseHeadingLevel = Len(Split(Trim(headingText), " ")(0)) - 1
+End Function
 
-Sub test_Exception()
-    Throw = Errs.NotImplementedException
-End Sub
 
-Sub test_FileReader()
-    Dim fn As String
-    fn = ThisDocument.Path & "\README.md"
-    
-    Dim fr As IIo
-    Set fr = New IoFileReader
-    
-    fr.SetReference fn
-    Debug.Print "next", fr.NextLine
-    Debug.Print "next", fr.NextLine
-    Debug.Print "peek", fr.PeekNextLine
-    Debug.Print "next", fr.NextLine
-    
-    fr.SetReference fn
-    Debug.Print "peek", fr.PeekNextLine
-    Debug.Print "peek", fr.PeekNextLine
-    Debug.Print "next", fr.NextLine
-    
-'    fr.CloseFile
-    
-End Sub
+Function RegexTest() As Object
+'    Const PAT As String = "^\s{,3}(?P<lvl>#{1,6})\s+(?P<heading>.*?)\s*(?:#*\s*)?$"
+'    Const PAT As String = "^\s*#*\s+(.*?)\s*(?:#*\s*)?$" ' works!
+'    Const PAT As String = "^\s{,3}(#{1,6})\s+(.*?)\s*(?:#*\s*)?$" ' works!
+    Const PAT As String = "^\s{0,3}(#{1,6})\s+(.*?)\s*(?:#*\s*)?$"
+    Dim t1 As String
 
-Sub test_FileReader_Eof()
-    Dim fn As String
-    fn = ThisDocument.Path & "\README.md"
+    t1 = "    # Simple Heading"
     
-    Dim fr As IIo
-    Set fr = New IoFileReader
-    fr.SetReference fn
+    Dim re As Object
+    Set re = CreateObject("VBScript.RegExp")
+    re.Pattern = PAT
     
-    Do While Not fr.EOF
-        fr.NextLine
-    Loop
+    Dim m As Object
+    Dim x As Object
+    Dim s As Long
+    Dim a As Long
     
-    Debug.Print "File read completely"
+    Set m = re.Execute(t1)
+    Debug.Print "Matching " & t1
+    For Each x In m
+        Debug.Print x.Value
+        a = x.Submatches.Count - 1
+        For s = 0 To a
+            Debug.Print "    " & s & ": " & x.Submatches(s)
+        Next s
+    Next x
     
-    fr.NextLine
+    If m.Count Then Debug.Print "matched!"
+    Set RegexTest = m
     
-End Sub
+End Function
 
-Sub test_ClassMutability()
-    Dim x As IBlockContainer
-    Set x = New BlockContainerList
-    x.Children.Push New BlockContainerQuote
-    
-    Debug.Print TypeName(x), "Children: " & x.Children.Count
-    Set x = CBlockContainer(x, New BlockLeafBlankLine)
-    
-    Debug.Print TypeName(x), "Children: " & x.Children.Count
-End Sub
+Public Function IsHeading(line As String, matches As Object) As Boolean
+'   Detects a heading.
+'
+'   Args:
+'       line: The line of text to parse.
+'       matches: The regexp match object to save calling this multiple times.
+'
+'   Returns:
+'
+'   Raises:
+'       True if a code block fence was detected. Also updates fence.
 
-Function CBlockContainer(castObject As IBlockContainer, asObject As IBlockContainer) As IBlockContainer
-'   Testing cast of one container type to another.
-    With castObject.Children
-        Do While .Count > 0
-            asObject.Children.Push .Pop
-        Loop
+    Const HEADING_PATTERN As String = "^\s{0,3}(#{1,6})\s+(.*?)\s*(?:#*\s*)$"
+    Set matches = Regex(HEADING_PATTERN, line)
+    IsHeading = matches.Count > 0
+End Function
+
+Public Function Regex(patternString As String, testString As String) As Object
+'   Executes a regex returning matches if any.
+'
+'   Args:
+'       pattern:
+'       toTest:
+'
+'   Returns:
+'       The regex match object.
+
+    Dim re As Object
+    Set re = CreateObject("VBScript.RegExp")
+    With re
+        .Pattern = patternString
+        Set Regex = .Execute(testString)
     End With
-    
-    Set CBlockContainer = asObject
 End Function
 
-Sub test_ListStyle()
-    Dim i As Long
-    Dim x As New List
+Public Sub test_IsHeading()
+
+    Dim matches As Object
     
-    Debug.Print "Standard: " & x.IsStandardStyle
-    
-    For i = 1 To 3
-        Debug.Print "Pushing: " & i
-        x.Push i
-    Next i
-    
-    Do While x.Count > 0
-        Debug.Print "Popping: " & x.Pop
-    Loop
-    
-    Debug.Print vbNewLine & "-----" & vbNewLine
-    Debug.Print "Standard: " & x.IsStandardStyle
-    
-        For i = 1 To 3
-        Debug.Print "Pushing: " & i
-        x.Push i
-    Next i
-    
-    Debug.Print vbNewLine & "Reversing..."
-    x.SetTapeStyle
-    Debug.Print "Standard: " & x.IsStandardStyle & vbNewLine
-    
-    Do While x.Count > 0
-        Debug.Print "Popping: " & x.Pop
-    Loop
-    
+    If IsHeading("   ###### Simple Heading   ########   x ####", matches) Then
+        With matches(0)
+            Debug.Print .Submatches(0), .Submatches(1)
+        End With
+    End If
 End Sub
 
-Function IsFencedCodeBlockStart(line As String) As Boolean
-'   Must include a ~ or a `
-    If InStr(line, "~") + InStr(line, "`") = 0 Then Exit Function
+
+
+Sub test_Cast()
+
+    Dim b As IBlock
+    Dim x As IBlock
     
-'   Simple detect code block fence. This will need to be improved later to
-'   account for indentation level.
-    Dim i As Long
-    Dim p As Long
-    Dim firstDetect As Long
+    Set b = New BlockContainer
+    Set x = b
     
-    Dim c As String * 1
-    Dim f As String * 1
+    Utils.CBlockLeaf b, New BlockLeafHeading
+    Debug.Print TypeName(b)
+    Debug.Print "Is BlockLeafHeading: " & TypeOf b Is BlockLeafHeading
+    Debug.Print "Reference match: " & (b Is x) & vbNewLine
     
+'    Dim bl As New List
+'    bl.Push New BlockContainer
+'    Debug.Print TypeName(bl.Peek)
+'
+'    Utils.CBlockLeaf bl.Peek, New BlockLeafHeading
+'    Debug.Print TypeName(bl.Peek)
+'    Debug.Print "Is BlockLeafHeading: " & TypeOf bl.Peek Is BlockLeafHeading
+'
+'    Utils.CBlockLeaf bl.Items(1), New BlockLeafHeading
+'    Debug.Print "Is BlockLeafHeading: " & TypeOf bl.Items(1) Is BlockLeafHeading
     
-    For i = 1 To Len(line)
-        c = Mid(line, i, 1)
-        Select Case c
-            Case Is = " "
-'               Check the fence character
-                If Not f = Chr(0) Then Exit For
-            Case Is = "~", "`"
-                Select Case f
-                    Case Is = Chr(0)
-                        f = c
-                        p = i
-                    Case Is = c
-                    Case Else
-                        Exit For
-                End Select
-            Case Else
-                Exit For
-        End Select
-    Next i
+    Dim col As New Collection
+    Set b = New BlockContainer
+    col.Add b
     
-    If p = 0 Then Exit Function
-    If i - p < 3 Then Exit Function
-    
-    Debug.Print Mid(line, p, i - p), p - 1
-    IsFencedCodeBlockStart = True
+    Utils.CBlockLeaf col.Item(1), New BlockLeafHeading
+    Debug.Print TypeName(col.Item(1))
+    Debug.Print "Collection item is BlockLeafHeading: " & TypeOf col.Item(1) Is BlockLeafHeading
+    Debug.Print "b item is BlockLeafHeading: " & TypeOf b Is BlockLeafHeading
+    Debug.Print "Reference match: " & (b Is col.Item(1))
+End Sub
+
+Sub Cast(x As IBlock, toX As IBlockLeaf)
+    Set x = toX
+End Sub
+
+Function GetIBlock(x As IBlock) As IBlock
+    Set GetIBlock = x
 End Function
+
+Sub test_WarningLevel()
+    Logger.Log "Default message level."
+    Throw.Exception = Errs.WarnEmptyFile
+End Sub

@@ -28,14 +28,15 @@ Public Enum Errs
 
 '   File Reader
     FileReaderEOF
-    WarnEmptyFile
+    FileReaderWarnEmptyFile
 
 '   Parser
     ParserIndentLevelOutsideRange
     
 '   Utility
-    UtilsStringIndentNotBlank
     UtilsBadArguments
+    UtilsStringIndentNotBlank
+    UtilsWarnDestructiveCast
 End Enum
 
 
@@ -69,14 +70,16 @@ Private Function ErrsLookup(errType As Errs) As String
             ErrsLookup = "Block type mismatch."
         Case Is = Errs.FileReaderEOF
             ErrsLookup = "End of file."
-        Case Is = Errs.WarnEmptyFile
-            ErrsLookup = "File is empty!"
+        Case Is = Errs.FileReaderWarnEmptyFile
+            ErrsLookup = "File is empty."
         Case Is = Errs.ParserIndentLevelOutsideRange
             ErrsLookup = "Cannot set new indentation level."
-        Case Is = Errs.UtilsStringIndentNotBlank
-            ErrsLookup = "String indentation must be white space."
         Case Is = Errs.UtilsBadArguments
             ErrsLookup = "Arguments passed not valid."
+        Case Is = Errs.UtilsStringIndentNotBlank
+            ErrsLookup = "String indentation must be white space."
+        Case Is = Errs.UtilsWarnDestructiveCast
+            ErrsLookup = "Cast resulted in loss of information."
         Case Else
             ErrsLookup = "Internal error " & errType & "."
     End Select
@@ -92,7 +95,8 @@ Private Function ErrsLevelLookup(errType As Errs) As Level
 '       A logger level.
 '
     Select Case errType
-        Case Is = Errs.WarnEmptyFile
+        Case Is = Errs.FileReaderWarnEmptyFile, _
+                  Errs.UtilsWarnDestructiveCast
             ErrsLevelLookup = Level.Warning
         Case Else
             ErrsLevelLookup = Level.Exception

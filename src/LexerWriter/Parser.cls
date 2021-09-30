@@ -105,8 +105,10 @@ Public Function ParseUnknownBlockLine(line As String, matches As Object) As Bloc
     Select Case True
         Case Is = IsHeading(line, matches)
             ParseUnknownBlockLine = BlockType.Heading
+            Logger.Log "Parse resolved to: Heading"
         Case Else
             ParseUnknownBlockLine = BlockType.Paragraph
+            Logger.Log "Parse resolved to: Paragraph"
     End Select
 End Function
 

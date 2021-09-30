@@ -116,7 +116,7 @@ Private Function ThisBlock() As IBlock
     Dim tb As Variant
     Set tb = mBlockStack.Peek
     If TypeOf tb Is IBlock Then
-        Set ThisBlock = mBlockStack.Peek
+        Set ThisBlock = tb
     End If
 End Function
 

@@ -10,8 +10,8 @@ Attribute VB_Exposed = False
 Option Explicit
 
 '-------------------------------------------------------------------------------
-'   Class: Parser
-'   Static functions that parse text without relying on state.
+'   Static Class: Parser
+'   Functions that parse text without relying on state.
 '   Lines should always be passed unindented unless otherwise stated.
 '-------------------------------------------------------------------------------
 
@@ -30,6 +30,7 @@ Public Function IsCodeBlockFence( _
 '
 '   Returns:
 '       True if a code block fence was detected. Also updates fence.
+
     Const VALID_FENCE_CHARS As String = "`~"
 
 '   Remove non-indent level spacing and test minimum length.
@@ -73,15 +74,52 @@ Public Function IsCodeBlockFence( _
     End If
 End Function
 
-Public Function ParseUnknownBlockLine(line) As BlockType
+Public Function IsHeading(line As String, matches As Object) As Boolean
+'   Detects a heading.
+'
+'   Args:
+'       line: The line of text to parse.
+'       matches: The regexp match object passed byRef to save multiple calls.
+'
+'   Returns:
+'
+'   Raises:
+'       True if a code block fence was detected. Also updates fence.
+
+    Const HEADING_PATTERN As String = "^\s{0,3}(#{1,6})\s+(.*?)\s*(?:#*\s*)$"
+    Set matches = Utils.Regex(HEADING_PATTERN, line)
+    IsHeading = matches.Count > 0
+End Function
+
+Public Function ParseUnknownBlockLine(line As String, matches As Object) As BlockType
 '   Parses a line as is without any assumptions.
 '   This line is typically the beginning of a new block.
 '
 '   Args:
 '       line: The line to be parsed.
+'       matches: The regexp match object passed byRef to save multiple calls.
 '
 '   Returns:
 '       The determined block type.
 
-    
+    Select Case True
+        Case Is = IsHeading(line, matches)
+            ParseUnknownBlockLine = BlockType.Heading
+        Case Else
+            ParseUnknownBlockLine = BlockType.Paragraph
+    End Select
+End Function
+
+Public Function ParseHeadingLevel(headingText As String) As Long
+'   Determines the heading level from the raw markdown text.
+'   The passed string is assumed to be a valid heading, therefore no checks
+'   are done so results may be unexpected if passing an unvalidated string.
+'
+'   Args:
+'       headingText: The raw markdown text that describes the heading.
+'
+'   Returns:
+'       The length of the first string of non-space characters.
+
+    ParseHeadingLevel = Len(Split(Trim(headingText), " ")(0)) - 1
 End Function

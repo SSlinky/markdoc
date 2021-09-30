@@ -8,8 +8,9 @@ Public Enum BlockType
     Quote
 
 '   Leaves
+    Heading
     BlankLine
+    Paragraph
     FencedCode
     IndentedCode
-    Paragraph
 End Enum

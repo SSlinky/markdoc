@@ -168,6 +168,40 @@ Private Sub SetThisBlockContent()
     End If
 End Sub
 
+Private Function BlockTreeHasContent(currentBlock As IBlock) As Boolean
+'   Checks whether anything exists to write.
+'
+'   Args:
+'       currentBlock: The current block to test.
+'
+'   Returns:
+'       True if something exists to write to a document.
+
+    Dim contentBlock As IBlockContent
+    Dim containerBlock As IBlockContainer
+    Dim childBlock As IBlock
+
+'   Test the current block.
+    If TypeOf currentBlock Is IBlockContent Then
+        Set contentBlock = currentBlock
+        If Not contentBlock.ContentText = vbNullString Then
+            BlockTreeHasContent = True
+            Exit Function
+        End If
+    End If
+
+'   Test children.
+    If TypeOf currentBlock Is IBlockContainer Then
+        Set containerBlock = currentBlock
+        For Each childBlock In containerBlock.Children
+            If BlockTreeHasContent(childBlock) Then
+                BlockTreeHasContent = True
+                Exit Function
+            End If
+        Next childBlock
+    End If
+End Function
+
 ' Helpers: Parser
 '-------------------------------------------------------------------------------
 Private Sub ParseLineType(line As String)

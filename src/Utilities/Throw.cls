@@ -43,10 +43,15 @@ End Enum
 '-------------------------------------------------------------------------------
 Public Property Let Exception(errType As Errs)
     Dim errDesc As String
+    Dim logLevel As Level
+
     errDesc = ErrsLookup(errType)
+    logLevel = ErrsLevelLookup(errType)
     
-    Logger.Log errDesc, Level.Exception
-    Err.Raise vbObjectError + errType + 1, Description:=errDesc
+    Logger.Log errDesc, logLevel
+    If logLevel = Level.Exception Then
+        Err.Raise vbObjectError + errType + 1, Description:=errDesc
+    End If
 End Property
 
 
@@ -74,5 +79,22 @@ Private Function ErrsLookup(errType As Errs) As String
             ErrsLookup = "Arguments passed not valid."
         Case Else
             ErrsLookup = "Internal error " & errType & "."
+    End Select
+End Function
+
+Private Function ErrsLevelLookup(errType As Errs) As Level
+'   Lookup to get error severity.
+'
+'   Args:
+'       errType: The type of exception being thrown.
+'
+'   Returns:
+'       A logger level.
+'
+    Select Case errType
+        Case Is = Errs.WarnEmptyFile
+            ErrsLevelLookup = Level.Warning
+        Case Else
+            ErrsLevelLookup = Level.Exception
     End Select
 End Function

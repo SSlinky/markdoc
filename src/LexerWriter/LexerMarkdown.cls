@@ -85,7 +85,7 @@ Public Sub WriteDocument()
     Set mkdwn = mBlockStack.Items(mBlockStack.Count)
 
 '   Exit if there's no tree.
-    If mkdwn.Children.Count = 0 Then
+    If Not BlockTreeHasContent(mkdwn) Then
         Throw = Errs.LexerWarnNothingToWrite
         Exit Sub
     End If
@@ -218,6 +218,7 @@ Private Function BlockTreeHasContent(currentBlock As IBlock) As Boolean
         Next childBlock
     End If
 End Function
+
 
 ' Helpers: Parser
 '-------------------------------------------------------------------------------

@@ -19,7 +19,24 @@ Public Enum Level
     Information
     Warning
     Exception
+    NoLevel
 End Enum
+
+' Private Backing Store
+'-------------------------------------------------------------------------------
+Private mLoggingLevel As Level
+
+
+' Properties
+'-------------------------------------------------------------------------------
+Public Property Let LoggingLevel(var As Level)
+    Logger.Log "Logging set to " & Mid(LevelLookup(var), 1, 4), NoLevel
+    mLoggingLevel = var
+End Property
+
+Public Property Get LoggingLevel() As Level
+    LoggingLevel = mLoggingLevel
+End Property
 
 
 ' Methods
@@ -35,10 +52,11 @@ Private Function LevelLookup(logLevel As Level) As String
         Case Is = Level.Exception
             LevelLookup = "EXPT: "
         Case Else
-            LevelLookup = ">>BAD LOOKUP>>: "
+            LevelLookup = "~~~~~"
     End Select
 End Function
 
 Public Sub Log(logValue As String, Optional logLevel As Level)
+    If logLevel < LoggingLevel Then Exit Sub
     Debug.Print LevelLookup(logLevel) & logValue
 End Sub

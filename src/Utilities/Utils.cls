@@ -264,7 +264,6 @@ End Function
 '-------------------------------------------------------------------------------
 Public Sub CBlockLeaf(block As IBlockContent, castToBlock As IBlockLeaf)
 '   Casts a block of any type to an IBlockLeaf of type castToBlock.
-'   This may cause loss of data as paragraphs do not have children.
 
     If TypeOf block Is IBlockLeaf Then
 '       Copy across the leaf content.

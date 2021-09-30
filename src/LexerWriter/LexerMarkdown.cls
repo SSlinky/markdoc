@@ -120,6 +120,20 @@ Private Function ThisBlock() As IBlock
     End If
 End Function
 
+Private Function CThisBlockLeaf(castToBlock As IBlockLeaf)
+'   Casts ThisBlock to another block type.
+'   This helper is a shortcut to casting ThisBlock as it cannot be done
+'   directly. The reference is lost so the block must be popped and pushed.
+'
+'   Args:
+'       castToBlock: The target block to cast to.
+'
+    Dim block As IBlock
+    Set block = mBlockStack.Pop
+    Utils.CBlockLeaf block, castToBlock
+    mBlockStack.Push block
+End Function
+
 Private Function ThisContentBlock() As IBlockContent
 '   Gets the current block container as an IBlockContent
 '   which enables use of the interface methods.
@@ -197,6 +211,7 @@ Private Sub ParseLineTypeAction( _
     
     Dim matches As Object
     Dim block As IBlock
+    Dim hdg As BlockLeafHeading
 
     Select Case True
 '       Parsing from inside fenced code block.
@@ -219,17 +234,17 @@ Private Sub ParseLineTypeAction( _
 '               Blank lines break the paragraph.
                 Case Is = lineUnindented = vbNullString
                     OpenSiblingBlock
-                    Utils.CBlockLeaf ThisBlock, New BlockLeafBlankLine
+                    CThisBlockLeaf New BlockLeafBlankLine
 '               A code fence breaks the paragraph.
                 Case Is = Parser.IsCodeBlockFence( _
                     lineUnindented, mFencedCodeFence)
                     OpenSiblingBlock
-                    Utils.CBlockLeaf ThisBlock, New BlockLeafFencedCode
+                    CThisBlockLeaf New BlockLeafFencedCode
                     ThisContentBlock.ContentText = lineUnindented
 '               A heading breaks the paragrap.
                 Case Is = Parser.IsHeading(lineUnindented, matches)
                     CloseBlock
-                    Dim hdg As New BlockLeafHeading
+                    Set hdg = New BlockLeafHeading
 
                     hdg.ContentText = matches(0).Submatches(1)
                     hdg.HeadingLevel = Parser.ParseHeadingLevel( _
@@ -259,10 +274,7 @@ Private Sub ParseLineTypeAction( _
             
             Select Case newBlockType
                 Case Is = BlockType.Heading
-'                   Cannot cast directly with collection so must pop/push
-                    Set block = mBlockStack.Pop
-                    Utils.CBlockLeaf block, New BlockLeafHeading
-                    mBlockStack.Push block
+                    CThisBlockLeaf New BlockLeafHeading
                     Set hdg = ThisBlock
                     hdg.ContentText = matches(0).Submatches(1)
                     hdg.HeadingLevel = Parser.ParseHeadingLevel( _

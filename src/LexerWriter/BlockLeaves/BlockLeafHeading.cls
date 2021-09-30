@@ -57,7 +57,7 @@ Public Property Let HeadingLevel(var As Long)
 End Property
 
 Public Property Get HeadingLevel() As Long
-    HeadngLevel = mHeadngLevel
+    HeadingLevel = mHeadngLevel
 End Property
 
 

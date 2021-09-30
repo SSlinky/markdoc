@@ -196,6 +196,7 @@ Private Sub ParseLineTypeAction( _
     End If
     
     Dim matches As Object
+    Dim block As IBlock
 
     Select Case True
 '       Parsing from inside fenced code block.
@@ -258,7 +259,10 @@ Private Sub ParseLineTypeAction( _
             
             Select Case newBlockType
                 Case Is = BlockType.Heading
-                    Utils.CBlockLeaf ThisBlock, New BlockLeafHeading
+'                   Cannot cast directly with collection so must pop/push
+                    Set block = mBlockStack.Pop
+                    Utils.CBlockLeaf block, New BlockLeafHeading
+                    mBlockStack.Push block
                     Set hdg = ThisBlock
                     hdg.ContentText = matches(0).Submatches(1)
                     hdg.HeadingLevel = Parser.ParseHeadingLevel( _

@@ -16,6 +16,7 @@ Option Explicit
 
 Private mBlockStack As List
 Private mLinkReference As Object
+Private mAttachedDocument As Document
 
 Private mFencedCodeFence As String
 Private mFencedCodeIndent As Long
@@ -28,6 +29,17 @@ Private mLine As String
 '-------------------------------------------------------------------------------
 Public Property Get BlockStack() As List
     Set BlockStack = mBlockStack
+End Property
+
+Public Property Set AttachedDocument(var As Document)
+    Set mAttachedDocument = var
+End Property
+
+Public Property Get AttachedDocument() As Document
+    If mAttachedDocument Is Nothing Then
+        Set mAttachedDocument = Application.Documents.Add
+    End If
+    Set AttachedDocument = mAttachedDocument
 End Property
 
 
@@ -68,18 +80,23 @@ End Sub
 Public Sub WriteDocument()
 '   Writes the parsed markdown to a new document.
 
+'   Reference the markdown block tree
     Dim mkdwn As BlockContainer
     Set mkdwn = mBlockStack.Items(mBlockStack.Count)
 
-    Dim doc As Document
-    Set doc = Application.Documents.Add
-    
-    mkdwn.WriteContent doc
-    mkdwn.StyleContent doc
+'   Exit if there's no tree.
+    If mkdwn.Children.Count = 0 Then
+        Throw = Errs.LexerWarnNothingToWrite
+        Exit Sub
+    End If
+
+'   Write to and style the document.
+    mkdwn.WriteContent AttachedDocument
+    mkdwn.StyleContent AttachedDocument
 End Sub
 
 
-' Helpers
+' Helpers: Blocks
 '-------------------------------------------------------------------------------
 Private Sub CloseBlock()
 '   Pops the current block and discards the reference

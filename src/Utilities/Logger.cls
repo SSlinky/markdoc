@@ -15,8 +15,8 @@ Option Explicit
 '-------------------------------------------------------------------------------
 
 Public Enum Level
-    Information
     Debugging
+    Information
     Warning
     Exception
 End Enum

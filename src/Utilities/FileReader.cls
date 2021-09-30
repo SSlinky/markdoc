@@ -59,6 +59,7 @@ Public Sub OpenStream(fileName As String)
     mFile = FreeFile
 
     Logger.Log "Opening (" & mFile & "): " & mFileName
+    If IsEoF Then Throw = Errs.WarnEmptyFile
 
     Open mFileName For Input Access Read As #mFile
     mFileIsOpen = True

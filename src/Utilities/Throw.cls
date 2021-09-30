@@ -28,6 +28,7 @@ Public Enum Errs
 
 '   File Reader
     FileReaderEOF
+    WarnEmptyFile
 
 '   Parser
     ParserIndentLevelOutsideRange
@@ -63,6 +64,8 @@ Private Function ErrsLookup(errType As Errs) As String
             ErrsLookup = "Block type mismatch."
         Case Is = Errs.FileReaderEOF
             ErrsLookup = "End of file."
+        Case Is = Errs.WarnEmptyFile
+            ErrsLookup = "File is empty!"
         Case Is = Errs.ParserIndentLevelOutsideRange
             ErrsLookup = "Cannot set new indentation level."
         Case Is = Errs.UtilsStringIndentNotBlank

@@ -80,7 +80,6 @@ End Sub
 Private Function IoReadNextLine() As String
 '   Reads the next line in the file.
     If IsEoF Then Throw = Errs.FileReaderEOF
-    Dim s As String
     Line Input #mFile, IoReadNextLine
 End Function
 

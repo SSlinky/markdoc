@@ -91,6 +91,19 @@ Public Function IsHeading(line As String, matches As Object) As Boolean
     IsHeading = matches.Count > 0
 End Function
 
+Public Function IsListItem(line As String, matches As Object) As Boolean
+'   Detects a list item.
+'
+'   Args:
+'       line: The line of text to parse.
+'
+'   Returns:
+'
+'   Raises:
+'
+    Throw = Errs.WarnNotImplementedException
+End Function
+
 Public Function ParseUnknownBlockLine(line As String, matches As Object) As BlockType
 '   Parses a line as is without any assumptions.
 '   This line is typically the beginning of a new block.

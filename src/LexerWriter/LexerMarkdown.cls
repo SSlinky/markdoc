@@ -309,9 +309,9 @@ Private Sub ParseLineTypeAction( _
                         matches(0).Submatches(1))
 
                     mBlockStack.Push hdg
-'               A new list breaks the paragraph. NOT YET IMPLEMENTED
-                ' ElseIf Parser.IsListItem(lineUnindented) Then
-
+'               A new list breaks the paragraph.
+                Case Is = Parser.IsListItem(lineUnindented, matches)
+                    Throw = Errs.NotImplementedException
 '               Nothing else pulls us out of this block type.
                 Case Else
                     ThisContentBlock.ContentText = lineUnindented

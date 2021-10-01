@@ -51,6 +51,7 @@ End Property
 '-------------------------------------------------------------------------------
 Public Sub WriteContent(toDoc As Document)
 '   This method MUST be called before StyleContent.
+    Logger.Log "Writing " & TypeName(Me) & ": " & mContentText
     If mContentText = vbNullString Then Exit Sub
 
     With toDoc

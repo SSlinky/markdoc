@@ -41,7 +41,7 @@ End Property
 
 ' Methods
 '-------------------------------------------------------------------------------
-Private Function LevelLookup(logLevel As Level) As String
+Public Function LevelLookup(logLevel As Level) As String
     Select Case logLevel
         Case Is = Level.Information
             LevelLookup = "INFO: "

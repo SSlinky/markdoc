@@ -303,7 +303,7 @@ End Sub
 
 '   Document helpers
 '-------------------------------------------------------------------------------
-Public Sub WriteDocument(toDoc As Document, block As IBlockContainer)
+Public Sub WriteContent(toDoc As Document, block As IBlockContainer)
 '   This method MUST be called before StyleContent.
 
 '   Writes the document by recursively calling the WriteContent method
@@ -314,12 +314,14 @@ Public Sub WriteDocument(toDoc As Document, block As IBlockContainer)
 '       block: The block to be written.
 '
     If TypeOf block Is IBlockContent Then
+        Dim bCont As IBlockContent
+        Set bCont = block
         Logger.Log "BlockContainer contains content text!", Level.Warning
-        Logger.Log "Not written: '" & block.ContentText & "'", Level.Warning
+        Logger.Log "Not written: '" & bCont.ContentText & "'", Level.Warning
     End If
 
     Dim child As IBlock
-    For Each child In Me.Children
+    For Each child In block.Children
         child.WriteContent toDoc
     Next
 End Sub

@@ -53,6 +53,7 @@ Public Sub WriteContent(toDoc As Document)
 '   This method MUST be called before StyleContent.
     Logger.Log "Writing " & TypeName(Me) & ": " & mContentText
     Set mInlineContent = New InlineContent
+    mInlineContent.Text = mContentText
     With mInlineContent
         Set .Range = toDoc.Range(Len(toDoc.content) - 1)
         .Range.Text = .Text

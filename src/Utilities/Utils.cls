@@ -291,20 +291,16 @@ Public Sub CBlockLeaf( _
         End If
     End If
 
-    If TypeOf block Is IBlockLeaf Then
-'       Copy across the leaf content.
-        Dim leaf As IBlockLeaf
-        Set leaf = block
-        castToBlock.ContentText = leaf.ContentText
-    ElseIf TypeOf block Is IBlockContainer Then
-'       Check container has no children.    
+'   Copy across the leaf content.
+    castToBlock.ContentText = block.ContentText
+
+    If TypeOf block Is IBlockContainer Then
+'       Check container has no children.
         Dim container As IBlockContainer
         Set container = block
         If container.Children.Count > 0 Then
             Logger.Log "Destructive cast. Children lost.", Level.Warning
         End If
-    Else
-        Throw = Errs.BlockTypeMismatch
     End If
 
 '   Get the child index from parent.

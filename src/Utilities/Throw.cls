@@ -68,7 +68,9 @@ Public Property Let Exception(errType As Errs)
 End Property
 
 Public Property Let ThrowLevel(var As Level)
-    Logger.Log "ThrowLevel set to " & Mid(LevelLookup(var), 1, 4), NoLevel
+    Dim loglev As String
+    logLev = Mid(Logger.LevelLookup(var), 1, 4)
+    Logger.Log "ThrowLevel set to " & loglev, NoLevel
     mThrowLevel = var
 End Property
 

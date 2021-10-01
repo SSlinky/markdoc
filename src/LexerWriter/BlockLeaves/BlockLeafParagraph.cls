@@ -66,15 +66,16 @@ Public Sub WriteContent(toDoc As Document)
         Set mMyParagraph = .Paragraphs(.Paragraphs.Count)
     End With
 
+    Dim inlineCont As InlineContent
 '   Set ranges and write content to new paragraph.
 '   >>>>
 '   For now, directly set the content as inline content.
 '   This code should be removed as functionality developed.
     Set mInlineConts = New List
-    mInlineConts.Push New InlineContent
+    Set inlineCont = New InlineContent
+    inlineCont.Text = mContentText
+    mInlineConts.Push inlineCont
 '   <<<<
-
-    Dim inlineCont As InlineContent
     For Each inlineCont In mInlineConts
         With inlineCont
             Set .Range = toDoc.Range(Len(toDoc.content) - 1)

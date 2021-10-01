@@ -44,6 +44,11 @@ Public Enum Errs
 End Enum
 
 
+' Private Backing Store
+'-------------------------------------------------------------------------------
+Private mThrowLevel As Level
+
+
 ' Properties
 '-------------------------------------------------------------------------------
 Public Property Let Exception(errType As Errs)
@@ -55,9 +60,18 @@ Public Property Let Exception(errType As Errs)
     logLevel = ErrsLevelLookup(errType)
     
     Logger.Log errDesc, logLevel
-    If logLevel = Level.Exception Then
+    If logLevel >= ThrowLevel And logLevel > Level.Information Then
         Err.Raise vbObjectError + errType + 1, Description:=errDesc
     End If
+End Property
+
+Public Property Let ThrowLevel(var As Level)
+    Logger.Log "ThrowLevel set to " & Mid(LevelLookup(var), 1, 4), NoLevel
+    mThrowLevel = var
+End Property
+
+Public Property Get ThrowLevel() As Level
+    ThrowLevel = mThrowLevel
 End Property
 
 

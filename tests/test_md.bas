@@ -10,6 +10,7 @@ Sub test_RunMarkDoc()
 
     stream.OpenStream ActiveDocument.Path & "\tests\test_md.md"
     lexer.ParseMarkdown stream
+    Set lexer.AttachedDocument = ThisDocument
     lexer.WriteDocument
 End Sub
 

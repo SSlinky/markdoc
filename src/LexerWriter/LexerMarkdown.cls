@@ -123,9 +123,10 @@ End Sub
 
 Private Sub OpenSiblingBlock()
 '   Close the current block and open a child of the same parent.
-    Dim indlev As Long
-
+'
+    CThisBlockContainerToParagraph
     CloseBlock
+    Dim indlev As Long
     indlev = ThisBlock.IndentationLevel
 
     OpenChildBlock
@@ -136,6 +137,10 @@ End Sub
 
 Private Function ThisBlock() As IBlock
 '   Returns the current block container.
+'
+'   Returns:
+'       The current block.
+'
     Dim tb As Variant
     Set tb = mBlockStack.Peek
     If TypeOf tb Is IBlock Then
@@ -160,12 +165,24 @@ End Sub
 Private Function ThisContentBlock() As IBlockContent
 '   Gets the current block container as an IBlockContent
 '   which enables use of the interface methods.
+'
 '   Returns:
 '       The current block.
-
+'
     Set ThisContentBlock = ThisBlock
-    
 End Function
+
+Private Sub CThisBlockContainerToParagraph()
+'   Casts BlockContainer ThisBlock to a paragraph.
+'   No effect if not BlockContainer.
+'
+    If Not TypeOf ThisBlock Is BlockContainer Then Exit Sub
+
+    Dim block As IBlock
+    Set block = mBlockStack.Pop
+    Utils.CBlockLeaf block, new BlockLeafParagraph
+    mBlockStack.Push block
+End Sub
 
 Private Sub SetThisBlockContent()
 '   Sets the content for the current block.

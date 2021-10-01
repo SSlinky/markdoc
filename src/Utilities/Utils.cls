@@ -307,15 +307,15 @@ Public Sub CBlockLeaf( _
         Throw = Errs.BlockTypeMismatch
     End If
 
+'   Get the child index from parent.
+    Dim childIndex As Long
+    If Not parent Is Nothing Then childIndex = parent.Children.PopFind(block)
+
 '   Cast to new block.
     Set block = castToBlock
 
-'   Update the child reference on the parent if passed.
-    If Not parent Is Nothing Then
-        Dim childIndex As Long
-        childIndex = parent.Children.PopFind(block)
-        parent.Children.Insert childIndex, block
-    End If
+'   Update the child reference on the parent.
+    If Not parent Is Nothing Then parent.Children.Insert childIndex, block
 End Sub
 
 '   Document helpers

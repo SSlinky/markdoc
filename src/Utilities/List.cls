@@ -120,13 +120,15 @@ Public Function PopFind(obj As Variant) As Long
     Dim i As Long
     Dim listItem As Variant
 
-    For Each listItem In mBase.Items
+    For Each listItem In mBase
         i = i + 1
         If listItem Is obj Then
-            mBase.Items.Remove i
+            mBase.Remove i
             PopFind = i
+            Exit Function
         End If
     Next listItem
+    Logger.Log "Item not found in List", Level.Warning
 End Function
 
 Public Sub Insert(index As Long, obj As Variant)
@@ -136,7 +138,11 @@ Public Sub Insert(index As Long, obj As Variant)
 '       index: The index location to insert to.
 '       obj: The object to be inserted.
 '
-    mBase.Add obj, Before:=index
+    If mBase.Count = 0 And index = 1 Then
+        mBase.Add obj
+    Else
+        mBase.Add obj, Before:=index
+    End If
 End Sub
 
 

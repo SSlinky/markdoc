@@ -260,6 +260,7 @@ End Function
 '-------------------------------------------------------------------------------
 Private Sub ParseLineType(line As String)
 '   Prepares the line and calls ParseLineTypeAction
+'   TODO: Figure out a way to modularise this so it isn't n level ifs.
 '
 '   Args:
 '       line: The raw line as it is read from the source.
@@ -297,7 +298,7 @@ Private Sub ParseLineTypeAction( _
 '
 
 '   An indentation level reduction will always kick us out of the block.
-'   Except when the
+'   Blank lines are considered to have the same indentation as previous line.
     If indentLevel < ThisBlock.IndentationLevel Then
         CloseBlock
         ParseLineTypeAction lineCleaned, lineUnindented, indentLevel
@@ -334,17 +335,15 @@ Private Sub ParseLineTypeAction( _
                     lineUnindented, mFencedCodeFence)
                     OpenSiblingBlock
                     CThisBlockLeaf New BlockLeafFencedCode
-                    ThisContentBlock.ContentText = lineUnindented
-'               A heading breaks the paragrap.
+'               A heading breaks the paragraph.
                 Case Is = Parser.IsHeading(lineUnindented, matches)
                     CloseBlock
-                    Set hdg = New BlockLeafHeading
+                    CThisBlockLeaf New BlockLeafHeading
 
+                    Set hdg = ThisBlock
                     hdg.ContentText = matches(0).Submatches(1)
                     hdg.HeadingLevel = Parser.ParseHeadingLevel( _
                         matches(0).Submatches(1))
-
-                    mBlockStack.Push hdg
 '               A new list breaks the paragraph.
                 Case Is = Parser.IsListItem(lineUnindented, matches)
                     Throw = Errs.NotImplementedException
@@ -361,11 +360,12 @@ Private Sub ParseLineTypeAction( _
                 ParseLineTypeAction lineCleaned, lineUnindented, indentLevel
             End If
         
-'       Parse from inside an unknown block type.
-        Case Else
+'       Parse from inside an empty block.
+        Case ThisContentBlock.ContentText = vbNullString
             Dim newBlockType As BlockType
-            newBlockType = Parser.ParseUnknownBlockLine(lineUnindented, matches)
-            
+            newBlockType = Parser.ParseUnknownBlockLine( _
+                lineUnindented, matches)
+
             Select Case newBlockType
                 Case Is = BlockType.Heading
                     LazyOpenSiblingBlock
@@ -377,6 +377,33 @@ Private Sub ParseLineTypeAction( _
                     OpenSiblingBlock
                 Case Is = BlockType.Paragraph
                     ThisContentBlock.ContentText = lineUnindented
+            End Select
+
+'       Parse from an unknown block that has content.
+        Case Else
+            Select Case True
+'               Content becoming blank line is a paragraph.
+                Case Is = lineUnindented = vbNullString
+                    LazyOpenSiblingBlock
+                    CThisBlockLeaf New BlockLeafBlankLine
+'               Content becoming code block fence is a paragraph.
+                Case Is = Parser.IsCodeBlockFence( _
+                    lineUnindented, mFencedCodeFence)
+                    LazyOpenSiblingBlock
+                    CThisBlockLeaf New BlockLeafFencedCode
+'               Content becoming a heading is a paragraph.
+                Case Is = Parser.IsHeading(lineUnindented, matches)
+                    LazyOpenSiblingBlock
+                    CThisBlockLeaf New BlockLeafHeading
+                    Set hdg = ThisBlock
+
+                    hdg.ContentText = matches(0).Submatches(1)
+                    hdg.HeadingLevel = Parser.ParseHeadingLevel( _
+                        matches(0).Submatches(1))
+'               Content becoming a new list is a paragraph.
+                Case Is = Parser.IsListItem(lineUnindented, matches)
+                    LazyOpenSiblingBlock
+                    Throw = Errs.NotImplementedException
             End Select
     End Select
 End Sub

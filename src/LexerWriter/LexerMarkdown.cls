@@ -62,16 +62,20 @@ End Sub
 ' Methods
 '-------------------------------------------------------------------------------
 Public Sub ParseMarkdown(textStream As IIo)
-'   Phase 1: Parse the text stream into blocks.
+'   Phase 1:
+'   Parse the text stream into blocks.
     Do While Not textStream.EOF
         mLine = textStream.ReadNextLine
         ParseLineType mLine
         mPreviousLine = mLine
     Loop
+'   Convert last block to Paragraph if it is unknown.
+    CThisBlockContainerToParagraph
 End Sub
 
 Public Sub ParseTree()
-'   Phase 2: Parse the leaf blocks.
+'   Phase 2:
+'   Parse the leaf blocks.
     Dim docLevelBlock As BlockContainer
     Set docLevelBlock = mBlockStack.Items(mBlockStack.Count)
     ParseBlockTree docLevelBlock
@@ -139,6 +143,7 @@ Private Sub LazyOpenSiblingBlock()
 '   Opens a new sibling if the current block has content.
 '   Otherwise, does nothing.
 '
+    CThisBlockContainerToParagraph
     If ThisContentBlock.ContentText = vbNullString Then Exit Sub
     OpenSiblingBlock
 End Sub
@@ -188,7 +193,13 @@ Private Sub CThisBlockContainerToParagraph()
 
     Dim block As IBlock
     Set block = mBlockStack.Pop
-    Utils.CBlockLeaf block, new BlockLeafParagraph
+
+    Dim blockContent As BlockContainer
+    Set blockContent = block
+
+    If Not blockContent.ContentText = vbNullString Then
+        Utils.CBlockLeaf block, new BlockLeafParagraph
+    End If
     mBlockStack.Push block
 End Sub
 

@@ -31,13 +31,3 @@ Public Property Get Children() As List
 '   Get accessor to the container's children.
     Throw = Errs.InterfaceUsedAsObject
 End Property
-
-Public Sub WriteContent(toDoc As Document)
-'   This method MUST be called before StyleContent.
-    Throw = Errs.InterfaceUsedAsObject
-End Sub
-
-Public Sub StyleContent(styleDoc As Document)
-'   This method MUST be called after WriteContent.
-    Throw = Errs.InterfaceUsedAsObject
-End Sub

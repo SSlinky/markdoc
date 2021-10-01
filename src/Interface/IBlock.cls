@@ -22,3 +22,11 @@ End Property
 Public Property Get IndentationLevel() As Long
     Throw = Errs.InterfaceUsedAsObject
 End Property
+
+Public Sub WriteContent(toDoc As Document)
+    Throw = Errs.InterfaceUsedAsObject
+End Sub
+
+Public Sub StyleContent(styleDoc As Document)
+    Throw = Errs.InterfaceUsedAsObject
+End Sub

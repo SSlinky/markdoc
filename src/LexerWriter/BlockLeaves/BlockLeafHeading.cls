@@ -10,7 +10,6 @@ Attribute VB_Exposed = False
 Option Explicit
 Implements IBlock
 Implements IBlockLeaf
-Implements IDocWritable
 Implements IBlockContent
 
 '-------------------------------------------------------------------------------
@@ -105,19 +104,19 @@ End Sub
 
 ' Interface Implementation
 '-------------------------------------------------------------------------------
-Public Sub IBlockLeaf_WriteContent(toDoc As Document)
+Public Property Let IBlock_IndentationLevel(var As Long)
+    IndentationLevel = var
+End Property
+
+Public Property Get IBlock_IndentationLevel() As Long
+    IBlock_IndentationLevel = IndentationLevel
+End Property
+
+Public Sub IBlock_WriteContent(toDoc As Document)
     WriteContent toDoc
 End Sub
 
-Public Sub IBlockLeaf_StyleContent(styleDoc As Document)
-    StyleContent styleDoc
-End Sub
-
-Public Sub IDocWritable_WriteContent(toDoc As Document)
-    WriteContent toDoc
-End Sub
-
-Public Sub IDocWritable_StyleContent(styleDoc As Document)
+Public Sub IBlock_StyleContent(styleDoc As Document)
     StyleContent styleDoc
 End Sub
 
@@ -129,18 +128,18 @@ Public Property Get IBlockLeaf_ContentText() As String
     IBlockLeaf_ContentText = ContentText
 End Property
 
+Public Sub IBlockLeaf_WriteContent(toDoc As Document)
+    WriteContent toDoc
+End Sub
+
+Public Sub IBlockLeaf_StyleContent(styleDoc As Document)
+    StyleContent styleDoc
+End Sub
+
 Public Property Let IBlockContent_ContentText(var As String)
     ContentText = var
 End Property
 
 Public Property Get IBlockContent_ContentText() As String
     IBlockContent_ContentText = ContentText
-End Property
-
-Public Property Let IBlock_IndentationLevel(var As Long)
-    IndentationLevel = var
-End Property
-
-Public Property Get IBlock_IndentationLevel() As Long
-    IBlock_IndentationLevel = IndentationLevel
 End Property

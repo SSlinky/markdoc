@@ -11,7 +11,6 @@ Option Explicit
 Implements IBlock
 Implements IBlockListItem
 Implements IBlockContainer
-Implements IDocWritable
 
 '-------------------------------------------------------------------------------
 '   Class: BlockContainerListItem
@@ -91,23 +90,19 @@ End Sub
 
 ' Interface Implementation
 '-------------------------------------------------------------------------------
-Public Property Get IBlockContainer_Children() As List
-    Set IBlockContainer_Children = Children
+Public Property Let IBlock_IndentationLevel(var As Long)
+    IndentationLevel = var
 End Property
 
-Public Sub IBlockContainer_WriteContent(toDoc As Document)
+Public Property Get IBlock_IndentationLevel() As Long
+    IBlock_IndentationLevel = IndentationLevel
+End Property
+
+Public Sub IBlock_WriteContent(toDoc As Document)
     WriteContent toDoc
 End Sub
 
-Public Sub IBlockContainer_StyleContent(styleDoc As Document)
-    StyleContent styleDoc
-End Sub
-
-Public Sub IDocWritable_WriteContent(toDoc As Document)
-    WriteContent toDoc
-End Sub
-
-Public Sub IDocWritable_StyleContent(styleDoc As Document)
+Public Sub IBlock_StyleContent(styleDoc As Document)
     StyleContent styleDoc
 End Sub
 
@@ -119,10 +114,6 @@ Public Property Get IBlockListItem_IndentationLevel() As Long
     IBlockListItem_IndentationLevel = IndentationLevel
 End Property
 
-Public Property Let IBlock_IndentationLevel(var As Long)
-    IndentationLevel = var
-End Property
-
-Public Property Get IBlock_IndentationLevel() As Long
-    IBlock_IndentationLevel = IndentationLevel
+Public Property Get IBlockContainer_Children() As List
+    Set IBlockContainer_Children = Children
 End Property

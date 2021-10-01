@@ -11,7 +11,6 @@ Option Explicit
 Implements IBlock
 Implements IBlockList
 Implements IBlockContainer
-Implements IDocWritable
 
 '-------------------------------------------------------------------------------
 '   Class: BlockContainerList
@@ -67,12 +66,11 @@ Public Sub WriteContent(toDoc As Document)
 '   This method MUST be called before StyleContent.
 
 '   Writes the document by recursively calling the WriteContent method
-'   of all docWritable objects in mChildren. There is no error handling as
-'   any object in mChildren that doesn't implement IDocWritable should throw.
+'   of all blocks in mChildren.
 
-    Dim docWritable As IDocWritable
-    For Each docWritable In mChildren.Items
-        docWritable.WriteContent toDoc
+    Dim block As IBlock
+    For Each block In mChildren.Items
+        block.WriteContent toDoc
     Next
 End Sub
 
@@ -80,36 +78,31 @@ Public Sub StyleContent(styleDoc As Document)
 '   This method MUST be called after WriteContent.
 
 '   Styles the document by recursively calling the StyleContent method
-'   of all docWritable objects in mChildren. There is no error handling as
-'   any object in mChildren that doesn't implement IDocWritable should throw.
+'   of all blocks in mChildren.
 
-    Dim docWritable As IDocWritable
+    Dim block As IBlock
     Do While mChildren.Items.Count > 0
-        Set docWritable = mChildren.Pop
-        docWritable.StyleContent styleDoc
+        Set block = mChildren.Pop
+        block.StyleContent styleDoc
     Loop
 End Sub
 
 
 ' Interface Implementation
 '-------------------------------------------------------------------------------
-Public Property Get IBlockContainer_Children() As List
-    Set IBlockContainer_Children = Children
+Public Property Let IBlock_IndentationLevel(var As Long)
+    IndentationLevel = var
 End Property
 
-Public Sub IBlockContainer_WriteContent(toDoc As Document)
+Public Property Get IBlock_IndentationLevel() As Long
+    IBlock_IndentationLevel = IndentationLevel
+End Property
+
+Public Sub IBlock_WriteContent(toDoc As Document)
     WriteContent toDoc
 End Sub
 
-Public Sub IBlockContainer_StyleContent(styleDoc As Document)
-    StyleContent styleDoc
-End Sub
-
-Public Sub IDocWritable_WriteContent(toDoc As Document)
-    WriteContent toDoc
-End Sub
-
-Public Sub IDocWritable_StyleContent(styleDoc As Document)
+Public Sub IBlock_StyleContent(styleDoc As Document)
     StyleContent styleDoc
 End Sub
 
@@ -125,10 +118,6 @@ Public Property Get IBlockList_IndentationLevel() As Long
     IBlockList_IndentationLevel = IndentationLevel
 End Property
 
-Public Property Let IBlock_IndentationLevel(var As Long)
-    IndentationLevel = var
-End Property
-
-Public Property Get IBlock_IndentationLevel() As Long
-    IBlock_IndentationLevel = IndentationLevel
+Public Property Get IBlockContainer_Children() As List
+    Set IBlockContainer_Children = Children
 End Property

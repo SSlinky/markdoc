@@ -73,28 +73,38 @@ End Sub
 ' Methods
 '-------------------------------------------------------------------------------
 Public Sub WriteContent(toDoc As Document)
-    Throw = Errs.NotImplementedException
+    Dim block As IBlock
+    If Not mContentText = vbNullString Then
+        Logger.Log "BlockContainer contains content text!", Level.Warning
+        Logger.Log "Not written: '" & mContentText & "'", Level.Warning
+    For Each block In Children
+        block.WriteContent toDoc
+    End If
 End Sub
 
 Public Sub StyleContent(styleDoc As Document)
-    Throw = Errs.NotImplementedException
+    Dim block As IBlock
+    For Each block In Children
+        block.StyleContent styleDoc
+    End If
 End Sub
 
 ' Interface Implementation
 '-------------------------------------------------------------------------------
-Public Property Get IBlockContainer_Children() As List
-'   Get accessor to the container's children.
-    Set IBlockContainer_Children = Children
+Public Property Let IBlock_IndentationLevel(var As Long)
+    IndentationLevel = var
 End Property
 
-Public Sub IBlockContainer_WriteContent(toDoc As Document)
-'   This class should be converted to a specific container type.
+Public Property Get IBlock_IndentationLevel() As Long
+    IBlock_IndentationLevel = IndentationLevel
+End Property
+
+Public Sub IBlock_WriteContent(toDoc As Document)
     WriteContent toDoc
 End Sub
 
-Public Sub IBlockContainer_StyleContent(styleDoc As Document)
-'   This class should be converted to a specific container type.
-    Throw = Errs.NotImplementedException
+Public Sub IBlock_StyleContent(styleDoc As Document)
+    StyleContent styleDoc
 End Sub
 
 Public Property Let IBlockContent_ContentText(var As String)
@@ -105,10 +115,7 @@ Public Property Get IBlockContent_ContentText() As String
     IBlockContent_ContentText = ContentText
 End Property
 
-Public Property Let IBlock_IndentationLevel(var As Long)
-    IndentationLevel = var
-End Property
-
-Public Property Get IBlock_IndentationLevel() As Long
-    IBlock_IndentationLevel = IndentationLevel
+Public Property Get IBlockContainer_Children() As List
+'   Get accessor to the container's children.
+    Set IBlockContainer_Children = Children
 End Property

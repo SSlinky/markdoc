@@ -268,12 +268,16 @@ End Function
 
 '   Block helpers
 '-------------------------------------------------------------------------------
-Public Sub CBlockLeaf(block As IBlockContent, castToBlock As IBlockLeaf)
+Public Sub CBlockLeaf( _
+    block As IBlockContent, _
+    castToBlock As IBlockLeaf, _
+    parent As IBlockContainer)
 '   Casts a block of any type to an IBlockLeaf of type castToBlock.
 '
 '   Args:
 '       block: The block to be cast.
 '       castToBlock: The block to cast to.
+'       parent: The parent container so its child ref can be updated.
 '
     Logger.Log "Casting " & TypeName(block) & " to " & TypeName(castToBlock)
 
@@ -292,7 +296,6 @@ Public Sub CBlockLeaf(block As IBlockContent, castToBlock As IBlockLeaf)
         Dim leaf As IBlockLeaf
         Set leaf = block
         castToBlock.ContentText = leaf.ContentText
-        Set block = castToBlock
     ElseIf TypeOf block Is IBlockContainer Then
 '       Check container has no children.    
         Dim container As IBlockContainer
@@ -300,11 +303,17 @@ Public Sub CBlockLeaf(block As IBlockContent, castToBlock As IBlockLeaf)
         If container.Children.Count > 0 Then
             Logger.Log "Destructive cast. Children lost.", Level.Warning
         End If
-'       Containers have no content. Direct set.
-        Set block = castToBlock
     Else
         Throw = Errs.BlockTypeMismatch
     End If
+
+'   Get the child index from the parent, removing the old block.
+    Dim childIndex As Long
+    childIndex = parent.PopFind(block)
+
+'   Cast to new block and insert the child reference back into parent.
+    Set block = castToBlock
+    parent.Children.Insert childIndex, block
 End Sub
 
 '   Document helpers

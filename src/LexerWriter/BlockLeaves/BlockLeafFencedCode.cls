@@ -20,16 +20,11 @@ Implements IBlockContent
 '-------------------------------------------------------------------------------
 
 
-Private Type StyledContent
-    Text As String
-    Range As Range
-End Type
-
-
 ' Private Backing Store
 '-------------------------------------------------------------------------------
 Private mContentText As String
 Private mIndentLevel As Long
+Private mInlineContent As InlineContent
 
 
 ' Properties
@@ -56,7 +51,11 @@ End Property
 '-------------------------------------------------------------------------------
 Public Sub WriteContent(toDoc As Document)
 '   This method MUST be called before StyleContent.
-    Throw = Errs.NotImplementedException
+    Set mInlineContent = New InlineContent
+    With mInlineContent
+        Set .Range = toDoc.Range(Len(toDoc.content) - 1)
+        .Range.Text = .Text
+    End With
 End Sub
 
 Public Sub StyleContent(styleDoc As Document)

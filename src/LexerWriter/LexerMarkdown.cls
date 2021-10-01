@@ -100,6 +100,9 @@ End Sub
 '-------------------------------------------------------------------------------
 Private Sub CloseBlock()
 '   Pops the current block and discards the reference
+'
+    CThisBlockContainerToParagraph
+
     Dim discard As IBlock
     Set discard = mBlockStack.Pop
 
@@ -124,7 +127,6 @@ End Sub
 Private Sub OpenSiblingBlock()
 '   Close the current block and open a child of the same parent.
 '
-    CThisBlockContainerToParagraph
     CloseBlock
     Dim indlev As Long
     indlev = ThisBlock.IndentationLevel
@@ -133,6 +135,14 @@ Private Sub OpenSiblingBlock()
     ThisBlock.IndentationLevel = indlev
 
     Logger.Log "Opened sibling block (" & mBlockStack.Count & ")"
+End Sub
+
+Private Sub LazyOpenSiblingBlock()
+'   Opens a new sibling if the current block has content.
+'   Otherwise, does nothing.
+'
+    If ThisContentBlock.ContentText = vbNullString Then Exit Sub
+    OpenSiblingBlock
 End Sub
 
 Private Function ThisBlock() As IBlock
@@ -349,11 +359,15 @@ Private Sub ParseLineTypeAction( _
             
             Select Case newBlockType
                 Case Is = BlockType.Heading
+                    LazyOpenSiblingBlock
                     CThisBlockLeaf New BlockLeafHeading
                     Set hdg = ThisBlock
                     hdg.ContentText = matches(0).Submatches(1)
                     hdg.HeadingLevel = Parser.ParseHeadingLevel( _
                         matches(0).Submatches(1))
+                    OpenSiblingBlock
+                Case Is = BlockType.Paragraph
+                    ThisContentBlock.ContentText = lineUnindented
             End Select
     End Select
 End Sub

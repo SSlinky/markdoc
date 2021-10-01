@@ -171,7 +171,7 @@ Private Sub CThisBlockLeaf(castToBlock As IBlockLeaf)
 '
     Dim block As IBlock
     Set block = mBlockStack.Pop
-    Utils.CBlockLeaf block, castToBlock
+    Utils.CBlockLeaf block, castToBlock, ThisBlock
     mBlockStack.Push block
 End Sub
 
@@ -198,7 +198,7 @@ Private Sub CThisBlockContainerToParagraph()
     Set blockContent = block
 
     If Not blockContent.ContentText = vbNullString Then
-        Utils.CBlockLeaf block, new BlockLeafParagraph
+        Utils.CBlockLeaf block, new BlockLeafParagraph, ThisBlock
     End If
     mBlockStack.Push block
 End Sub
@@ -215,7 +215,7 @@ Private Sub SetThisBlockContent()
     
     If TypeOf block Is IBlockContainer Then
 '       Cast to paragraph.
-        Utils.CBlockLeaf block, New BlockLeafParagraph
+        Utils.CBlockLeaf block, New BlockLeafParagraph, ThisBlock
     Else
         Throw = Errs.BlockTypeMismatch
     End If

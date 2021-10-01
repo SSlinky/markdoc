@@ -309,7 +309,7 @@ Public Sub CBlockLeaf( _
 
 '   Get the child index from the parent, removing the old block.
     Dim childIndex As Long
-    childIndex = parent.PopFind(block)
+    childIndex = parent.Children.PopFind(block)
 
 '   Cast to new block and insert the child reference back into parent.
     Set block = castToBlock

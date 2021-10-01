@@ -271,7 +271,7 @@ End Function
 Public Sub CBlockLeaf( _
     block As IBlockContent, _
     castToBlock As IBlockLeaf, _
-    parent As IBlockContainer)
+    Optional parent As IBlockContainer)
 '   Casts a block of any type to an IBlockLeaf of type castToBlock.
 '
 '   Args:
@@ -307,13 +307,15 @@ Public Sub CBlockLeaf( _
         Throw = Errs.BlockTypeMismatch
     End If
 
-'   Get the child index from the parent, removing the old block.
-    Dim childIndex As Long
-    childIndex = parent.Children.PopFind(block)
-
-'   Cast to new block and insert the child reference back into parent.
+'   Cast to new block.
     Set block = castToBlock
-    parent.Children.Insert childIndex, block
+
+'   Update the child reference on the parent if passed.
+    If Not parent Is Nothing Then
+        Dim childIndex As Long
+        childIndex = parent.Children.PopFind(block)
+        parent.Children.Insert childIndex, block
+    End If
 End Sub
 
 '   Document helpers

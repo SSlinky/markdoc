@@ -133,8 +133,6 @@ Private Sub OpenSiblingBlock()
 
     OpenChildBlock
     ThisBlock.IndentationLevel = indlev
-
-    Logger.Log "Opened sibling block (" & mBlockStack.Count & ")"
 End Sub
 
 Private Sub LazyOpenSiblingBlock()

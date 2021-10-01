@@ -300,3 +300,44 @@ Public Sub CBlockLeaf(block As IBlockContent, castToBlock As IBlockLeaf)
         Throw = Errs.BlockTypeMismatch
     End If
 End Sub
+
+'   Document helpers
+'-------------------------------------------------------------------------------
+Public Sub WriteDocument(toDoc As Document, block As IBlockContainer)
+'   This method MUST be called before StyleContent.
+
+'   Writes the document by recursively calling the WriteContent method
+'   of all blocks in Children.
+'
+'   Args:
+'       toDoc: The document to write to.
+'       block: The block to be written.
+'
+'
+    If TypeOf block Is IBlockContent Then
+        Logger.Log "BlockContainer contains content text!", Level.Warning
+        Logger.Log "Not written: '" & block.ContentText & "'", Level.Warning
+    End If
+
+    Dim child As IBlock
+    For Each child In Me.Children
+        child.WriteContent toDoc
+    Next
+End Sub
+
+Public Sub StyleContent(styleDoc As Document, block As IBlockContainer)
+'   This method MUST be called after WriteContent.
+
+'   Styles the document by recursively calling the StyleContent method
+'   of all blocks in Children.
+'
+'   Args:
+'       styleDoc: The document to style.
+'       block: The block to be styled.
+'
+    Dim child As IBlock
+    Do While block.Children.Items.Count > 0
+        Set child = block.Children.Pop
+        child.StyleContent styleDoc
+    Loop
+End Sub

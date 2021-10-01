@@ -143,7 +143,7 @@ Private Function ThisBlock() As IBlock
     End If
 End Function
 
-Private Function CThisBlockLeaf(castToBlock As IBlockLeaf)
+Private Sub CThisBlockLeaf(castToBlock As IBlockLeaf)
 '   Casts ThisBlock to another block type.
 '   This helper is a shortcut to casting ThisBlock as it cannot be done
 '   directly. The reference is lost so the block must be popped and pushed.
@@ -155,7 +155,7 @@ Private Function CThisBlockLeaf(castToBlock As IBlockLeaf)
     Set block = mBlockStack.Pop
     Utils.CBlockLeaf block, castToBlock
     mBlockStack.Push block
-End Function
+End Sub
 
 Private Function ThisContentBlock() As IBlockContent
 '   Gets the current block container as an IBlockContent

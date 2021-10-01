@@ -294,7 +294,13 @@ Public Sub CBlockLeaf(block As IBlockContent, castToBlock As IBlockLeaf)
         castToBlock.ContentText = leaf.ContentText
         Set block = castToBlock
     ElseIf TypeOf block Is IBlockContainer Then
-'       Containers have no content.
+'       Check container has no children.    
+        Dim container As IBlockContainer
+        Set container = block
+        If container.Children.Count > 0 Then
+            Logger.Log "Destructive cast. Children lost.", Level.Warning
+        End If
+'       Containers have no content. Direct set.
         Set block = castToBlock
     Else
         Throw = Errs.BlockTypeMismatch

@@ -316,8 +316,12 @@ Public Sub WriteContent(toDoc As Document, block As IBlockContainer)
     If TypeOf block Is IBlockContent Then
         Dim bCont As IBlockContent
         Set bCont = block
-        Logger.Log "BlockContainer contains content text!", Level.Warning
-        Logger.Log "Not written: '" & bCont.ContentText & "'", Level.Warning
+        If Not bCont.ContentText = vbNullString Then
+            Logger.Log "BlockContainer contains content text!", _
+                Level.Warning
+            Logger.Log "Not written: '" & bCont.ContentText & "'", _
+                Level.Warning
+        End If
     End If
 
     Dim child As IBlock

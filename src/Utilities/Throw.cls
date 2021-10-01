@@ -21,6 +21,7 @@ Public Enum Errs
 '   Application
     InterfaceUsedAsObject
     NotImplementedException
+    WarnNoNamedDefaultStyle
     WarnNotImplementedException
 
 '   Block
@@ -85,9 +86,11 @@ Private Function ErrsLookup(errType As Errs) As String
     Select Case errType
         Case Is = Errs.InterfaceUsedAsObject
             ErrsLookup = "Interface cannot be concrete type."
-        Case Is = Errs.WarnNotImplementedException
-            ErrsLookup = "Not yet implemented."
         Case Is = Errs.NotImplementedException
+            ErrsLookup = "Not yet implemented."
+        Case Is = Errs.WarnNoNamedDefaultStyle
+            ErrsLookup = "Could not create default style."
+        Case Is = Errs.WarnNotImplementedException
             ErrsLookup = "Not yet implemented."
         Case Is = Errs.BlockNotCreated
             ErrsLookup = "Block must be created using Create method."
@@ -122,7 +125,8 @@ Private Function ErrsLevelLookup(errType As Errs) As Level
 '       A logger level.
 '
     Select Case errType
-        Case Is = Errs.WarnNotImplementedException, _
+        Case Is = Errs.WarnNoNamedDefaultStyle, _
+                  Errs.WarnNotImplementedException, _
                   Errs.FileReaderWarnEmptyFile, _
                   Errs.LexerWarnNothingToWrite, _
                   Errs.UtilsWarnDestructiveCast

@@ -108,6 +108,37 @@ Public Sub SetStandardStyle()
     End If
 End Sub
 
+Public Function PopFind(obj As Variant) As Long
+'   Pops an object at the location obj is found.
+'
+'   Args:
+'       obj: The object to find.
+'
+'   Returns:
+'       The index location of the object.
+'
+    Dim i As Long
+    Dim listItem As Variant
+
+    For Each listItem In mBase.Items
+        i = i + 1
+        If listItem Is obj Then
+            mBase.Items.Remove i
+            PopFind = i
+        End If
+    Next listItem
+End Function
+
+Public Sub Insert(index As Long, obj As Variant)
+'   Inserts an item at the specified index.
+'
+'   Args:
+'       index: The index location to insert to.
+'       obj: The object to be inserted.
+'
+    mBase.Add obj, Before:=index
+End Sub
+
 
 ' Helpers
 '-------------------------------------------------------------------------------

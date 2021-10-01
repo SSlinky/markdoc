@@ -313,7 +313,6 @@ Public Sub WriteDocument(toDoc As Document, block As IBlockContainer)
 '       toDoc: The document to write to.
 '       block: The block to be written.
 '
-'
     If TypeOf block Is IBlockContent Then
         Logger.Log "BlockContainer contains content text!", Level.Warning
         Logger.Log "Not written: '" & block.ContentText & "'", Level.Warning

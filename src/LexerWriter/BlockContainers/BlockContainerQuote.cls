@@ -70,34 +70,11 @@ End Sub
 ' Methods
 '-------------------------------------------------------------------------------
 Public Sub WriteContent(toDoc As Document)
-'   This method MUST be called before StyleContent.
-
-'   Writes the document by recursively calling the WriteContent method
-'   of all blocks in mChildren.
-'
-'   Args:
-'       toDoc: The document to write to.
-'
-    Dim block As IBlock
-    For Each block In mChildren.Items
-        block.WriteContent toDoc
-    Next
+    Utils.WriteContent toDoc, Me
 End Sub
 
 Public Sub StyleContent(styleDoc As Document)
-'   This method MUST be called after WriteContent.
-
-'   Styles the document by recursively calling the StyleContent method
-'   of all blocks in mChildren.
-'
-'   Args:
-'       styleDoc: The document to style.
-'
-    Dim block As IBlock
-    Do While mChildren.Items.Count > 0
-        Set block = mChildren.Pop
-        block.StyleContent styleDoc
-    Loop
+    Utils.StyleContent styleDoc, Me
 End Sub
 
 

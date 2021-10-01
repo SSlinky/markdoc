@@ -76,15 +76,13 @@ End Sub
 ' Methods
 '-------------------------------------------------------------------------------
 Public Sub WriteContent(toDoc As Document)
-'   This method MUST be called before StyleContent.
     If Not mIsCreated Then Throw = Errs.BlockNotCreated
-    Throw = Errs.NotImplementedException
+    Utils.WriteContent toDoc, Me
 End Sub
 
 Public Sub StyleContent(styleDoc As Document)
-'   This method MUST be called after WriteContent.
     If Not mIsCreated Then Throw = Errs.BlockNotCreated
-    Throw = Errs.NotImplementedException
+    Utils.StyleContent styleDoc, Me
 End Sub
 
 

@@ -73,20 +73,11 @@ End Sub
 ' Methods
 '-------------------------------------------------------------------------------
 Public Sub WriteContent(toDoc As Document)
-    Dim block As IBlock
-    If Not mContentText = vbNullString Then
-        Logger.Log "BlockContainer contains content text!", Level.Warning
-        Logger.Log "Not written: '" & mContentText & "'", Level.Warning
-    For Each block In Children
-        block.WriteContent toDoc
-    End If
+    Utils.WriteContent toDoc, Me
 End Sub
 
 Public Sub StyleContent(styleDoc As Document)
-    Dim block As IBlock
-    For Each block In Children
-        block.StyleContent styleDoc
-    End If
+    Utils.StyleContent styleDoc, Me
 End Sub
 
 ' Interface Implementation

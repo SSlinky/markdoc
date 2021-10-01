@@ -5,6 +5,9 @@ Sub test_RunMarkDoc()
     Dim lexer As LexerMarkdown
     Dim stream As IIo
     
+    Logger.LoggingLevel = Debugging
+    Throw.ThrowLevel = NoLevel
+    
     Set lexer = New LexerMarkdown
     Set stream = New IoFileReader
 

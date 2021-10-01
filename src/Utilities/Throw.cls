@@ -60,8 +60,10 @@ Public Property Let Exception(errType As Errs)
     logLevel = ErrsLevelLookup(errType)
     
     Logger.Log errDesc, logLevel
-    If logLevel >= ThrowLevel And logLevel > Level.Information Then
-        Err.Raise vbObjectError + errType + 1, Description:=errDesc
+    If logLevel >= ThrowLevel Then
+        If logLevel > Level.Information And logLevel <> Level.NoLevel Then
+            Err.Raise vbObjectError + errType + 1, Description:=errDesc
+        End If
     End If
 End Property
 

@@ -15,12 +15,11 @@ Option Explicit
 '-------------------------------------------------------------------------------
 
 Public Enum Level
-    NoLevel
     Debugging
     Information
     Warning
     Exception
-    NeverThrow
+    NoLevel
 End Enum
 
 ' Private Backing Store

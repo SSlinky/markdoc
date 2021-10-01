@@ -198,7 +198,7 @@ Private Sub CThisBlockContainerToParagraph()
     Set blockContent = block
 
     If Not blockContent.ContentText = vbNullString Then
-        Utils.CBlockLeaf block, new BlockLeafParagraph, ThisBlock
+        Utils.CBlockLeaf block, New BlockLeafParagraph, ThisBlock
     End If
     mBlockStack.Push block
 End Sub
@@ -366,17 +366,23 @@ Private Sub ParseLineTypeAction( _
             newBlockType = Parser.ParseUnknownBlockLine( _
                 lineUnindented, matches)
 
-            Select Case newBlockType
-                Case Is = BlockType.Heading
-                    LazyOpenSiblingBlock
-                    CThisBlockLeaf New BlockLeafHeading
-                    Set hdg = ThisBlock
-                    hdg.ContentText = matches(0).Submatches(1)
-                    hdg.HeadingLevel = Parser.ParseHeadingLevel( _
-                        matches(0).Submatches(1))
-                    OpenSiblingBlock
-                Case Is = BlockType.Paragraph
-                    ThisContentBlock.ContentText = lineUnindented
+            Select Case True
+                Case Is = Parser.IsCodeBlockFence( _
+                    lineUnindented, mFencedCodeFence)
+                    CThisBlockLeaf New BlockLeafFencedCode
+                Case Else
+                    Select Case newBlockType
+                        Case Is = BlockType.Heading
+                            LazyOpenSiblingBlock
+                            CThisBlockLeaf New BlockLeafHeading
+                            Set hdg = ThisBlock
+                            hdg.ContentText = matches(0).Submatches(1)
+                            hdg.HeadingLevel = Parser.ParseHeadingLevel( _
+                                matches(0).Submatches(1))
+                            OpenSiblingBlock
+                        Case Is = BlockType.Paragraph
+                            ThisContentBlock.ContentText = lineUnindented
+                    End Select
             End Select
 
 '       Parse from an unknown block that has content.
@@ -404,6 +410,8 @@ Private Sub ParseLineTypeAction( _
                 Case Is = Parser.IsListItem(lineUnindented, matches)
                     LazyOpenSiblingBlock
                     Throw = Errs.NotImplementedException
+                Case Else
+                    ThisContentBlock.ContentText = lineUnindented
             End Select
     End Select
 End Sub

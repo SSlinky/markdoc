@@ -138,7 +138,7 @@ Public Sub Insert(index As Long, obj As Variant)
 '       index: The index location to insert to.
 '       obj: The object to be inserted.
 '
-    If mBase.Count = 0 And index = 1 Then
+    If (mBase.Count = 0 And index = 1) Or (index > mBase.Count) Then
         mBase.Add obj
     Else
         mBase.Add obj, Before:=index

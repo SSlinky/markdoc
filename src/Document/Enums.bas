@@ -15,6 +15,9 @@ Public Enum BlockType
     IndentedCode
 End Enum
 
+
+' Converters
+'-------------------------------------------------------------------------------
 Public Function BlockTypeToStyleName(blType As BlockType) As String
 '   Converts a BlockType enum to a style LocalName.
 '
@@ -26,11 +29,15 @@ Public Function BlockTypeToStyleName(blType As BlockType) As String
 '
     Dim localName As String
     Select Case blType
+        Case Is = BlockType.Normal
+            localName = "Normal"
         Case Is = BlockType.Heading
             localName = "Heading "
         Case Is = BlockType.FencedCode, BlockType.IndentedCode
             localName = "CodeBlock"
         Case Else
+            Logger.Log "No explicit style for BlockType(" & blType & ")", _
+                Level.Information
             localName = "Normal"
     End Select
 

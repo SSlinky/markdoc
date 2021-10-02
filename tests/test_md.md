@@ -5,7 +5,8 @@ This document is intended to test markdown parsing.
 The content will be expanded as parsed / writer capability increases.
 
 ## Test Fenced Code Block
-The following block should be styled as code. Nothing should break the block
+
+The following block should be styled as code. Nothing should break the block.
 unless the closing fence is detected.
 
 ````This entire line should not be displayed.

@@ -2,10 +2,12 @@ Attribute VB_Name = "test_md"
 Option Explicit
 
 Sub test_RunMarkDoc()
+    DocumentShortcuts.Attach ThisDocument
+
     Dim lexer As LexerMarkdown
     Dim stream As IIo
     
-    Logger.LoggingLevel = Debugging
+    Logger.LoggingLevel = Information
     Throw.ThrowLevel = NoLevel
     
     Set lexer = New LexerMarkdown

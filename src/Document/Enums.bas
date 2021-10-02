@@ -29,7 +29,7 @@ Public Function BlockTypeToStyleName(blType As BlockType) As String
 '
     Dim localName As String
     Select Case blType
-        Case Is = BlockType.Normal
+        Case Is = BlockType.Paragraph
             localName = "Normal"
         Case Is = BlockType.Heading
             localName = "Heading "

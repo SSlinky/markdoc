@@ -256,13 +256,26 @@ Public Function Between(n As Long, a As Long, b As Long) As Boolean
 '
 '   Args:
 '       n: The number to test.
-'       b: The lower bound.
-'       c: The upper bound.
+'       a: The lower bound.
+'       b: The upper bound.
 '
 '   Returns:
 '       True if n between or equal to a or b.
 '
     Between = n >= a And n <= b   
+End Function
+
+Public Function Min(a As Long, b As Long) As Long
+'   Returns the smaller of the two numbers.
+'
+'   Args:
+'       a: The first number to compare.
+'       b: The second number to compare.
+'
+'   Returns:
+'       The smaller of a and b.
+'
+    Min = IIf(a < b, a, b)
 End Function
 
 

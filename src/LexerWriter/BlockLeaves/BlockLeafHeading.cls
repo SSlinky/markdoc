@@ -100,7 +100,14 @@ End Sub
 
 Public Sub StyleContent(styleDoc As Document)
 '   This method MUST be called after WriteContent.
-    Throw = Errs.NotImplementedException
+    Dim styleName As String
+    styleName = Enums.BlockTypeToStyleName(BlockType.Heading, HeadingLevel) 
+
+    Dim inlineCont As InlineContent
+    Set inlineCont = mInlineConts(1)
+    inlineCont.Range.Style = DocumentShortcuts.GetStyle(styleName)
+
+'   TODO: Loop over the inline sections setting as required.
 End Sub
 
 

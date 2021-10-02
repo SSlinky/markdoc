@@ -62,7 +62,9 @@ End Sub
 
 Public Sub StyleContent(styleDoc As Document)
 '   This method MUST be called after WriteContent.
-    Throw = Errs.NotImplementedException
+    Dim styleName As String
+    styleName = Enums.BlockTypeToStyleName(BlockType.FencedCode)
+    mInlineContent.Range.Style = DocumentShortcuts.GetStyle(styleName)
 End Sub
 
 

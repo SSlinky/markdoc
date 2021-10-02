@@ -92,9 +92,9 @@ Private Sub CreateStyle(localName As String)
     Dim sty As Style
     Select Case localName
         Case Is = CODEBLOCK
-            Logger.Log "Making style: " & STYNAME, Level.Information
-            Set sty = forDocument.Styles.Add( _
-                Name:=STYNAME, _
+            Logger.Log "Making style: " & localName, Level.Information
+            Set sty = mDoc.Styles.Add( _
+                Name:=localName, _
                 Type:=wdStyleTypeParagraph)
             With sty
                 .NoProofing = True
@@ -115,6 +115,6 @@ Private Sub CreateStyle(localName As String)
         Case Is = NORMAL
             Throw = Errs.NotImplementedException
         Case Else
-            Throw = Errs.DocumentWarnNoNamedDefaultStyle
+            Throw = Errs.WarnNoNamedDefaultStyle
     End Select
 End Sub

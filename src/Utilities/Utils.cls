@@ -271,13 +271,13 @@ End Function
 Public Sub CBlockLeaf( _
     block As IBlockContent, _
     castToBlock As IBlockLeaf, _
-    Optional parent As IBlockContainer)
+    Optional parentBlock As IBlockContainer)
 '   Casts a block of any type to an IBlockLeaf of type castToBlock.
 '
 '   Args:
 '       block: The block to be cast.
 '       castToBlock: The block to cast to.
-'       parent: The parent container so its child ref can be updated.
+'       parentBlock: The parent container so its child ref can be updated.
 '
     Logger.Log "Casting " & TypeName(block) & " to " & TypeName(castToBlock)
 
@@ -305,13 +305,17 @@ Public Sub CBlockLeaf( _
 
 '   Get the child index from parent.
     Dim childIndex As Long
-    If Not parent Is Nothing Then childIndex = parent.Children.PopFind(block)
+    If Not parentBlock Is Nothing Then
+        childIndex = parentBlock.Children.PopFind(block)
+    End If
 
 '   Cast to new block.
     Set block = castToBlock
 
 '   Update the child reference on the parent.
-    If Not parent Is Nothing Then parent.Children.Insert childIndex, block
+    If Not parentBlock Is Nothing Then
+        parentBlock.Children.Insert childIndex, block
+    End If
 End Sub
 
 '   Document helpers

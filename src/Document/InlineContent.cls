@@ -36,6 +36,11 @@ Public Property Set Range(var As Range)
 End Property
 
 Public Property Get Range() As Range
+    With mRange
+        If .End <> .Start + Len(mText) Then
+            Set mRange = .Parent.Range(.Start, .Start + Len(mText))
+        End If
+    End With
     Set Range = mRange
 End Property
 

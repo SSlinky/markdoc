@@ -38,7 +38,13 @@ End Property
 Public Property Get Range() As Range
     With mRange
         If .End <> .Start + Len(mText) Then
-            Set mRange = .Parent.Range(.Start, .Start + Len(mText))
+            Dim docLength As Long
+            Dim rangeEnd As Long
+            
+            docLength = Len(.Parent.content)
+            rangeEnd = .Start + Len(mText)
+            
+            Set mRange = .Parent.Range(.Start, Utils.Min(rangeEnd, docLength))
         End If
     End With
     Set Range = mRange

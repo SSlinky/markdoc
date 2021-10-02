@@ -16,6 +16,7 @@ Option Explicit
 
 ' Private Backing Store
 '-------------------------------------------------------------------------------
+Private mDoc As Document
 Private mStyles As Object
 
 ' Properties
@@ -30,7 +31,10 @@ Public Sub Attach(doc As Document)
 '   Args:
 '       doc: The document to attach.
 '
-   
+    Set mDoc = doc
+
+'   Create and populate the styles dictionary.
+    LoadStyles doc
 End Sub
 
 ' Methods
@@ -44,7 +48,19 @@ Public Function GetStyle(localName As String) As Style
 '   Returns:
 '       A document style if found or created. Normal if not.
 '
-    
+    If Not mStyles.Exists(localName) Then
+'       Attempt to create the style if it does not exist.
+        Logger.Log "Style " & localName & " does not exist.", _
+            Level.Information
+        CreateStyle localName
+'       Return Normal if we couldn't create.
+'       Function calls itself just in case Normal has been deleted.
+        If Not mStyles.Exists(localName) Then
+            Set GetStyle = GetStyle("Normal")
+            Exit Function
+        End If
+    End If
+    Set GetStyle = mDoc.Styles(localName)
 End Function
 
 
@@ -56,11 +72,11 @@ Private Sub LoadStyles(doc As Document)
 '   Args:
 '       doc: The document to load from.
 '
+    Set mStyles = CreateObject("Scripting.Dictionary")
     Dim sty As Style
     For Each sty In doc.Styles
         mStyles.Add sty.NameLocal, Nothing
     Next sty
-
 End Sub
 
 Private Sub CreateStyle(localName As String)
@@ -69,6 +85,7 @@ Private Sub CreateStyle(localName As String)
 '   Args:
 '       localName: The name of the style to create.
 '
+    Const NORMAL As String = "Normal"
     Const CODEBLOCK As String = "CodeBlock"
     Const BG_GREY As Long = 16
     
@@ -94,6 +111,9 @@ Private Sub CreateStyle(localName As String)
                     .ColorIndex = wdDarkBlue
                 End With
             End With
+            mStyles.Add localName, sty
+        Case Is = NORMAL
+            Throw = Errs.NotImplementedException
         Case Else
             Throw = Errs.DocumentWarnNoNamedDefaultStyle
     End Select

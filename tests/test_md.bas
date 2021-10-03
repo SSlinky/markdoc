@@ -1,6 +1,9 @@
 Attribute VB_Name = "test_md"
 Option Explicit
 
+Const GITHUB As String = "https://raw.githubusercontent.com/SSlinky/markdoc/master/tests/"
+
+
 Sub test_RunMarkDoc()
     DocumentShortcuts.Attach ThisDocument
 
@@ -14,6 +17,24 @@ Sub test_RunMarkDoc()
     Set stream = New IoFileReader
 
     stream.OpenStream ActiveDocument.Path & "\tests\test_md.md"
+    lexer.ParseMarkdown stream
+    Set lexer.AttachedDocument = ThisDocument
+    lexer.WriteDocument
+End Sub
+
+Sub test_RunMarkDoc_FromHttp()
+    DocumentShortcuts.Attach ThisDocument
+
+    Dim lexer As LexerMarkdown
+    Dim stream As IFileReader
+
+    Logger.LoggingLevel = Information
+    Throw.ThrowLevel = NoLevel
+
+    Set lexer = New LexerMarkdown
+    Set stream = New HttpFileReader
+
+    stream.OpenStream GITHUB & "test_md.md"
     lexer.ParseMarkdown stream
     Set lexer.AttachedDocument = ThisDocument
     lexer.WriteDocument

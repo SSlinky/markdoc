@@ -2,17 +2,17 @@ VERSION 1.0 CLASS
 BEGIN
   MultiUse = -1  'True
 END
-Attribute VB_Name = "IoFileReader"
+Attribute VB_Name = "FileReaderIo"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Option Explicit
-Implements IIo
+Implements IFileReader
 
 '-------------------------------------------------------------------------------
-'   Class: FileReader
-'   Reads the contents of a file line by line.
+'   Class: FileReaderIo
+'   Reads the contents of a file on the system line by line.
 '-------------------------------------------------------------------------------
 
 ' Private Backing Store
@@ -68,7 +68,7 @@ Public Sub OpenStream(fileName As String)
     Open mFileName For Input Access Read As #mFile
     Logger.Log "Opened (" & mFile & "): " & mFileName, Level.Information
     If IsEoF Then Throw = Errs.FileReaderWarnEmptyFile
-    
+
     mFileIsOpen = True
 End Sub
 
@@ -93,18 +93,18 @@ End Function
 
 ' Interface Implementation
 '-------------------------------------------------------------------------------
-Public Property Get IIo_EOF() As Boolean
-    IIo_EOF = IsEoF
+Public Property Get IFileReader_EOF() As Boolean
+    IFileReader_EOF = IsEoF
 End Property
 
-Public Sub IIo_OpenStream(fileName As String)
+Public Sub IFileReader_OpenStream(fileName As String)
     OpenStream fileName
 End Sub
 
-Public Function IIo_PeekNextLine() As String
-    IIo_PeekNextLine = PeekNextLine
+Public Function IFileReader_PeekNextLine() As String
+    IFileReader_PeekNextLine = PeekNextLine
 End Function
 
-Public Function IIo_ReadNextLine() As String
-    IIo_ReadNextLine = ReadNextLine
+Public Function IFileReader_ReadNextLine() As String
+    IFileReader_ReadNextLine = ReadNextLine
 End Function

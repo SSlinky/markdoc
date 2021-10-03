@@ -61,7 +61,7 @@ End Sub
 
 ' Methods
 '-------------------------------------------------------------------------------
-Public Sub ParseMarkdown(textStream As IIo)
+Public Sub ParseMarkdown(textStream As IFileReader)
 '   Phase 1:
 '   Parse the text stream into blocks.
     Do While Not textStream.EOF

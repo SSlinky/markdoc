@@ -9,7 +9,7 @@ Sub test_RunMarkDoc()
     
     Logger.LoggingLevel = Information
     Throw.ThrowLevel = NoLevel
-    
+
     Set lexer = New LexerMarkdown
     Set stream = New IoFileReader
 
@@ -20,12 +20,12 @@ Sub test_RunMarkDoc()
 End Sub
 
 Sub test_EmptyDoc()
-    Dim stream1 As IIo
-    Dim stream2 As IIo
-    
+    Dim stream1 As IFileReader
+    Dim stream2 As IFileReader
+
     Set stream1 = New IoFileReader
     Set stream2 = New IoFileReader
-    
+
     stream1.OpenStream ActiveDocument.Path & "\tests\test_empty.md"
     stream2.OpenStream ActiveDocument.Path & "\tests\test_md.md"
 End Sub

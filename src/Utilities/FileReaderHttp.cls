@@ -43,9 +43,43 @@ Public Function ReadNextLine() As String
     ReadNextLine = mLines.Pop
 End Function
 
-Public Sub OpenStream(httpPath As String)
+Public Sub OpenStream( _
+    httpPath As String, _
+    Optional proxy_username As String, _
+    Optional proxy_password As String)
+
 '   Loads file into backing store so that it can be read line by line.
-    Throw = Errs.NotImplementedException
+'
+'   TODO: Move proxy stuff into a config file and read from there.
+'         Cannot have this pushed to github and method sig must be path only.
+'   Args:
+'       httpPath: The url location of the file.
+'       proxy_username: Username to get through proxy.
+'       proxy_password: Password to get through proxy.
+'
+    Const HTTPREQUEST_PROXYSETTING_PROXY As Long = 2
+    Const PROXY As String = "proxy.com:8080"
+
+    Dim httpResult As String
+    Set mLines = New List
+    
+    With CreateObject("MSXML2.ServerXMLHTTP")
+        .Open "GET", httpPath, False
+        If Not proxy_username = vbNullString Then
+            .SetProxy HTTPREQUEST_PROXYSETTING_PROXY, PROXY, ""
+            .SetProxyCredentials proxy_username, proxy_password
+        End If
+        .Send
+        httpResult = StrConv(.ResponseBody, vbUnicode)
+    End With
+
+    Dim fileLines() As String
+    fileLines = Split(httpResult, vbLf)
+
+    Dim i As Long
+    For i = 0 To UBound(fileLines)
+        mLines.Push fileLines(i)
+    Next i
 End Sub
 
 Public Sub CloseStream()

@@ -25,7 +25,7 @@ Private mNextLine As String
 '-------------------------------------------------------------------------------
 Public Property Get IsEoF() As Boolean
 '   Returns True if the entire contents has been read.
-    Throw = Errs.NotImplementedException
+    IsEoF = mLines.Count = 0
 End Property
 
 
@@ -33,12 +33,14 @@ End Property
 '-------------------------------------------------------------------------------
 Public Function PeekNextLine() As String
 '   Returns the next line to be read without advancing the pointer.
-    Throw = Errs.NotImplementedException
+    If IsEoF Then Throw = Errs.FileReaderEOF
+    PeekNextLine = mLines.Peek
 End Function
 
 Public Function ReadNextLine() As String
 '   Returns the next line to be read and advances the pointer.
-    Throw = Errs.NotImplementedException
+    If IsEoF Then Throw = Errs.FileReaderEOF
+    ReadNextLine = mLines.Pop
 End Function
 
 Public Sub OpenStream(httpPath As String)
@@ -47,7 +49,8 @@ Public Sub OpenStream(httpPath As String)
 End Sub
 
 Public Sub CloseStream()
-'   Does nothing.
+'   Discards the file.
+    Set mLines = New List
 End Sub
 
 

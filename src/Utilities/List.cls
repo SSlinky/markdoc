@@ -24,14 +24,14 @@ Private mIsTapeStyle As Boolean
 ' Properties
 '-------------------------------------------------------------------------------
 Public Property Get IsTapeStyle() As Boolean
-'   Pushing and popping is FILO.
+'   Pushing and popping is FIFO.
 '    - New items are pushed after last item.
 '    - First item is popped.
     IsTapeStyle = mIsTapeStyle
 End Property
 
 Public Property Get IsStandardStyle() As Boolean
-'   Pushing and popping is FIFO.
+'   Pushing and popping is LIFO.
 '    - New items are pushed before first item.
 '    - First item is popped.
     IsStandardStyle = Not mIsTapeStyle

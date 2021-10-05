@@ -43,22 +43,25 @@ Public Function ReadNextLine() As String
     ReadNextLine = mLines.Pop
 End Function
 
-Public Sub OpenStream( _
-    httpPath As String, _
-    Optional proxy_username As String, _
-    Optional proxy_password As String)
-
+Public Sub OpenStream(httpPath As String)
 '   Loads file into backing store so that it can be read line by line.
 '
 '   TODO: Move proxy stuff into a config file and read from there.
 '         Cannot have this pushed to github and method sig must be path only.
 '   Args:
-'       httpPath: The url location of the file.
-'       proxy_username: Username to get through proxy.
-'       proxy_password: Password to get through proxy.
+'       httpPath: (excl proxy) The url location of the file.
+'                 (incl proxy) The url,proxy,username,password.
 '
     Const HTTPREQUEST_PROXYSETTING_PROXY As Long = 2
-    Const PROXY As String = "proxy.com:8080"
+
+    Dim proxyUrl As String
+    Dim proxyUsr As String
+    Dim proxyPwd As String
+    Dim args() as String
+
+    args = split(httpPath, ",")
+    If UBound(args) = 3 Then
+        proxy_url = 
 
     Dim httpResult As String
     Set mLines = New List

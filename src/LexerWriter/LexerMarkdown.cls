@@ -343,7 +343,7 @@ Private Sub ParseLineTypeAction( _
                     Set hdg = ThisBlock
                     hdg.ContentText = matches(0).Submatches(1)
                     hdg.HeadingLevel = Parser.ParseHeadingLevel( _
-                        matches(0).Submatches(0)
+                        matches(0).Submatches(0))
 '               A new list breaks the paragraph.
                 Case Is = Parser.IsListItem(lineUnindented, matches)
                     Throw = Errs.NotImplementedException
@@ -378,7 +378,7 @@ Private Sub ParseLineTypeAction( _
                             Set hdg = ThisBlock
                             hdg.ContentText = matches(0).Submatches(1)
                             hdg.HeadingLevel = Parser.ParseHeadingLevel( _
-                                matches(0).Submatches(0)
+                                matches(0).Submatches(0))
                             OpenSiblingBlock
                         Case Is = BlockType.Paragraph
                             ThisContentBlock.ContentText = lineUnindented
@@ -405,7 +405,7 @@ Private Sub ParseLineTypeAction( _
 
                     hdg.ContentText = matches(0).Submatches(1)
                     hdg.HeadingLevel = Parser.ParseHeadingLevel( _
-                        matches(0).Submatches(0)
+                        matches(0).Submatches(0))
 '               Content becoming a new list is a paragraph.
                 Case Is = Parser.IsListItem(lineUnindented, matches)
                     LazyOpenSiblingBlock

@@ -262,6 +262,20 @@ Public Function Regex(patternString As String, testString As String) As Object
         patternString & " with " & testString
 End Function
 
+Public Function EndsWith(str As String, subStr As String) As Boolean
+Attribute EndsWith.VB_Description = "Tests whether a string ends with a string."
+'   Tests whether a string ends with a string
+'
+'   Args:
+'       str: The string to test.
+'       subStr: The string to attempt to locate.
+'
+'   Returns:
+'       True if str ends with subStr.
+'
+    EndsWith = Right(str, Len(subStr)) = subStr
+End Function
+
 '   Long Helpers
 '-------------------------------------------------------------------------------
 Public Function Between(n As Long, a As Long, b As Long) As Boolean

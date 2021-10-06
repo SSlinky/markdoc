@@ -66,6 +66,7 @@ Public Sub ParseMarkdown(textStream As IFileReader)
 '   Parse the text stream into blocks.
     Do While Not textStream.EOF
         mLine = textStream.ReadNextLine
+        mLine = Utils.Secure(mLine)
         ParseLineType mLine
         mPreviousLine = mLine
     Loop

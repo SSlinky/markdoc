@@ -46,6 +46,14 @@ Public Property Get IndentationLevel() As Long
     IndentationLevel = mIndentLevel
 End Property
 
+Public Property Set InlineContents(var As List)
+Attribute InlineContents.VB_Description = "The parsed inline content."
+    Set mInlineContents = var
+End Property
+
+Public Property Get InlineContents() As List
+    InlineContents = mInlineConts
+End Property
 
 ' Methods
 '-------------------------------------------------------------------------------

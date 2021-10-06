@@ -138,3 +138,27 @@ Public Function ParseHeadingLevel(headingText As String) As Long
 
     ParseHeadingLevel = Len(Split(Trim(headingText), " ")(0)) - 1
 End Function
+
+Public Function HasHardLineBreak(line As String, prevLine As String) As Boolean
+Attribute HasHardLineBreak.VB_Description = "Test line for hard line break."
+'   Test line for hard line break in a paragraph line.
+'
+'   Args:
+'       line: The line of text to be parsed.
+'       prevLine: The previous line of parsed text.
+'
+'   Returns:
+'       True if the line should be broken.
+
+    Const DOUBLESPACE As String = "  "
+
+    If Utils.EndsWith(line, DOUBLESPACE) Then
+        HasHardLineBreak = True
+        Exit Function
+    End If
+
+    'TODO: Check if ends with unescaped \
+    'Think about whether it's better to do this or to have a paragraph split
+    'during phase 2. Maybe that's better, actually.
+
+End Function

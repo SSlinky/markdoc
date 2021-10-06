@@ -40,10 +40,10 @@ Public Property Get Range() As Range
         If .End <> .Start + Len(mText) Then
             Dim docLength As Long
             Dim rangeEnd As Long
-            
+
             docLength = Len(.Parent.content)
             rangeEnd = .Start + Len(mText)
-            
+
             Set mRange = .Parent.Range(.Start, Utils.Min(rangeEnd, docLength))
         End If
     End With

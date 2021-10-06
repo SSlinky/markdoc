@@ -101,7 +101,7 @@ End Sub
 Public Sub StyleContent(styleDoc As Document)
 '   This method MUST be called after WriteContent.
     Dim styleName As String
-    styleName = Enums.BlockTypeToStyleName(BlockType.Heading, HeadingLevel) 
+    styleName = Enums.BlockTypeToStyleName(BlockType.Heading, HeadingLevel)
 
     Dim inlineCont As InlineContent
     Set inlineCont = mInlineConts(1)

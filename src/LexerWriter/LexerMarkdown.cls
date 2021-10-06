@@ -212,7 +212,7 @@ Private Sub SetThisBlockContent()
 
     Dim block As IBlock
     Set block = ThisBlock
-    
+
     If TypeOf block Is IBlockContainer Then
 '       Cast to paragraph.
         Utils.CBlockLeaf block, New BlockLeafParagraph, ThisBlock
@@ -303,7 +303,7 @@ Private Sub ParseLineTypeAction( _
         CloseBlock
         ParseLineTypeAction lineCleaned, lineUnindented, indentLevel
     End If
-    
+
     Dim matches As Object
     Dim block As IBlock
     Dim hdg As BlockLeafHeading
@@ -359,7 +359,7 @@ Private Sub ParseLineTypeAction( _
                 OpenSiblingBlock
                 ParseLineTypeAction lineCleaned, lineUnindented, indentLevel
             End If
-        
+
 '       Parse from inside an empty block.
         Case ThisContentBlock.ContentText = vbNullString
             Dim newBlockType As BlockType
@@ -441,7 +441,7 @@ Private Sub ParseBlockTree(block As IBlock)
         Dim content As IBlockContent
         Set content = block
         Logger.Log "Parsing... " & content.ContentText
-    
+
     Else
         Throw = Errs.BlockTypeMismatch
     End If

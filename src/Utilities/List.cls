@@ -59,7 +59,7 @@ Public Property Get Enumerator() As IUnknown
 Attribute Enumerator.VB_Description = "Gets an enumerator that iterates through the List."
 Attribute Enumerator.VB_UserMemId = -4
 'Gets an enumerator that iterates through the List.
-    Set Enumerator = mBase.[_NewEnum]    
+    Set Enumerator = mBase.[_NewEnum]
 End Property
 
 

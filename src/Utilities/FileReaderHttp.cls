@@ -83,7 +83,7 @@ Public Sub OpenStream(args As String)
             .SetProxyCredentials proxyUsr, proxyPwd
         End If
         .Send
-'       Convert the result from an ANSI byte array to unicode.        
+'       Convert the result from an ANSI byte array to unicode.
         httpResult = StrConv(.ResponseBody, vbUnicode)
     End With
 

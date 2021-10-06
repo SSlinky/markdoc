@@ -20,7 +20,7 @@ Sub test_RunMarkDoc_from_http()
     stream.OpenStream GITHUB & "test_md.md"
     lexer.ParseMarkdown stream
     Set lexer.AttachedDocument = ThisDocument
-    
+
     ThisDocument.content.Delete
     lexer.WriteDocument
 End Sub
@@ -45,7 +45,7 @@ Sub test_RunMarkDoc_from_http_behind_proxy()
     stream.OpenStream GITHUB & "test_md.md" & secrets
     lexer.ParseMarkdown stream
     Set lexer.AttachedDocument = ThisDocument
-    
+
     ThisDocument.content.Delete
     lexer.WriteDocument
 End Sub

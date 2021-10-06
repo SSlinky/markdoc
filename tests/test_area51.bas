@@ -24,16 +24,16 @@ Function RegexTest() As Object
     Dim t1 As String
 
     t1 = "    # Simple Heading"
-    
+
     Dim re As Object
     Set re = CreateObject("VBScript.RegExp")
     re.Pattern = PAT
-    
+
     Dim m As Object
     Dim x As Object
     Dim s As Long
     Dim a As Long
-    
+
     Set m = re.Execute(t1)
     Debug.Print "Matching " & t1
     For Each x In m
@@ -43,10 +43,10 @@ Function RegexTest() As Object
             Debug.Print "    " & s & ": " & x.Submatches(s)
         Next s
     Next x
-    
+
     If m.Count Then Debug.Print "matched!"
     Set RegexTest = m
-    
+
 End Function
 
 Public Function IsHeading(line As String, matches As Object) As Boolean
@@ -87,7 +87,7 @@ End Function
 Public Sub test_IsHeading()
 
     Dim matches As Object
-    
+
     If IsHeading("   ###### Simple Heading   ########   x ####", matches) Then
         With matches(0)
             Debug.Print .Submatches(0), .Submatches(1)
@@ -101,15 +101,15 @@ Sub test_Cast()
 
     Dim b As IBlock
     Dim x As IBlock
-    
+
     Set b = New BlockContainer
     Set x = b
-    
+
     Utils.CBlockLeaf b, New BlockLeafHeading
     Debug.Print TypeName(b)
     Debug.Print "Is BlockLeafHeading: " & TypeOf b Is BlockLeafHeading
     Debug.Print "Reference match: " & (b Is x) & vbNewLine
-    
+
 '    Dim bl As New List
 '    bl.Push New BlockContainer
 '    Debug.Print TypeName(bl.Peek)
@@ -120,11 +120,11 @@ Sub test_Cast()
 '
 '    Utils.CBlockLeaf bl.Items(1), New BlockLeafHeading
 '    Debug.Print "Is BlockLeafHeading: " & TypeOf bl.Items(1) Is BlockLeafHeading
-    
+
     Dim col As New Collection
     Set b = New BlockContainer
     col.Add b
-    
+
     Utils.CBlockLeaf col.Item(1), New BlockLeafHeading
     Debug.Print TypeName(col.Item(1))
     Debug.Print "Collection item is BlockLeafHeading: " & TypeOf col.Item(1) Is BlockLeafHeading

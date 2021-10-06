@@ -9,7 +9,7 @@ Sub test_RunMarkDoc()
 
     Dim lexer As LexerMarkdown
     Dim stream As IIo
-    
+
     Logger.LoggingLevel = Information
     Throw.ThrowLevel = NoLevel
 

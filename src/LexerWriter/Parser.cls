@@ -42,7 +42,7 @@ Public Function IsCodeBlockFence( _
     Dim fenceChar  As String
 
     If Not fence = vbNullString Then
-'       Check fence matches left side of line    
+'       Check fence matches left side of line
         If Left(line, Len(fence)) = fence Then
 '           Check entire line only fence characters.
             fenceChar = Left(fence, 1)

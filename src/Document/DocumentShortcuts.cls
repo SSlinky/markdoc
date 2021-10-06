@@ -88,7 +88,7 @@ Private Sub CreateStyle(localName As String)
     Const NORMAL As String = "Normal"
     Const CODEBLOCK As String = "CodeBlock"
     Const BG_GREY As Long = 16
-    
+
     Dim sty As Style
     Select Case localName
         Case Is = CODEBLOCK

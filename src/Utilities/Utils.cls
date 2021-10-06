@@ -50,9 +50,9 @@ Public Function UnindentLine(line As String, indentLevel As Long) As String
 
     dim i As Long
     dim c As String
-    
+
     For i = 1 To indentLevel
-'       Throw if we hit the end of the line.    
+'       Throw if we hit the end of the line.
         If i > Len(line) Then
             Throw = Errs.UtilsBadArguments
             UnindentLine = line
@@ -61,14 +61,14 @@ Public Function UnindentLine(line As String, indentLevel As Long) As String
 
         c = Mid(line, i, 1)
         Select Case c
-'           Iterate only when we hit a space.        
+'           Iterate only when we hit a space.
             Case Is = " ":
 
-'           Replace tabs with four spaces.            
+'           Replace tabs with four spaces.
             Case Is = Chr(ASCII_TAB):
                 line = InsertReplace(line, "    ", i, 1)
 
-'           Throw for any other character.                
+'           Throw for any other character.
             Case Else:
                 Throw = Errs.UtilsStringIndentNotBlank
                 UnindentLine = line
@@ -120,12 +120,12 @@ End Function
 Function SuperTrim(str As String, Optional trimChars As String) As String
 '   Removes any character in trimChars from the start or end of the line.
     Dim i As Long
-    
+
 '   Default trim characters
     If trimChars = "" Then
         trimChars = vbNewLine & Chr(ASCII_NBSP) & Chr(ASCII_TAB) & " "
     End If
-    
+
 '   Trim left
     For i = 1 To Len(str)
         If Not StrIn(Mid(str, i, 1), trimChars) Then Exit For
@@ -137,7 +137,7 @@ Function SuperTrim(str As String, Optional trimChars As String) As String
         If Not StrIn(Mid(str, i, 1), trimChars) Then Exit For
     Next i
     If i < Len(str) Then str = Left(str, i)
-    
+
     SuperTrim = str
 End Function
 
@@ -148,13 +148,13 @@ Function CleanString(str As String, _
 '   Converts any single dirtyChar into a cleanChar.
 '   dirtyChars and cleanChars must be the same length.
     If Not Len(dirtyChars) = Len(cleanChars) Then Throw = UtilsBadArguments
-    
+
 '   Set up defaults if nothing passed
     If dirtyChars = "" Then
         dirtyChars = Chr(ASCII_NBSP)
         cleanChars = " "
     End If
-    
+
     Dim i As Long
 '   Replace each dirtyChar with the corresponding cleanChar
     For i = 1 To Len(dirtyChars)
@@ -262,7 +262,7 @@ Public Function Between(n As Long, a As Long, b As Long) As Boolean
 '   Returns:
 '       True if n between or equal to a or b.
 '
-    Between = n >= a And n <= b   
+    Between = n >= a And n <= b
 End Function
 
 Public Function Min(a As Long, b As Long) As Long

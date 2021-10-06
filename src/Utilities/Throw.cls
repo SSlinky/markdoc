@@ -33,11 +33,11 @@ Public Enum Errs
     FileReaderWarnEmptyFile
 
 '   Lexer
-    LexerWarnNothingToWrite    
+    LexerWarnNothingToWrite
 
 '   Parser
     ParserIndentLevelOutsideRange
-    
+
 '   Utility
     UtilsBadArguments
     UtilsStringIndentNotBlank
@@ -59,7 +59,7 @@ Public Property Let Exception(errType As Errs)
 
     errDesc = ErrsLookup(errType)
     logLevel = ErrsLevelLookup(errType)
-    
+
     Logger.Log errDesc, logLevel
     If logLevel >= ThrowLevel Then
         If logLevel > Level.Information And logLevel <> Level.NoLevel Then

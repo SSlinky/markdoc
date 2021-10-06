@@ -32,7 +32,7 @@ End Property
 ' Methods
 '-------------------------------------------------------------------------------
 Public Function PeekNextLine() As String
-'   Returns the next line to be read without advancing the pointer.
+Attribute Enumerator.VB_Description = "Returns the next line to be read without advancing the pointer."
     If IsEoF Then Throw = Errs.FileReaderEOF
     PeekNextLine = mLines.Peek
 End Function
@@ -43,42 +43,54 @@ Public Function ReadNextLine() As String
     ReadNextLine = mLines.Pop
 End Function
 
-Public Sub OpenStream(httpPath As String)
+Public Sub OpenStream(args As String)
 '   Loads file into backing store so that it can be read line by line.
+'   The args parameter is split and read. Not ideal but needs to be generic.
 '
-'   TODO: Move proxy stuff into a config file and read from there.
-'         Cannot have this pushed to github and method sig must be path only.
 '   Args:
-'       httpPath: (excl proxy) The url location of the file.
-'                 (incl proxy) The url,proxy,username,password.
+'       args: (excl proxy) The url location of the file.
+'             (incl proxy) url,proxy url,username,password.
 '
     Const HTTPREQUEST_PROXYSETTING_PROXY As Long = 2
 
+    Dim resource As String
     Dim proxyUrl As String
     Dim proxyUsr As String
     Dim proxyPwd As String
-    Dim args() as String
+    Dim spltArgs() As String
+    Dim useProxy As Boolean
 
-    args = split(httpPath, ",")
-    If UBound(args) = 3 Then
-        proxy_url = 
+'   Set up the GET request parameters.
+    spltArgs = split(args, ",")
+    If UBound(spltArgs) = 3 Then
+        useProxy = True
+        proxyUrl = spltArgs(1)
+        proxyUsr = spltArgs(2)
+        proxyPwd = spltArgs(3)
+    ElseIf UBound(spltArgs) <> 0 Then
+        Throw = Errs.UtilsBadArguments
+    End If
+    resource = spltArgs(0)
 
     Dim httpResult As String
     Set mLines = New List
-    
+
+'   Send the GET request.
     With CreateObject("MSXML2.ServerXMLHTTP")
-        .Open "GET", httpPath, False
-        If Not proxy_username = vbNullString Then
-            .SetProxy HTTPREQUEST_PROXYSETTING_PROXY, PROXY, ""
-            .SetProxyCredentials proxy_username, proxy_password
+        .Open "GET", resource, False
+        If useProxy Then
+            .SetProxy HTTPREQUEST_PROXYSETTING_PROXY, proxyUrl, ""
+            .SetProxyCredentials proxyUsr, proxyPwd
         End If
         .Send
+'       Convert the result from an ANSI byte array to unicode.        
         httpResult = StrConv(.ResponseBody, vbUnicode)
     End With
 
     Dim fileLines() As String
     fileLines = Split(httpResult, vbLf)
 
+'   Add the lines to the backing store so they can be iterated through.
     Dim i As Long
     For i = 0 To UBound(fileLines)
         mLines.Push fileLines(i)

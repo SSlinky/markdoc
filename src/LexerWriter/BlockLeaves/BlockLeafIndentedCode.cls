@@ -19,13 +19,6 @@ Implements IBlockContent
 '   Indented code blocks do not contain children or siblings.
 '-------------------------------------------------------------------------------
 
-
-Private Type StyledContent
-    Text As String
-    Range As Range
-End Type
-
-
 ' Private Backing Store
 '-------------------------------------------------------------------------------
 Private mContentText As String

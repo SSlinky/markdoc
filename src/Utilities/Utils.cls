@@ -20,6 +20,19 @@ Const ASCII_TAB As Long = 9
 
 '   String manipulation.
 '-------------------------------------------------------------------------------
+Public Function Secure(line As String) As String
+Attribute Secure.VB_Description = "Replaces U+0000 with U+FFFD."
+'   Replaces U+0000 with U+FFFD
+'
+'   Args:
+'       line: The line to secure.
+'
+'   Returns:
+'       The line with replaced U+0000 characters.
+'
+    Secure = Replace(line, ChrW(0), ChrW(65533))
+End Function
+
 Public Function UnindentLine(line As String, indentLevel As Long) As String
 '   Removes indentation from a line so that it can be parsed as if it was
 '   at base indent level.

@@ -446,7 +446,39 @@ Private Sub ParseBlockTree(block As IBlock)
     Else
         Throw = Errs.BlockTypeMismatch
     End If
+End Sub
 
+Private Sub ParseInlineContent(block As IBlockContentInline)
+Attribute ParseInlineContent.VB_Description = "Parses the inline content of the block."
+'   Parses the inline content of the block.
+'
+'   Args:
+'       block: The block that has inline content.
+'
+    Const ESCAPABLE As String = "\!""#$%&'()*+,-./:;<=>?@[\]^_`{|}~"
+
+'   Prepare the content variables.
+    Dim inlineConts As List
+    Set inlineConts = New List
+
+    Dim content As String
+    content = block.ContentText
+
+'   Prepare the parser variables.
+    Dim i As Long
+    Dim c As String * 1
+    Dim isCode As Boolean
+    Dim isBold As Boolean
+    Dim isItalic As Boolean
+    Dim isEscaped As Boolean
+
+    For i = 1 To Len(content)
+
+
+    Next i
+
+
+    Set block.InlineContents = inlineConts
 End Sub
 
 

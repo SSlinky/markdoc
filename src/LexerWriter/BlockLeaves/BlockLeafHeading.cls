@@ -7,6 +7,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
+'@Folder("markDoc.src.LexerWriter.BlockLeaves")
 Option Explicit
 Implements IBlock
 Implements IBlockLeaf
@@ -101,7 +102,7 @@ End Sub
 Public Sub StyleContent(styleDoc As Document)
 '   This method MUST be called after WriteContent.
     Dim styleName As String
-    styleName = Enums.BlockTypeToStyleName(BlockType.Heading, HeadingLevel) 
+    styleName = Enums.BlockTypeToStyleName(BlockType.Heading, HeadingLevel)
 
     Dim inlineCont As InlineContent
     Set inlineCont = mInlineConts(1)

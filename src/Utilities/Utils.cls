@@ -7,6 +7,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+'@Folder("markDoc.src.Utilities")
 Option Explicit
 
 '-------------------------------------------------------------------------------
@@ -42,17 +43,17 @@ Public Function UnindentLine(line As String, indentLevel As Long) As String
     End If
 
 '   Throw if there's no line or the indent level is less than 0.
-    If line = vbNullString or indentLevel < 0 Then
+    If line = vbNullString Or indentLevel < 0 Then
         Throw = Errs.UtilsBadArguments
         UnindentLine = line
         Exit Function
     End If
 
-    dim i As Long
-    dim c As String
+    Dim i As Long
+    Dim c As String
     
     For i = 1 To indentLevel
-'       Throw if we hit the end of the line.    
+'       Throw if we hit the end of the line.
         If i > Len(line) Then
             Throw = Errs.UtilsBadArguments
             UnindentLine = line
@@ -61,14 +62,14 @@ Public Function UnindentLine(line As String, indentLevel As Long) As String
 
         c = Mid(line, i, 1)
         Select Case c
-'           Iterate only when we hit a space.        
+'           Iterate only when we hit a space.
             Case Is = " ":
 
-'           Replace tabs with four spaces.            
+'           Replace tabs with four spaces.
             Case Is = Chr(ASCII_TAB):
                 line = InsertReplace(line, "    ", i, 1)
 
-'           Throw for any other character.                
+'           Throw for any other character.
             Case Else:
                 Throw = Errs.UtilsStringIndentNotBlank
                 UnindentLine = line
@@ -262,7 +263,7 @@ Public Function Between(n As Long, a As Long, b As Long) As Boolean
 '   Returns:
 '       True if n between or equal to a or b.
 '
-    Between = n >= a And n <= b   
+    Between = n >= a And n <= b
 End Function
 
 Public Function Min(a As Long, b As Long) As Long

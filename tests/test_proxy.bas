@@ -1,4 +1,5 @@
 Attribute VB_Name = "test_proxy"
+'@Folder("markDoc.Tests")
 Option Explicit
 
 Const GITHUB As String = "https://raw.githubusercontent.com/SSlinky/markdoc/master/tests/"
@@ -40,7 +41,8 @@ Sub test_RunMarkDoc_from_http_behind_proxy()
 
     Set lexer = New LexerMarkdown
     Set stream = New FileReaderHttp
-    secrets = private_test_proxy.PROXYCREDS
+    
+    ' secrets = private_test_proxy.PROXYCREDS
 
     stream.OpenStream GITHUB & "test_md.md" & secrets
     lexer.ParseMarkdown stream

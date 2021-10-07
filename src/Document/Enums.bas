@@ -1,10 +1,11 @@
 Attribute VB_Name = "Enums"
+'@Folder("markDoc.src.Document")
 Option Explicit
 
 Public Enum BlockType
 '   Containers
     List
-    ListItem
+    listItem
     Quote
 
 '   Leaves

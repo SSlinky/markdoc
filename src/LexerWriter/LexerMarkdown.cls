@@ -7,6 +7,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
+'@Folder("markDoc.src.LexerWriter")
 Option Explicit
 
 '-------------------------------------------------------------------------------
@@ -266,7 +267,7 @@ Private Sub ParseLineType(line As String)
 '       line: The raw line as it is read from the source.
 
     Dim cleanLine As String
-    Dim unindentLine As String
+    Dim UnindentLine As String
     Dim thisIndentLevel As Long
 
 '   Clean, get indentation, and unindent line.
@@ -275,11 +276,11 @@ Private Sub ParseLineType(line As String)
     If Trim(cleanLine) = vbNullString Then
         thisIndentLevel = ThisBlock.IndentationLevel
     Else
-        unindentLine = Utils.unindentLine(cleanLine, ThisBlock.IndentationLevel)
-        thisIndentLevel = Utils.GetIndentationLevel(unindentLine)
+        UnindentLine = Utils.UnindentLine(cleanLine, ThisBlock.IndentationLevel)
+        thisIndentLevel = Utils.GetIndentationLevel(UnindentLine)
     End If
 
-    ParseLineTypeAction cleanLine, unindentLine, thisIndentLevel
+    ParseLineTypeAction cleanLine, UnindentLine, thisIndentLevel
 End Sub
 
 Private Sub ParseLineTypeAction( _

@@ -109,6 +109,7 @@ Public Sub SetStandardStyle()
 End Sub
 
 Public Function PopFind(obj As Variant) As Long
+Attribute IndexOf.VB_Description = "Pops an object at the location obj is found."
 '   Pops an object at the location obj is found.
 '
 '   Args:
@@ -118,13 +119,30 @@ Public Function PopFind(obj As Variant) As Long
 '       The index location of the object.
 '
     Dim i As Long
+    i = IndexOf(obj)
+    If i > 0 Then mBase.Remove i
+    PopFind = i
+End Function
+
+Public Function IndexOf(obj As Variant) As Long
+Attribute IndexOf.VB_Description = "Returns the index of an object if found."
+'   Returns the index of an object if found.
+'
+'   Args:
+'       obj: The object to find.
+'
+'   Returns:
+'       The index location of the object.
+'
+'   Raises:
+'
+    Dim i As Long
     Dim listItem As Variant
 
     For Each listItem In mBase
         i = i + 1
         If listItem Is obj Then
-            mBase.Remove i
-            PopFind = i
+            IndexOf = i
             Exit Function
         End If
     Next listItem

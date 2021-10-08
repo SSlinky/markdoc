@@ -149,10 +149,11 @@ Attribute HasHardLineBreak.VB_Description = "Test line for hard line break."
 '
 '   Returns:
 '       True if the line should be broken.
-
+'
+    If line = vbNewLine Or prevLine = vbNullString Then Exit Function
     Const DOUBLESPACE As String = "  "
 
-    If Utils.EndsWith(line, DOUBLESPACE) Then
+    If Utils.EndsWith(prevLine, DOUBLESPACE) Then
         HasHardLineBreak = True
         Exit Function
     End If

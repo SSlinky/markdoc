@@ -163,6 +163,25 @@ Public Sub Insert(index As Long, obj As Variant)
     End If
 End Sub
 
+Public Sub FromArray(arr() As Variant)
+Attribute FromArray.VB_Description = "Load list items from an array."
+'   Load list items from a single dimension array.
+'
+'   Args:
+'       arr: A 1D array of anything.
+'
+    Dim lb As Long
+    Dim ub As Long
+
+    lb = LBound(arr)
+    ub = UBound(arr)
+
+    Dim i As Long
+    For i = lb To ub
+        Push arr(i)
+    Next i
+End Sub
+
 
 ' Helpers
 '-------------------------------------------------------------------------------

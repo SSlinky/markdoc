@@ -149,6 +149,25 @@ Private Sub LazyOpenSiblingBlock()
     OpenSiblingBlock
 End Sub
 
+Private Sub SplitBlockLeaf(block As IBlockLeaf, parent As IBlockContainer, splitContent As String)
+Attribute SplitBlock.VB_Description = "Splits content of one block over two."
+'   Splits content of one block over two with a blank line between.
+'
+'   Args:
+'       block: The block to split.
+'       parent: The parent block.
+'
+    Dim insertAtIndex As Long
+    insertAtIndex = parent.Children.IndexOf(block) + 1
+    
+    Dim splitBlock As IBlockLeaf
+    Set splitBlock = BlockFactory.CreateBlock(TypeName(block))
+    splitBlock.ContentText = splitContent
+
+    parent.Children.Insert(insertAtIndex, splitBlock)
+    parent.Children.Insert(insertAtIndex, New BlockLeafBlankLine)
+End Sub
+
 Private Function ThisBlock() As IBlock
 '   Returns the current block container.
 '

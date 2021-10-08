@@ -221,6 +221,21 @@ Function StrIn(str As String, subStr As String) As Boolean
     StrIn = InStr(str, subStr) > 0
 End Function
 
+Public Function UnescapedBackTick(str As String, Optional start As Long = 1) As Boolean
+Attribute UnescapedBackTick.VB_Description = "Tests whether the back tick is escaped."
+'   Tests whether the back tick is escaped
+'
+'   Args:
+'       str: The string containing the back tick.
+'       start: The position of the backtick.
+'
+'   Returns:
+'       True if the back tick is not escaped.
+'
+    UnescapedBackTick = Mid(str, start, 1) = "`" And _
+                        Mid(str, start + 1, 1) <> "`"
+End Function
+
 Public Function EndsWithNewLine(str As String) As Boolean
 '   Tests the passed in string to see if it ends in a new line.
 '

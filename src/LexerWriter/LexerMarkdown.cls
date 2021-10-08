@@ -156,6 +156,7 @@ Attribute SplitBlock.VB_Description = "Splits content of one block over two."
 '   Args:
 '       block: The block to split.
 '       parent: The parent block.
+'       splitContent: The ContentText for the split block.
 '
     Dim insertAtIndex As Long
     insertAtIndex = parent.Children.IndexOf(block) + 1
@@ -478,10 +479,18 @@ Attribute ParseInlineContent.VB_Description = "Parses the inline content of the 
 
 '   Prepare the content variables.
     Dim inlineConts As List
+    Dim thisInline As InlineContent
     Set inlineConts = New List
 
     Dim content As String
+    Dim lines As List
+    Dim line As Variant
+    Dim thisLine As String
+    Dim prevLine As String
+
     content = block.ContentText
+    Set lines = New List
+    lines.FromArray(Split(content, vbNewLine))
 
 '   Prepare the parser variables.
     Dim i As Long
@@ -490,12 +499,62 @@ Attribute ParseInlineContent.VB_Description = "Parses the inline content of the 
     Dim isBold As Boolean
     Dim isItalic As Boolean
     Dim isEscaped As Boolean
+    Dim isLineBreak As Boolean
+    Dim lineStart As Long
 
-    For i = 1 To Len(content)
+    thisInline = New InlineContent
+    lineStart = 1
 
+    For line In lines
+        prevLine = thisLine
+        thisLine = CStr(line)
 
-    Next i
+'       Break out if we hit a line break.
+        If Parser.HasHardLineBreak(thisLine, prevLine) Then
+            SplitBlockLeaf block, blockParent, Mid(content, lineStart)
+            Exit For
+        End If
 
+        For i = 1 To Len(thisLine)
+            c = Mid(thisLine, i, 1)
+
+            Select Case True
+'               Handle changes to state for inline code.
+                Case Is = Not isEscaped And Utils.UnescapedBackTick(thisLine, i)
+                    If isCode Then
+                        thisInline.Style = DocumentShortcuts.GetStyle("InlineCode")
+                    End If
+
+'                   Toggle isCode.
+                    isCode = isCode Xor True
+'                   Push the inline content to the stack and set up a new one.
+                    inlineConts.Push thisInline
+                    Set thisInline = New InlineContent
+
+'               Handle inline code content.
+                Case Is = isCode
+                    thisInline.AppendText c
+
+'               Handle an escape character.            
+                Case Is = Not isEscaped And c = "\"
+                    isEscaped = True
+                    GoTo NextParseInlineContentChar
+
+'               Handle the character after the escape character.
+                Case Is = isEscaped
+                    If Not Utils.StrIn(ESCAPABLE, c) Then c = "\" & c
+                    thisInline.AppendText c
+
+'               Handle plain text.
+                Case Else
+                    thisInline.AppendText c
+
+            End Select
+        Next i
+
+'       Add the length of this line and two for CrLf.        
+        lineStart = lineStart + Len(line) + 2
+    Next line
 
     Set block.InlineContents = inlineConts
 End Sub

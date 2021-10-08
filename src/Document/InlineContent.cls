@@ -57,3 +57,16 @@ End Property
 Public Property Get Style() As Style
     Set Style = mStyle
 End Property
+
+
+' Methods
+'-------------------------------------------------------------------------------
+Public Sub AppendText(str As String)
+Attribute AppendText.VB_Description = "Appends text to the Text property."
+'   Appends text to the Text property
+'
+'   Args:
+'       str: The string to append to the Text property.
+'
+    Text = Text & str
+End Sub

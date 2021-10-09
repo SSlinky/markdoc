@@ -7,6 +7,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+'@Folder("markDoc.src.LexerWriter")
 Option Explicit
 
 '-------------------------------------------------------------------------------
@@ -42,7 +43,7 @@ Public Function IsCodeBlockFence( _
     Dim fenceChar  As String
 
     If Not fence = vbNullString Then
-'       Check fence matches left side of line    
+'       Check fence matches left side of line
         If Left(line, Len(fence)) = fence Then
 '           Check entire line only fence characters.
             fenceChar = Left(fence, 1)

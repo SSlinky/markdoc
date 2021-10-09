@@ -1,4 +1,5 @@
 Attribute VB_Name = "test_area51"
+'@Folder("markDoc.Tests")
 Option Explicit
 
 Public Function ParseHeadingLevel(headingText As String) As Long

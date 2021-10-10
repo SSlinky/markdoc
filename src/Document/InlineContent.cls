@@ -55,6 +55,7 @@ Public Property Set Style(var As Style)
 End Property
 
 Public Property Get Style() As Style
+    If mStyle Is Nothing Then Style = DocumentShortcuts.GetStyle("Normal")
     Set Style = mStyle
 End Property
 

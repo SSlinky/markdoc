@@ -8,6 +8,7 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Option Explicit
+Implements ISortable
 
 '-------------------------------------------------------------------------------
 '   Class: InlineContent
@@ -81,3 +82,15 @@ Attribute AppendText.VB_Description = "Appends text to the Text property."
 '
     Text = Text & str
 End Sub
+
+
+' Interface Implementation
+'-------------------------------------------------------------------------------
+Public Property Let ISortable_SortIndex(var As Long)
+Attribute SortIndex.VB_Description = "The sort index for this item."
+    SortIndex = var
+End Property
+
+Public Property Get ISortable_SortIndex() As Long
+    ISortable_SortIndex = SortIndex
+End Property

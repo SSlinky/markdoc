@@ -8,15 +8,15 @@ Sub test_RunMarkDoc()
     DocumentShortcuts.Attach ThisDocument
 
     Dim lexer As LexerMarkdown
-    Dim stream As IIo
+    Dim stream As IFileReader
 
     Logger.LoggingLevel = Information
     Throw.ThrowLevel = NoLevel
 
     Set lexer = New LexerMarkdown
-    Set stream = New IoFileReader
+    Set stream = New FileReaderIo
 
-    stream.OpenStream ActiveDocument.Path & "\tests\test_md.md"
+    stream.OpenStream ActiveDocument.Path & "\tests\test_md_inline.md"
     lexer.ParseMarkdown stream
     Set lexer.AttachedDocument = ThisDocument
     lexer.WriteDocument
@@ -32,7 +32,7 @@ Sub test_RunMarkDoc_FromHttp()
     Throw.ThrowLevel = NoLevel
 
     Set lexer = New LexerMarkdown
-    Set stream = New HttpFileReader
+    Set stream = New FileReaderHttp
 
     stream.OpenStream GITHUB & "test_md.md"
     lexer.ParseMarkdown stream
@@ -44,8 +44,8 @@ Sub test_EmptyDoc()
     Dim stream1 As IFileReader
     Dim stream2 As IFileReader
 
-    Set stream1 = New IoFileReader
-    Set stream2 = New IoFileReader
+    Set stream1 = New FileReaderIo
+    Set stream2 = New FileReaderIo
 
     stream1.OpenStream ActiveDocument.Path & "\tests\test_empty.md"
     stream2.OpenStream ActiveDocument.Path & "\tests\test_md.md"

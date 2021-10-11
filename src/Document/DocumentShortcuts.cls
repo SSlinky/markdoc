@@ -98,10 +98,11 @@ Private Sub CreateStyle(localName As String)
     Const CODEBLOCK As String = "CodeBlock"
     Const CODEINLINE As String = "CodeInline"
 
+    Logger.Log "Making style: " & localName, Level.Information
+
     Dim sty As Style
     Select Case localName
         Case Is = CODEBLOCK
-            Logger.Log "Making style: " & localName, Level.Information
             Set sty = mDoc.Styles.Add( _
                 Name:=localName, _
                 Type:=wdStyleTypeParagraph)
@@ -116,16 +117,16 @@ Private Sub CreateStyle(localName As String)
                     .Bold = False
                     .Italic = False
                     .AllCaps = False
-                    .Name = FONTNAME
+                    .Name = FONT_NAME
                     .ColorIndex = wdDarkBlue
                 End With
             End With
             mStyles.Add localName, sty
 
         Case Is = CODEINLINE
-            Set sty = forDocument.Styles.Add( _
-            Name:=STYNAME, _
-            Type:=wdStyleTypeCharacter)
+            Set sty = mDoc.Styles.Add( _
+                Name:=localName, _
+                Type:=wdStyleTypeCharacter)
             With sty
                 .NoProofing = True
                 With .Font
@@ -133,7 +134,7 @@ Private Sub CreateStyle(localName As String)
                     .Bold = False
                     .Italic = False
                     .AllCaps = False
-                    .Name = FONTNAME
+                    .Name = FONT_NAME
                     .Color = FG_ORANGE
                 End With
             End With

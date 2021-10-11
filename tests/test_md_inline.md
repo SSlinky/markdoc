@@ -1,0 +1,1 @@
+Simple paragraph with `inline code`.

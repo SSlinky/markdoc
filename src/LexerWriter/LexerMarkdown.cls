@@ -459,9 +459,9 @@ Private Sub ParseBlockTree(block As IBlock, Optional blockParent As IBlock)
         Next child
 
     ElseIf TypeOf block Is IBlockContent Then
-        Dim content As IBlockContent
-        Set content = block
-        Logger.Log "Parsing... " & content.ContentText
+        Dim contentBlock As IBlockContent
+        Set contentBlock = block
+        Logger.Log "Parsing... " & contentBlock.ContentText
         ParseInlineContent block, blockParent
     Else
         Throw = Errs.BlockTypeMismatch
@@ -516,7 +516,7 @@ Attribute ParseInlineContent.VB_Description = "Parses the inline content of the 
 
     Const INLINECODEPATTERN As String = "([^\\`](?:\\\\)*)(`)((?:[^`\n]+?))(`)"
 
-    Set codeStyle = DocumentShortcuts.GetStyle("InlineCode")
+    Set codeStyle = DocumentShortcuts.GetStyle("CodeInline")
     Set thisInline = New InlineContent
     lineStart = 1
 

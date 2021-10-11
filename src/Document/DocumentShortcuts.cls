@@ -85,9 +85,18 @@ Private Sub CreateStyle(localName As String)
 '   Args:
 '       localName: The name of the style to create.
 '
+'   Font constants
+    Const FONT_NAME As String = "Consolas"
+    Const FONT_SIZE As Long = 10
+
+'   Colour constants    
+    Const FG_ORANGE As Long = -721354753
+    Const BG_GREY As Long = 16
+
+'   Style name constants
     Const NORMAL As String = "Normal"
     Const CODEBLOCK As String = "CodeBlock"
-    Const BG_GREY As Long = 16
+    Const CODEINLINE As String = "CodeInline"
 
     Dim sty As Style
     Select Case localName
@@ -98,23 +107,42 @@ Private Sub CreateStyle(localName As String)
                 Type:=wdStyleTypeParagraph)
             With sty
                 .NoProofing = True
-                .NextParagraphStyle = "Normal"
-                .BaseStyle = "Normal"
+                .NextParagraphStyle = NORMAL
+                .BaseStyle = NORMAL
                 .NoSpaceBetweenParagraphsOfSameStyle = True
                 .Shading.BackgroundPatternColorIndex = BG_GREY
                 With .Font
-                    .Size = 10
+                    .Size = FONT_SIZE
                     .Bold = False
                     .Italic = False
-                    .AllCaps = True
-                    .Name = "Consolas"
+                    .AllCaps = False
+                    .Name = FONTNAME
                     .ColorIndex = wdDarkBlue
                 End With
             End With
             mStyles.Add localName, sty
+
+        Case Is = CODEINLINE
+            Set sty = forDocument.Styles.Add( _
+            Name:=STYNAME, _
+            Type:=wdStyleTypeCharacter)
+            With sty
+                .NoProofing = True
+                With .Font
+                    .Size = FONT_SIZE
+                    .Bold = False
+                    .Italic = False
+                    .AllCaps = False
+                    .Name = FONTNAME
+                    .Color = FG_ORANGE
+                End With
+            End With
+
         Case Is = NORMAL
             Throw = Errs.NotImplementedException
+
         Case Else
             Throw = Errs.WarnNoNamedDefaultStyle
+
     End Select
 End Sub

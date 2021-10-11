@@ -82,6 +82,54 @@ Public Sub Push(obj As Variant)
     End If
 End Sub
 
+Public Sub PushSort(obj As ISortable)
+'   Pushes an ISortable into a sorted stack position
+'
+'   Args:
+'       obj: The object to be push sorted.
+'
+    Dim searchLow As Long
+    Dim searchHgh As Long
+    Dim searchMid As Long
+    Dim indexSort As Long
+
+    Dim objLow As ISortable
+    Dim objHgh As ISortable
+
+    searchLow = 1
+    searchMid = 1
+    searchHgh = mBase.Count
+
+'   Don't search if we have no objects
+    If searchHgh = 0 Then
+        Push obj
+        Exit Sub
+    End If
+
+'   Perform a binary search on the data
+    indexSort = obj.SortIndex
+    Do While searchLow < searchHgh
+'       Set the comparison objects
+        ' Set objLow = mBase.Items(searchLow)
+        ' Set objHgh = mBase.Items(searchHgh)
+
+'       Set the middle point
+        searchMid = Int((searchHgh - searchLow) / 2) + searchLow
+
+'       Update the low or high boundary.
+        If mBase.Item(searchMid).SortIndex < indexSort And searchLow < searchMid Then
+            searchLow = searchMid
+        Else
+            searchHgh = searchMid
+        End If
+    Loop
+
+'   Insert at sorted position.
+    If mBase.Item(searchMid).SortIndex < indexSort Then searchMid = searchMid + 1
+    Insert searchMid, obj
+End Sub
+
+
 Public Function Pop() As Variant
 '   Returns the first item, popping it from the list.
     If IsObject(mBase.Item(1)) Then

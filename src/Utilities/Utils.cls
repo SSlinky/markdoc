@@ -277,6 +277,26 @@ Public Function Regex(patternString As String, testString As String) As Object
         patternString & " with " & testString
 End Function
 
+Public Function GetLenMatchGroups(mo As Object, grpStart As Long, grpEnd As Long) As Long
+Attribute GetLenMatchGroups.VB_Description = "Calculates the length of the match groups."
+'   Calculates the length of the match groups
+'
+'   Args:
+'       mo: The match object.
+'       grpStart: The first match group.
+'       grpEnd: The last match group.
+'
+'   Returns:
+'       The sum of string length of all groups in the range.
+'
+    Dim i As Long
+    Dim rtn As Long
+    For i = grpStart To grpEnd
+        rtn = rtn + Len(mo.SubMatches(i))
+    Next i
+    GetLenMatchGroups = rtn
+End Function
+
 Public Function EndsWith(str As String, subStr As String) As Boolean
 Attribute EndsWith.VB_Description = "Tests whether a string ends with a string."
 '   Tests whether a string ends with a string

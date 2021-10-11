@@ -28,7 +28,7 @@ Attribute CreateBlock.VB_Description = "Returns a block of type blockName."
 '
 '   Raises:
 '       Bad argument if block type not registered.
-'   
+'
     Select Case blockName
         Case Is = "BlockLeafParagraph"
             Set CreateBlock = New BlockLeafParagraph

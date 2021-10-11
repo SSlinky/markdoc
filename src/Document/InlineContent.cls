@@ -60,13 +60,13 @@ Public Property Get Style() As Style
     Set Style = mStyle
 End Property
 
-Public Property Set SortIndex(var As Long)
+Public Property Let SortIndex(var As Long)
 Attribute SortIndex.VB_Description = "The sort number for this content."
-    Set mSortIndex = var
+    mSortIndex = var
 End Property
 
 Public Property Get SortIndex() As Long
-    Set SortIndex = mSortIndex
+    SortIndex = mSortIndex
 End Property
 
 

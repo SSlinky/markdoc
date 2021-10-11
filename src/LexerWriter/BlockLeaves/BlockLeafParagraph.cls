@@ -11,6 +11,7 @@ Option Explicit
 Implements IBlock
 Implements IBlockLeaf
 Implements IBlockContent
+Implements IBlockContentInline
 
 '-------------------------------------------------------------------------------
 '   Class: BlockLeafParagraph
@@ -48,11 +49,11 @@ End Property
 
 Public Property Set InlineContents(var As List)
 Attribute InlineContents.VB_Description = "The parsed inline content."
-    Set mInlineContents = var
+    Set mInlineConts = var
 End Property
 
 Public Property Get InlineContents() As List
-    InlineContents = mInlineConts
+    Set InlineContents = mInlineConts
 End Property
 
 ' Methods
@@ -139,4 +140,20 @@ End Property
 
 Public Property Get IBlockContent_ContentText() As String
     IBlockContent_ContentText = ContentText
+End Property
+
+Public Property Set IBlockContentInline_InlineContents(var As List)
+    Set InlineContents = var
+End Property
+
+Public Property Get IBlockContentInline_InlineContents() As List
+    Set IBlockContentInline_InlineContents = InlineContents
+End Property
+
+Public Property Let IBlockContentInline_ContentText(var As String)
+    ContentText = var
+End Property
+
+Public Property Get IBlockContentInline_ContentText() As String
+    IBlockContentInline_ContentText = ContentText
 End Property

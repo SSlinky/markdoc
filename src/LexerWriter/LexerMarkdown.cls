@@ -160,13 +160,13 @@ Attribute SplitBlock.VB_Description = "Splits content of one block over two."
 '
     Dim insertAtIndex As Long
     insertAtIndex = parent.Children.IndexOf(block) + 1
-    
+
     Dim splitBlock As IBlockLeaf
     Set splitBlock = BlockFactory.CreateBlock(TypeName(block))
     splitBlock.ContentText = splitContent
 
-    parent.Children.Insert(insertAtIndex, splitBlock)
-    parent.Children.Insert(insertAtIndex, New BlockLeafBlankLine)
+    parent.Children.Insert insertAtIndex, splitBlock
+    parent.Children.Insert insertAtIndex, New BlockLeafBlankLine
 End Sub
 
 Private Function ThisBlock() As IBlock
@@ -287,7 +287,7 @@ Private Sub ParseLineType(line As String)
 '       line: The raw line as it is read from the source.
 
     Dim cleanLine As String
-    Dim unindentLine As String
+    Dim UnindentLine As String
     Dim thisIndentLevel As Long
 
 '   Clean, get indentation, and unindent line.
@@ -296,11 +296,11 @@ Private Sub ParseLineType(line As String)
     If Trim(cleanLine) = vbNullString Then
         thisIndentLevel = ThisBlock.IndentationLevel
     Else
-        unindentLine = Utils.unindentLine(cleanLine, ThisBlock.IndentationLevel)
-        thisIndentLevel = Utils.GetIndentationLevel(unindentLine)
+        UnindentLine = Utils.UnindentLine(cleanLine, ThisBlock.IndentationLevel)
+        thisIndentLevel = Utils.GetIndentationLevel(UnindentLine)
     End If
 
-    ParseLineTypeAction cleanLine, unindentLine, thisIndentLevel
+    ParseLineTypeAction cleanLine, UnindentLine, thisIndentLevel
 End Sub
 
 Private Sub ParseLineTypeAction( _
@@ -362,9 +362,9 @@ Private Sub ParseLineTypeAction( _
                     CThisBlockLeaf New BlockLeafHeading
 
                     Set hdg = ThisBlock
-                    hdg.ContentText = matches(0).Submatches(1)
+                    hdg.ContentText = matches(0).SubMatches(1)
                     hdg.HeadingLevel = Parser.ParseHeadingLevel( _
-                        matches(0).Submatches(0))
+                        matches(0).SubMatches(0))
 '               A new list breaks the paragraph.
                 Case Is = Parser.IsListItem(lineUnindented, matches)
                     Throw = Errs.NotImplementedException
@@ -397,9 +397,9 @@ Private Sub ParseLineTypeAction( _
                             LazyOpenSiblingBlock
                             CThisBlockLeaf New BlockLeafHeading
                             Set hdg = ThisBlock
-                            hdg.ContentText = matches(0).Submatches(1)
+                            hdg.ContentText = matches(0).SubMatches(1)
                             hdg.HeadingLevel = Parser.ParseHeadingLevel( _
-                                matches(0).Submatches(0))
+                                matches(0).SubMatches(0))
                             OpenSiblingBlock
                         Case Is = BlockType.Paragraph
                             ThisContentBlock.ContentText = lineUnindented
@@ -409,25 +409,25 @@ Private Sub ParseLineTypeAction( _
 '       Parse from an unknown block that has content.
         Case Else
             Select Case True
-'               Content becoming blank line is a paragraph.
+'               Unknown content becoming blank line is a paragraph.
                 Case Is = lineUnindented = vbNullString
                     LazyOpenSiblingBlock
                     CThisBlockLeaf New BlockLeafBlankLine
-'               Content becoming code block fence is a paragraph.
+'               Unknown content becoming code block fence is a paragraph.
                 Case Is = Parser.IsCodeBlockFence( _
                     lineUnindented, mFencedCodeFence)
                     LazyOpenSiblingBlock
                     CThisBlockLeaf New BlockLeafFencedCode
-'               Content becoming a heading is a paragraph.
+'               Unknown content becoming a heading is a paragraph.
                 Case Is = Parser.IsHeading(lineUnindented, matches)
                     LazyOpenSiblingBlock
                     CThisBlockLeaf New BlockLeafHeading
                     Set hdg = ThisBlock
 
-                    hdg.ContentText = matches(0).Submatches(1)
+                    hdg.ContentText = matches(0).SubMatches(1)
                     hdg.HeadingLevel = Parser.ParseHeadingLevel( _
-                        matches(0).Submatches(0))
-'               Content becoming a new list is a paragraph.
+                        matches(0).SubMatches(0))
+'               Unknown content becoming a new list is a paragraph.
                 Case Is = Parser.IsListItem(lineUnindented, matches)
                     LazyOpenSiblingBlock
                     Throw = Errs.NotImplementedException
@@ -437,7 +437,7 @@ Private Sub ParseLineTypeAction( _
     End Select
 End Sub
 
-Private Sub ParseBlockTree(block As IBlock)
+Private Sub ParseBlockTree(block As IBlock, Optional blockParent As IBlock)
 '   Parses the block content if it's a leaf and calls this method
 '   recursively on its children. You should only need to pass the
 '   document level block to this sub.
@@ -455,20 +455,20 @@ Private Sub ParseBlockTree(block As IBlock)
 
         Set container = block
         For Each child In container.Children
-            ParseBlockTree child
+            ParseBlockTree child, block
         Next child
 
     ElseIf TypeOf block Is IBlockContent Then
         Dim content As IBlockContent
         Set content = block
         Logger.Log "Parsing... " & content.ContentText
-
+        ParseInlineContent block, blockParent
     Else
         Throw = Errs.BlockTypeMismatch
     End If
 End Sub
 
-Private Sub ParseInlineContent(block As IBlockContentInline)
+Private Sub ParseInlineContent(block As IBlockContentInline, blockParent As IBlockContainer)
 Attribute ParseInlineContent.VB_Description = "Parses the inline content of the block."
 '   Parses the inline content of the block.
 '
@@ -487,10 +487,12 @@ Attribute ParseInlineContent.VB_Description = "Parses the inline content of the 
     Dim line As Variant
     Dim thisLine As String
     Dim prevLine As String
+    Dim splitLines As Variant
 
     content = block.ContentText
     Set lines = New List
-    lines.FromArray(Split(content, vbNewLine))
+    splitLines = Split(content, vbNewLine)
+    lines.FromArray splitLines
 
 '   Prepare the parser variables.
     Dim i As Long
@@ -501,11 +503,24 @@ Attribute ParseInlineContent.VB_Description = "Parses the inline content of the 
     Dim isEscaped As Boolean
     Dim isLineBreak As Boolean
     Dim lineStart As Long
+    Dim codeStyle As Style
 
-    thisInline = New InlineContent
+'   Prepare Regex variables
+    Dim re As Object
+    Dim mo As Object
+    Dim matchDict As Object
+    Dim matchStart As Long
+    Dim preMatchGroupsLen As Long
+    Dim matchLen As Long
+    Dim sortIdx As Long
+
+    Const INLINECODEPATTERN As String = "([^\\`](?:\\\\)*)(`)((?:[^`\n]+?))(`)"
+
+    Set codeStyle = DocumentShortcuts.GetStyle("InlineCode")
+    Set thisInline = New InlineContent
     lineStart = 1
 
-    For line In lines
+    For Each line In lines
         prevLine = thisLine
         thisLine = CStr(line)
 
@@ -515,30 +530,59 @@ Attribute ParseInlineContent.VB_Description = "Parses the inline content of the 
             Exit For
         End If
 
+'       Search for inline code blocks as a first priority.
+        Set re = Utils.Regex(INLINECODEPATTERN, thisLine)
+        Set matchDict = CreateObject("Scripting.Dictionary")
+
+        For Each mo In re
+            matchStart = mo.FirstIndex + 1
+            preMatchGroupsLen = Utils.GetLenMatchGroups(mo, 0, 1)
+            matchLen = Len(mo.SubMatches(2))
+            sortIdx = lineStart + matchStart + preMatchGroupsLen
+            matchDict.Add matchStart + preMatchGroupsLen, matchLen
+
+            thisInline.Text = mo.SubMatches(2)
+            thisInline.SortIndex = sortIdx
+            Set thisInline.Style = codeStyle
+            inlineConts.Push thisInline
+            Set thisInline = New InlineContent
+        Next mo
+
+
+        thisInline.SortIndex = 1
         For i = 1 To Len(thisLine)
+'           Ignore sections already parsed with Regex
+            Do While matchDict.Exists(i + 1)
+                If Not thisInline.Text = vbNullString Then
+                    inlineConts.Push thisInline
+                    Set thisInline = New InlineContent
+                End If
+                i = i + matchDict.Item(i + 1)
+            Loop
+            If thisInline.SortIndex = 0 Then thisInline.SortIndex = i + lineStart
+
             c = Mid(thisLine, i, 1)
 
             Select Case True
 '               Handle changes to state for inline code.
-                Case Is = Not isEscaped And Utils.UnescapedBackTick(thisLine, i)
-                    If isCode Then
-                        thisInline.Style = DocumentShortcuts.GetStyle("InlineCode")
-                    End If
+'                 Case Is = Not isEscaped And Utils.UnescapedBackTick(thisLine, i)
+'                     If isCode Then
+'                         thisInline.Style = DocumentShortcuts.GetStyle("InlineCode")
+'                     End If
 
-'                   Toggle isCode.
-                    isCode = isCode Xor True
-'                   Push the inline content to the stack and set up a new one.
-                    inlineConts.Push thisInline
-                    Set thisInline = New InlineContent
+' '                   Toggle isCode.
+'                     isCode = isCode Xor True
+' '                   Push the inline content to the stack and set up a new one.
+'                     inlineConts.Push thisInline
+'                     Set thisInline = New InlineContent
 
 '               Handle inline code content.
                 Case Is = isCode
                     thisInline.AppendText c
 
-'               Handle an escape character.            
+'               Handle an escape character.
                 Case Is = Not isEscaped And c = "\"
                     isEscaped = True
-                    GoTo NextParseInlineContentChar
 
 '               Handle the character after the escape character.
                 Case Is = isEscaped
@@ -552,7 +596,7 @@ Attribute ParseInlineContent.VB_Description = "Parses the inline content of the 
             End Select
         Next i
 
-'       Add the length of this line and two for CrLf.        
+'       Add the length of this line and two for CrLf.
         lineStart = lineStart + Len(line) + 2
     Next line
 

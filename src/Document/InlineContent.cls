@@ -19,6 +19,7 @@ Option Explicit
 Private mText As String
 Private mRange As Range
 Private mStyle As Style
+Private mSortIndex As Long
 
 
 ' Properties
@@ -57,6 +58,15 @@ End Property
 Public Property Get Style() As Style
     If mStyle Is Nothing Then Style = DocumentShortcuts.GetStyle("Normal")
     Set Style = mStyle
+End Property
+
+Public Property Set SortIndex(var As Long)
+Attribute SortIndex.VB_Description = "The sort number for this content."
+    Set mSortIndex = var
+End Property
+
+Public Property Get SortIndex() As Long
+    Set SortIndex = mSortIndex
 End Property
 
 

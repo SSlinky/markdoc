@@ -1,4 +1,5 @@
 Attribute VB_Name = "test_md"
+'@Folder("markDoc.Tests")
 Option Explicit
 
 Const GITHUB As String = "https://raw.githubusercontent.com/SSlinky/markdoc/master/tests/"
@@ -9,7 +10,6 @@ Sub test_RunMarkDoc()
 
     Dim lexer As LexerMarkdown
     Dim stream As IFileReader
-
     Logger.LoggingLevel = Information
     Throw.ThrowLevel = NoLevel
 

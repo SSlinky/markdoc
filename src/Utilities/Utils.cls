@@ -7,6 +7,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+'@Folder("markDoc.src.Utilities")
 Option Explicit
 
 '-------------------------------------------------------------------------------
@@ -55,15 +56,15 @@ Public Function UnindentLine(line As String, indentLevel As Long) As String
     End If
 
 '   Throw if there's no line or the indent level is less than 0.
-    If line = vbNullString or indentLevel < 0 Then
+    If line = vbNullString Or indentLevel < 0 Then
         Throw = Errs.UtilsBadArguments
         UnindentLine = line
         Exit Function
     End If
 
-    dim i As Long
-    dim c As String
-
+    Dim i As Long
+    Dim c As String
+    
     For i = 1 To indentLevel
 '       Throw if we hit the end of the line.
         If i > Len(line) Then

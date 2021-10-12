@@ -7,6 +7,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
+'@Folder("markDoc.src.Utilities")
 Option Explicit
 
 '-------------------------------------------------------------------------------
@@ -51,7 +52,7 @@ Public Property Get Count() As Long
 End Property
 
 Public Property Get Items() As Collection
-    Attribute Items.VB_UserMemId = 0
+Attribute Items.VB_UserMemId = 0
     Set Items = mBase
 End Property
 

@@ -7,6 +7,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+'@Folder("markDoc.src.Utilities")
 Option Explicit
 
 '-------------------------------------------------------------------------------
@@ -53,7 +54,7 @@ Private mThrowLevel As Level
 ' Properties
 '-------------------------------------------------------------------------------
 Public Property Let Exception(errType As Errs)
-    Attribute Exception.VB_UserMemId = 0
+Attribute Exception.VB_UserMemId = 0
     Dim errDesc As String
     Dim logLevel As Level
 
@@ -70,7 +71,7 @@ End Property
 
 Public Property Let ThrowLevel(var As Level)
     Dim loglev As String
-    logLev = Mid(Logger.LevelLookup(var), 1, 4)
+    loglev = Mid(Logger.LevelLookup(var), 1, 4)
     Logger.Log "ThrowLevel set to " & loglev, NoLevel
     mThrowLevel = var
 End Property

@@ -7,6 +7,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
+'@Folder("markDoc.src.Utilities")
 Option Explicit
 Implements IFileReader
 
@@ -32,7 +33,7 @@ End Property
 ' Methods
 '-------------------------------------------------------------------------------
 Public Function PeekNextLine() As String
-Attribute Enumerator.VB_Description = "Returns the next line to be read without advancing the pointer."
+Attribute PeekNextLine.VB_Description = "Returns the next line to be read without advancing the pointer."
     If IsEoF Then Throw = Errs.FileReaderEOF
     PeekNextLine = mLines.Peek
 End Function
@@ -61,7 +62,7 @@ Public Sub OpenStream(args As String)
     Dim useProxy As Boolean
 
 '   Set up the GET request parameters.
-    spltArgs = split(args, ",")
+    spltArgs = Split(args, ",")
     If UBound(spltArgs) = 3 Then
         useProxy = True
         proxyUrl = spltArgs(1)

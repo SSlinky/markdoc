@@ -145,3 +145,29 @@ Sub test_WarningLevel()
     Logger.Log "Default message level."
     Throw.Exception = Errs.FileReaderWarnEmptyFile
 End Sub
+
+Sub test_ISortable()
+
+    Dim x As ISortable
+    Dim xs As New List
+    
+    Dim nums() As String
+    Dim printNums As String
+    
+    nums = Split("1,2,3,7,54,2,8,3,1,5,8,90,2,4,6", ",")
+    Dim i As Long
+    
+    For i = 0 To UBound(nums)
+        Set x = New InlineContent
+        x.SortIndex = Int(nums(i))
+        xs.PushSort x
+        
+        printNums = ""
+        For Each x In xs
+            printNums = printNums & x.SortIndex & " "
+        Next x
+        Debug.Print printNums
+    Next i
+
+    Debug.Assert printNums = "1 1 2 2 2 3 3 4 5 6 7 8 8 54 90 "
+End Sub

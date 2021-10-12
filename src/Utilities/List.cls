@@ -84,49 +84,71 @@ Public Sub Push(obj As Variant)
 End Sub
 
 Public Sub PushSort(obj As ISortable)
+Attribute Identifier.VB_Description = "Pushes an ISortable into a sorted stack position."
 '   Pushes an ISortable into a sorted stack position
 '
 '   Args:
 '       obj: The object to be push sorted.
 '
     Dim searchLow As Long
-    Dim searchHgh As Long
     Dim searchMid As Long
-    Dim indexSort As Long
+    Dim searchHigh As Long
 
-    Dim objLow As ISortable
-    Dim objHgh As ISortable
+    Dim indexLow As Long
+    Dim indexMid As Long
+    Dim indexObj As Long
+    Dim indexHigh As Long
+    
+    Dim lastRun As Boolean
 
     searchLow = 1
-    searchMid = 1
-    searchHgh = mBase.Count
+    searchHigh = mBase.Count
 
-'   Don't search if we have no objects
-    If searchHgh = 0 Then
+'   Don't search if we have no objects.
+    If searchHigh = 0 Then
         Push obj
         Exit Sub
     End If
 
-'   Perform a binary search on the data
-    indexSort = obj.SortIndex
-    Do While searchLow < searchHgh
-'       Set the comparison objects
-        ' Set objLow = mBase.Items(searchLow)
-        ' Set objHgh = mBase.Items(searchHgh)
+'   Perform a binary search on the data.
+    indexObj = obj.SortIndex
+    Do
+'       Set the middle point.
+        searchMid = Int((searchHigh - searchLow) / 2) + searchLow
+        
+'       Set the indexes to test against.
+        indexLow = mBase.Item(searchLow).SortIndex
+        indexMid = mBase.Item(searchMid).SortIndex
+        indexHigh = mBase.Item(searchHigh).SortIndex
 
-'       Set the middle point
-        searchMid = Int((searchHgh - searchLow) / 2) + searchLow
+'       Check if lower than low or higher than high.
+        If indexObj <= indexLow Then
+            searchMid = searchLow
+            Exit Do
+        ElseIf indexObj >= indexHigh Then
+            searchMid = searchHigh + 1
+            Exit Do
+        End If
+
+'       Exit if last run
+        If lastRun Then Exit Do
 
 '       Update the low or high boundary.
-        If mBase.Item(searchMid).SortIndex < indexSort And searchLow < searchMid Then
-            searchLow = searchMid
+        If indexObj > indexMid Then
+            searchLow = searchMid + 1
         Else
-            searchHgh = searchMid
+            searchHigh = searchMid - 1
         End If
+        
+        If searchHigh < searchLow Then
+            Debug.Assert False
+        End If
+        
+'       Flag last run or not.
+        lastRun = searchLow >= searchHigh
     Loop
 
 '   Insert at sorted position.
-    If mBase.Item(searchMid).SortIndex < indexSort Then searchMid = searchMid + 1
     Insert searchMid, obj
 End Sub
 

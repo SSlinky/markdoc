@@ -512,14 +512,18 @@ Attribute ParseInlineContent.VB_Description = "Parses the inline content of the 
     Dim matchDict As Object
     Dim matchStart As Long
     Dim preMatchGroupsLen As Long
+    Dim postMatchGroupsLen As Long
     Dim matchLen As Long
     Dim sortIdx As Long
 
+'   TODO: ISSUE This pattern doesn't work for tick escaped ticks inside code.
+'           e.g. Not code `this is ````` code`.
+'           The ````` should be parsed as is and interpreted as inline code.
     Const INLINECODEPATTERN As String = "([^\\`](?:\\\\)*)(`)((?:[^`\n]+?))(`)"
 
     Set codeStyle = DocumentShortcuts.GetStyle("CodeInline")
     Set thisInline = New InlineContent
-    lineStart = 1
+    lineStart = 0
 
     For Each line In lines
         prevLine = thisLine
@@ -538,29 +542,50 @@ Attribute ParseInlineContent.VB_Description = "Parses the inline content of the 
         For Each mo In re
             matchStart = mo.FirstIndex + 1
             preMatchGroupsLen = Utils.GetLenMatchGroups(mo, 0, 1)
+            postMatchGroupsLen = Utils.GetLenMatchGroups(mo, 0, 3)
             matchLen = Len(mo.SubMatches(2))
             sortIdx = lineStart + matchStart + preMatchGroupsLen
-            matchDict.Add matchStart + preMatchGroupsLen, matchLen
+
+            matchDict.Add _
+                matchStart + preMatchGroupsLen, _
+                matchStart + postMatchGroupsLen
 
             thisInline.Text = mo.SubMatches(2)
             thisInline.SortIndex = sortIdx
+
             Set thisInline.Style = codeStyle
-            inlineConts.Push thisInline
+            inlineConts.PushSort thisInline
+
+            Logger.Log "PushSortCode " & _
+                sortIdx & " - " & thisInline.Text
+
             Set thisInline = New InlineContent
         Next mo
 
+        Dim loopBuster As Long
 
-        thisInline.SortIndex = 1
         For i = 1 To Len(thisLine)
+            loopBuster = loopBuster + 1
+            Debug.Assert loopBuster < 100
+
+'           Set the sort index if it's a new block.        
+            If thisInline.SortIndex = 0 Then
+                thisInline.SortIndex = i + lineStart
+            End If
+
 '           Ignore sections already parsed with Regex
-            Do While matchDict.Exists(i + 1)
+            Do While matchDict.Exists(lineStart + i + 1)
                 If Not thisInline.Text = vbNullString Then
-                    inlineConts.Push thisInline
+                    inlineConts.PushSort thisInline
+
+                    Logger.Log "PushSortNorm " & _
+                        thisInline.SortIndex & " - " & thisInline.Text
+
                     Set thisInline = New InlineContent
                 End If
                 i = i + matchDict.Item(i + 1)
+                thisInline.SortIndex = i + lineStart
             Loop
-            If thisInline.SortIndex = 0 Then thisInline.SortIndex = i + lineStart
 
             c = Mid(thisLine, i, 1)
 
@@ -601,6 +626,13 @@ Attribute ParseInlineContent.VB_Description = "Parses the inline content of the 
         lineStart = lineStart + Len(line) + 2
     Next line
 
+'   PushSort the final inline if it has content.
+    If Not thisInline.Text = vbNullString Then
+        inlineConts.PushSort thisInline
+
+        Logger.Log "PushSortNorm " & _
+            thisInline.SortIndex & " - " & thisInline.Text
+    End If
     Set block.InlineContents = inlineConts
 End Sub
 

@@ -10,7 +10,7 @@ Sub test_RunMarkDoc()
 
     Dim lexer As LexerMarkdown
     Dim stream As IFileReader
-    Logger.LoggingLevel = Information
+    Logger.LoggingLevel = Debugging
     Throw.ThrowLevel = NoLevel
 
     Set lexer = New LexerMarkdown

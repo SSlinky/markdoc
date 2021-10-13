@@ -91,9 +91,8 @@ Attribute ParseInlineContent.VB_Description = "Parses the inline content of the 
 '       Parse content with Regex
         Set mMatchDict = CreateObject("Scripting.Dictionary")
 
-        ParseWithRegex INLINECODEPATTERN, _
-            DocumentShortcuts.GetStyle("CodeInline"), _
-            mCurrentLineStart
+        ParseWithRegex INLINECODEPATTERN, thisLine, _
+            DocumentShortcuts.GetStyle("CodeInline")
 
 '       Iterate over each character not already parsed.
         For i = 1 To Len(thisLine)
@@ -103,7 +102,7 @@ Attribute ParseInlineContent.VB_Description = "Parses the inline content of the 
             End If
 
 '           Ignore sections already parsed with Regex
-            i = SkipMatchedSections(i, mCurrentLineStart)
+            i = SkipMatchedSections(i)
 
             c = Mid(thisLine, i, 1)
             Select Case True
@@ -136,13 +135,14 @@ End Sub
 
 ' Helpers
 '-------------------------------------------------------------------------------
-Private Sub ParseWithRegex(pattern As String, sty As Style)
+Private Sub ParseWithRegex(pattern As String, thisLine As String, sty As Style)
 Attribute ParseWithRegex.VB_Description = "Updates mMatchDict with match details."
 '   Updates mMatchDict with match details. The dictionary is an object so
 '   is passed byRef which means we do not need to explicitly set a return.
 '
 '   Args:
 '       pattern: The regex pattern.
+'       thisLine: The line to test.
 '       sty: The style to apply.
 '
     Dim regexResult As Object
@@ -165,7 +165,7 @@ Attribute ParseWithRegex.VB_Description = "Updates mMatchDict with match details
 
 '       Add a skip item to the dictionary.
 '           Key: Position start.
-'           Value: Characters to skip.
+'           Value: Position after skip.
         mMatchDict.Add _
             matchStartPosition + preMatchGroupsLen, _
             matchStartPosition + postMatchGroupsLen
@@ -218,10 +218,10 @@ Attribute SkipMatchedSections.VB_Description = "Skips over sections matched with
 
     Do While mMatchDict.Exists(mCurrentLineStart + i + 1)
         skipLength = mMatchDict.Item(i + 1)
-        If skipLength <= 0 Then Throw = Errs.ApplicationValueError
+        If skipLength <= i Then Throw = Errs.ApplicationValueError
 
         LazyPushThisInline
-        i = i + skipLength
+        i = skipLength
         mThisInline.SortIndex = i + mCurrentLineStart
     Loop
     SkipMatchedSections = i
@@ -234,8 +234,9 @@ Attribute LazyPushThisInline.VB_Description = "Pushes the current InlineContent 
     If Not mThisInline.Text = vbNullString Then
         mInlineConts.PushSort mThisInline
 
-        Logger.Log "PushSort " & _
-            mThisInline.SortIndex & " - " & thisInline.Text
+        With mThisInline
+            Logger.Log "PushSort " & .SortIndex & " - " & .Text
+        End With
 
         Set mThisInline = New InlineContent
     End If

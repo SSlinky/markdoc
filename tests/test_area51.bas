@@ -150,18 +150,18 @@ Sub test_ISortable()
 
     Dim x As ISortable
     Dim xs As New List
-    
+
     Dim nums() As String
     Dim printNums As String
-    
+
     nums = Split("1,2,3,7,54,2,8,3,1,5,8,90,2,4,6", ",")
     Dim i As Long
-    
+
     For i = 0 To UBound(nums)
         Set x = New InlineContent
         x.SortIndex = Int(nums(i))
         xs.PushSort x
-        
+
         printNums = ""
         For Each x In xs
             printNums = printNums & x.SortIndex & " "

@@ -41,7 +41,7 @@ Sub test_RunMarkDoc_from_http_behind_proxy()
 
     Set lexer = New LexerMarkdown
     Set stream = New FileReaderHttp
-    
+
     ' secrets = private_test_proxy.PROXYCREDS
 
     stream.OpenStream GITHUB & "test_md.md" & secrets

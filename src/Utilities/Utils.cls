@@ -64,7 +64,7 @@ Public Function UnindentLine(line As String, indentLevel As Long) As String
 
     Dim i As Long
     Dim c As String
-    
+
     For i = 1 To indentLevel
 '       Throw if we hit the end of the line.
         If i > Len(line) Then

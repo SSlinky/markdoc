@@ -20,6 +20,7 @@ Public Enum Errs
 '   have an equivalent description in ErrsLookup.
 
 '   Application
+    ApplicationValueError
     InterfaceUsedAsObject
     NotImplementedException
     WarnNoNamedDefaultStyle
@@ -62,7 +63,10 @@ Attribute Exception.VB_UserMemId = 0
     logLevel = ErrsLevelLookup(errType)
 
     Logger.Log errDesc, logLevel
-    If logLevel >= ThrowLevel Then
+'   Throw exception if the error level is high enough.
+'   Never throw for Information or NoLevel.
+'   Always throw for Critical.    
+    If logLevel >= ThrowLevel Or logLevel = Level.Critical Then
         If logLevel > Level.Information And logLevel <> Level.NoLevel Then
             Err.Raise vbObjectError + errType + 1, Description:=errDesc
         End If
@@ -85,6 +89,8 @@ End Property
 '-------------------------------------------------------------------------------
 Private Function ErrsLookup(errType As Errs) As String
     Select Case errType
+        Case Is = Errs.ApplicationValueError
+            ErrsLookup = "Value error."
         Case Is = Errs.InterfaceUsedAsObject
             ErrsLookup = "Interface cannot be concrete type."
         Case Is = Errs.NotImplementedException
@@ -132,6 +138,8 @@ Private Function ErrsLevelLookup(errType As Errs) As Level
                   Errs.LexerWarnNothingToWrite, _
                   Errs.UtilsWarnDestructiveCast
             ErrsLevelLookup = Level.Warning
+        Case Is = Errs.ApplicationValueError
+            ErrsLevelLookup = Level.Critical
         Case Else
             ErrsLevelLookup = Level.Exception
     End Select

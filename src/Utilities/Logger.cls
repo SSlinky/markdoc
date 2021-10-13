@@ -20,6 +20,7 @@ Public Enum Level
     Information
     Warning
     Exception
+    Critical
     NoLevel
 End Enum
 
@@ -52,6 +53,8 @@ Public Function LevelLookup(logLevel As Level) As String
             LevelLookup = "WARN: "
         Case Is = Level.Exception
             LevelLookup = "EXPT: "
+        Case Is = Level.Critical
+            LevelLookup = "CRIT: "
         Case Else
             LevelLookup = "~~~~~"
     End Select

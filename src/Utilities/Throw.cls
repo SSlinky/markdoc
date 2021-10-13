@@ -65,7 +65,7 @@ Attribute Exception.VB_UserMemId = 0
     Logger.Log errDesc, logLevel
 '   Throw exception if the error level is high enough.
 '   Never throw for Information or NoLevel.
-'   Always throw for Critical.    
+'   Always throw for Critical.
     If logLevel >= ThrowLevel Or logLevel = Level.Critical Then
         If logLevel > Level.Information And logLevel <> Level.NoLevel Then
             Err.Raise vbObjectError + errType + 1, Description:=errDesc

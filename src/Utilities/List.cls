@@ -98,7 +98,7 @@ Attribute Identifier.VB_Description = "Pushes an ISortable into a sorted stack p
     Dim indexMid As Long
     Dim indexObj As Long
     Dim indexHigh As Long
-    
+
     Dim lastRun As Boolean
 
     searchLow = 1
@@ -115,7 +115,7 @@ Attribute Identifier.VB_Description = "Pushes an ISortable into a sorted stack p
     Do
 '       Set the middle point.
         searchMid = Int((searchHigh - searchLow) / 2) + searchLow
-        
+
 '       Set the indexes to test against.
         indexLow = mBase.Item(searchLow).SortIndex
         indexMid = mBase.Item(searchMid).SortIndex
@@ -139,11 +139,11 @@ Attribute Identifier.VB_Description = "Pushes an ISortable into a sorted stack p
         Else
             searchHigh = searchMid - 1
         End If
-        
+
         If searchHigh < searchLow Then
             Debug.Assert False
         End If
-        
+
 '       Flag last run or not.
         lastRun = searchLow >= searchHigh
     Loop

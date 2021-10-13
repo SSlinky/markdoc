@@ -90,7 +90,7 @@ Private Sub CreateStyle(localName As String)
     Const FONT_NAME As String = "Consolas"
     Const FONT_SIZE As Long = 10
 
-'   Colour constants    
+'   Colour constants
     Const FG_ORANGE As Long = -721354753
     Const BG_GREY As Long = 16
 

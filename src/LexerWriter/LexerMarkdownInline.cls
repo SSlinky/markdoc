@@ -25,7 +25,7 @@ Private Const ESCAPABLE As String = "\!""#$%&'()*+,-./:;<=>?@[\]^_`{|}~"
 Private mBlock As IBlockContentInline
 Private mMatchDict As Object
 Private mThisInline As InlineContent
-Private mInlineConts As List
+Private mInlineContents As List
 Private mCurrentLineStart As Long
 
 
@@ -47,7 +47,7 @@ Attribute ParseInlineContent.VB_Description = "Parses the inline content of the 
 '       block: The block that has inline content.
 '
     Set mBlock = block
-    Set mInlineConts = New List
+    Set mInlineContents = New List
 '
 '   Prepare the content variables.
     Dim line As Variant
@@ -71,15 +71,11 @@ Attribute ParseInlineContent.VB_Description = "Parses the inline content of the 
     Dim isStruck As Boolean
     Dim isEscaped As Boolean
 
-'   Prepare Regex variables
-
-
     Set mThisInline = New InlineContent
-    mCurrentLineStart = 0
 
-    For Each line In lines
+    For Each line In lines    
         prevLine = thisLine
-        thisLine = CStr(line)
+        thisLine = PrepLine(prevLine, line)
 
 '       Break out if we hit a line break.
         If Parser.HasHardLineBreak(thisLine, prevLine) Then
@@ -96,7 +92,7 @@ Attribute ParseInlineContent.VB_Description = "Parses the inline content of the 
 
 '       Iterate over each character not already parsed.
         For i = 1 To Len(thisLine)
-'           Set the sort index if it's a new block.        
+'           Set the sort index if it's a new block.
             If mThisInline.SortIndex = 0 Then
                 mThisInline.SortIndex = i + mCurrentLineStart
             End If
@@ -122,14 +118,11 @@ Attribute ParseInlineContent.VB_Description = "Parses the inline content of the 
 
             End Select
         Next i
-
-'       Add the length of this line and two for CrLf.
-        mCurrentLineStart = mCurrentLineStart + Len(line) + 2
+        LazyPushThisInline
     Next line
 
-'   PushSort the final inline if it has content and apply all to block.
-    LazyPushThisInline
-    Set block.InlineContents = mInlineConts
+'   Apply all to block.
+    Set block.InlineContents = mInlineContents
 End Sub
 
 
@@ -177,7 +170,6 @@ Attribute ParseWithRegex.VB_Description = "Updates mMatchDict with match details
 
 '       Push the InlineContent and reset.
         LazyPushThisInline
-        Set mThisInline = New InlineContent
     Next matchObject
 End Sub
 
@@ -216,7 +208,7 @@ Attribute SkipMatchedSections.VB_Description = "Skips over sections matched with
 '
     Dim skipLength As Long
 
-    Do While mMatchDict.Exists(mCurrentLineStart + i + 1)
+    Do While mMatchDict.Exists(i + 1)
         skipLength = mMatchDict.Item(i + 1)
         If skipLength <= i Then Throw = Errs.ApplicationValueError
 
@@ -241,3 +233,17 @@ Attribute LazyPushThisInline.VB_Description = "Pushes the current InlineContent 
         Set mThisInline = New InlineContent
     End If
 End Sub
+
+Private Function PrepLine(prevLine As String, thisLine As Variant) As String
+Attribute PrepLine.VB_Description = "Casts to string and prepends with a space if required."
+'   Casts to string and prepends with a space if required
+'
+'   Args:
+'       prevLine: The previous line (used to detirmine if spacing required)
+'       thisLine: The current line to be cast.
+'
+'   Returns:
+'       A string line prepended with a space if previous line has text.
+'
+    PrepLine = IIf(prevLine = vbNullString, "", " ") & CStr(thisLine)
+End Function

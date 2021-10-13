@@ -19,7 +19,7 @@ Option Explicit
 '   TODO: ISSUE This pattern doesn't work for tick escaped ticks inside code.
 '           e.g. Not code `this is ````` code`.
 '           The ````` should be parsed as is and interpreted as inline code.
-Private Const INLINECODEPATTERN As String = "([^\\`](?:\\\\)*)(`)((?:[^`\n]+?))(`)"
+Private Const INLINECODEPATTERN As String = "(^|(?:[^\\`]))(?:\\\\)*(`)((?:[^`\n]+?))(`)"
 Private Const ESCAPABLE As String = "\!""#$%&'()*+,-./:;<=>?@[\]^_`{|}~"
 
 Private mBlock As IBlockContentInline

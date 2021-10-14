@@ -158,9 +158,63 @@ Attribute HasHardLineBreak.VB_Description = "Test line for hard line break."
         HasHardLineBreak = True
         Exit Function
     End If
+End Function
 
-    'TODO: Check if ends with unescaped \
-    'Think about whether it's better to do this or to have a paragraph split
-    'during phase 2. Maybe that's better, actually.
+Function LeftFlankDelimiterRun(str As String, ind As Long) As String
+'   A left-flanking delimiter run is a delimiter run that is
+'       (1) not followed by Unicode whitespace, and either
+'       (2a) not followed by a Unicode punctuation character, or;
+'       (2b1) followed by a Unicode punctuation character and
+'       (2b2) preceded by Unicode whitespace or a Unicode punctuation character.
+'   For purposes of this definition, the beginning and the end of the line count as Unicode whitespace.
 
+    Dim c As String * 1
+    Dim nc As String * 1
+    Dim pc As String * 1
+    
+    Dim rtn As String
+    
+    c = Mid(str, ind, 1)
+    
+    If c <> "*" And c <> "_" Then Exit Function
+    
+    str = " " & str & " "
+    pc = Mid(str, ind)
+    ind = ind + 1
+    
+    If Mid(str, ind + 1) = c Then
+        rtn = c & c
+        ind = ind + 1
+    Else
+        rtn = c
+    End If
+    
+    nc = Mid(str, ind + 1, 1)
+    
+    Dim nextPunc As Boolean
+    Dim prevPuncOrWhite As Boolean
+    Dim ncIsSpace As Boolean
+    Dim pcIsSpace As Boolean
+    
+    ncIsSpace = nc = " " Or nc = Chr(160)
+    pcIsSpace = pc = " " Or pc = Chr(160)
+    
+    If Not ncIsSpace Then
+        nextPunc = IsUnicodePunctuation(nc)
+        prevPuncOrWhite = pcIsSpace Or IsUnicodePunctuation(pc)
+        
+        If Not nextPunc Or (nextPunc And prevPuncOrWhite) Then
+            LeftFlankDelimiterRun = rtn
+        End If
+    End If
+End Function
+
+Function IsUnicodePunctuation(char As String) As Boolean
+'   ASCII !, ", #, $, %, &, ', (, ), *, +, ,, -, ., / (U+0021–2F), :, ;, <, =, >, ?, @ (U+003A–0040), [, \, ], ^, _, ` (U+005B–0060), {, |, }, or ~ (U+007B–007E)
+' TODO those U+num jiggas from ASCII.
+' TODO: https://www.fileformat.info/info/unicode/category/Pc/list.htm
+    Select Case char
+        Case Is = "!", """", "#", "$", "%", "&", "'", "(", ")", "*", "+", ",", "-", ".", "/", ":", ";", "<", "=", ">", "?", "@", "[", "\", "]", "_", "`", "{", "|", "}", "~"
+            IsUnicodePunctuation = True
+    End Select
 End Function

@@ -10,6 +10,7 @@ Attribute VB_Exposed = False
 '@Folder("markDoc.src.Document")
 Option Explicit
 Implements ISortable
+Implements IInlineContent
 
 '-------------------------------------------------------------------------------
 '   Class: InlineContent
@@ -95,3 +96,39 @@ End Property
 Public Property Get ISortable_SortIndex() As Long
     ISortable_SortIndex = SortIndex
 End Property
+
+Public Property Let IInlineContent_Text(var As String)
+    Text = var
+End Property
+
+Public Property Get IInlineContent_Text() As String
+    IInlineContent_Text = Text
+End Property
+
+Public Property Set IInlineContent_Range(var As Range)
+    Set Range = var
+End Property
+
+Public Property Get IInlineContent_Range() As Range
+    Set IInlineContent_Range = Range
+End Property
+
+Public Property Set IInlineContent_Style(var As Style)
+    Set Style = var
+End Property
+
+Public Property Get IInlineContent_Style() As Style
+    Set IInlineContent_Style = Style
+End Property
+
+Public Property Let IInlineContent_SortIndex(var As Long)
+    SortIndex = var
+End Property
+
+Public Property Get IInlineContent_SortIndex() As Long
+    IInlineContent_SortIndex = SortIndex
+End Property
+
+Public Sub IInlineContent_AppendText(str As String)
+    AppendText str
+End Sub

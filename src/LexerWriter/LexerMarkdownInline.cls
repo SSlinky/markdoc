@@ -19,7 +19,7 @@ Option Explicit
 '   TODO: ISSUE This pattern doesn't work for tick escaped ticks inside code.
 '           e.g. Not code `this is ````` code`.
 '           The ````` should be parsed as is and interpreted as inline code.
-Private Const INLINECODEPATTERN As String = "(^|(?:[^\\`]))(?:\\\\)*(`)((?:[^`\n]+?))(`)"
+Private Const INLINECODEPATTERN As String = "((?:^|(?:[^\\`]))(?:\\\\)*)((?:`)((?:[^`\n]+?))(?:`))"
 Private Const ESCAPABLE As String = "\!""#$%&'()*+,-./:;<=>?@[\]^_`{|}~"
 
 Private mBlock As IBlockContentInline
@@ -87,7 +87,7 @@ Attribute ParseInlineContent.VB_Description = "Parses the inline content of the 
 '       Parse content with Regex
         Set mMatchDict = CreateObject("Scripting.Dictionary")
 
-        ParseWithRegex INLINECODEPATTERN, thisLine, _
+        thisLine = ParseWithRegex INLINECODEPATTERN, thisLine, _
             DocumentShortcuts.GetStyle("CodeInline")
 
 '       Iterate over each character not already parsed.
@@ -102,6 +102,9 @@ Attribute ParseInlineContent.VB_Description = "Parses the inline content of the 
 
             c = Mid(thisLine, i, 1)
             Select Case True
+'               Handle erased section.
+                Case Is = c = Chr(0)
+
 '               Handle an escape character.
                 Case Is = Not isEscaped And c = "\"
                     isEscaped = True
@@ -128,7 +131,7 @@ End Sub
 
 ' Helpers
 '-------------------------------------------------------------------------------
-Private Sub ParseWithRegex(pattern As String, thisLine As String, sty As Style)
+Private Function ParseWithRegex(pattern As String, thisLine As String, sty As Style) As String
 Attribute ParseWithRegex.VB_Description = "Updates mMatchDict with match details."
 '   Updates mMatchDict with match details. The dictionary is an object so
 '   is passed byRef which means we do not need to explicitly set a return.
@@ -138,40 +141,55 @@ Attribute ParseWithRegex.VB_Description = "Updates mMatchDict with match details
 '       thisLine: The line to test.
 '       sty: The style to apply.
 '
+'   Returns:
+'       The original line that was tested but any matched sections erased.
+'
+'   Due to the fact that only the entire match object gives us a FirstIndex
+'   property, the below three capture groups are required. This is to ensure the
+'   right sections are captured / replaced.
+'
+'   Group 1: The section immediately before Group 2.
+'   Group 2: The section of thisLine to be replaced with null characters.
+'            This section will also be flagged to be skipped by the parser.
+'   Group 3: The section to be stored in the Text property of InlineContent.
+'
+'   Groups should be nested in the following format.
+'   (1)(2(3))
+'
     Dim regexResult As Object
     Dim matchObject As Object
-    Dim sortPosition As Long
-    Dim matchCharLength As Long
-    Dim preMatchGroupsLen As Long
-    Dim postMatchGroupsLen As Long
-    Dim matchStartPosition As Long
+    Dim grpOneFirstIndex As Long
+    Dim grpTwoFirstIndex As Long
+    Dim grpTwoLastIndex As Long
 
     Set regexResult = Utils.Regex(INLINECODEPATTERN, thisLine)
 
     For Each matchObject In regexResult
 '       Get the match object metadata.
-        matchStartPosition = matchObject.FirstIndex + 1
-        preMatchGroupsLen = Utils.GetLenMatchGroups(matchObject, 0, 1)
-        postMatchGroupsLen = Utils.GetLenMatchGroups(matchObject, 0, 3)
-        matchCharLength = Len(matchObject.SubMatches(2))
-        sortPosition = mCurrentLineStart + matchStartPosition + preMatchGroupsLen
+        grpOneFirstIndex = matchObject.FirstIndex + 1
+        grpTwoFirstIndex = grpOneFirstIndex + Len(matchObject.SubMatches(0))
+        grpTwoLastIndex = grpTwoFirstIndex + Len(matchObject.SubMatches(1)) - 1
 
 '       Add a skip item to the dictionary.
 '           Key: Position start.
 '           Value: Position after skip.
-        mMatchDict.Add _
-            matchStartPosition + preMatchGroupsLen, _
-            matchStartPosition + postMatchGroupsLen
+        mMatchDict.Add grpTwoFirstIndex + 1, grpTwoLastIndex
 
 '       Set the values on the InlineContent.
         mThisInline.Text = matchObject.SubMatches(2)
-        mThisInline.SortIndex = sortPosition
+        mThisInline.SortIndex = mCurrentLineStart + grpOneFirstIndex
         Set mThisInline.Style = sty
+
+'       Erase the matched section of the string so it cannot be parsed with another regex.
+        thisLine = Utils.EraseStringSection(thisLine, grpTwoFirstIndex, grpTwoLastIndex)
 
 '       Push the InlineContent and reset.
         LazyPushThisInline
     Next matchObject
-End Sub
+
+'   Return the censored line.
+    ParseWithRegex = thisLine
+End Function
 
 Private Sub SplitBlockLeaf(block As IBlockLeaf, parent As IBlockContainer, splitContent As String)
 Attribute SplitBlock.VB_Description = "Splits content of one block over two."

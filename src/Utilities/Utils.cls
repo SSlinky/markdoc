@@ -200,6 +200,42 @@ Function TinyLTrim(line As String) As String
     End If
 End Function
 
+Public Function EraseStringSection(str As String, fromChar As Long, toChar As Long) As String
+Attribute EraseStringSection.VB_Description = "Replaces a section of a string with null chars."
+'   Replaces a section of a string with null chars.
+'
+'   Args:
+'       str: The string to modify.
+'       fromChar: The start of the subsection.
+'       toChar: The end of the subsection.
+'
+'   Returns:
+'       The modified string.
+'
+'   Raises:
+'       UtilsBadArguments when toChar is greater than the length of str.
+'       UtilsBadArguments when toChar is less than fromChar.
+'       UtilsBadArguments when fromChar is less than 0.
+'
+    If toChar > Len(str) Then Throw = Errs.UtilsBadArguments
+    If toChar < fromChar Then Throw = Errs.UtilsBadArguments
+    If fromChar <= 0 Then Throw = Errs.UtilsBadArguments
+
+    If fromChar > Len(str) Then
+        EraseStringSection = str
+        Exit Function
+    End If
+
+    Dim nullStringLen As Long
+    nullStringLen = toChar - fromChar + 1
+
+    Dim nullString As String
+    nullString = String(nullStringLen, Chr(0))
+
+    EraseStringSection = InsertReplace(str, nullString, fromChar, nullStringLen)
+    
+End Function
+
 
 '   String interrogation.
 '-------------------------------------------------------------------------------

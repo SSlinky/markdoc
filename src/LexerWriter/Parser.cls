@@ -160,61 +160,109 @@ Attribute HasHardLineBreak.VB_Description = "Test line for hard line break."
     End If
 End Function
 
-Function LeftFlankDelimiterRun(str As String, ind As Long) As String
+Public Function LeftFlankDelimiterRun(str As String, ind As Long) As String
+Attribute LeftFlankDelimiterRun.VB_Description = "Returns the left flank of a delimiter run."
+'   Returns the left flank of a delimiter run.
+'
+'   Args:
+'       str: The string to test for a delimiter run.
+'       ind: The start (left) position of the delimiter.
+'
+'   Returns:
+'       A string delimiter if one exists or null string.
+'
 '   A left-flanking delimiter run is a delimiter run that is
 '       (1) not followed by Unicode whitespace, and either
 '       (2a) not followed by a Unicode punctuation character, or;
 '       (2b1) followed by a Unicode punctuation character and
 '       (2b2) preceded by Unicode whitespace or a Unicode punctuation character.
 '   For purposes of this definition, the beginning and the end of the line count as Unicode whitespace.
+'
+    LeftFlankDelimiterRun = FlankDelimiterRun(str, ind, 1)
+End Function
+
+Public Function RightFlankDelimiterRun(str As String, ind As Long) As String
+Attribute LeftFlankDelimiterRun.VB_Description = "Returns the right flank of a delimiter run."
+'   Returns the right flank of a delimiter run.
+'
+'   Args:
+'       str: The string to test for a delimiter run.
+'       ind: The start (left) position of the delimiter.
+'
+'   Returns:
+'       A string delimiter if one exists or null string.
+'
+'   A right-flanking delimiter run is a delimiter run that is
+'       (1) not preceded by Unicode whitespace, and either
+'       (2a) not preceded by a Unicode punctuation character, or;
+'       (2b1) preceded by a Unicode punctuation character and
+'       (2b2) followed by Unicode whitespace or a Unicode punctuation character.
+'   For purposes of this definition, the beginning and the end of the line count as Unicode whitespace.
+'
+    RightFlankDelimiterRun = FlankDelimiterRun(str, ind, 1)
+End Function
+
+Private Function FlankDelimiterRun(str As String, ind As Long, lro As Long) As String
+Attribute FlankDelimiterRun.VB_Description = "Performs the work of finding a left or right delimiter run."
+'   Performs the work of finding a left or right delimiter run.
+'   This function is called by Left or Right delimiter run functions.
+'
+'   Args:
+'       str: The string to test for a delimiter run.
+'       ind: The start (left) position of the potential delimiter.
+'       lro: Left(1)/Right(-1) offset.
+'
+'   Returns:
+'       A string delimiter if one exists or null string.
+'
+'   Raises:
+'       ParserBadArguments if the left-right offset is not valid.
+'
+    If Not lro ^ 2 = 1 Then Throw = Errs.ParserBadArguments
 
     Dim c As String * 1
-    Dim nc As String * 1
     Dim pc As String * 1
-    
+    Dim nc As String * 1
     Dim rtn As String
     
     c = Mid(str, ind, 1)
     
+'   Strong and emphasis only use _ or *
     If c <> "*" And c <> "_" Then Exit Function
     
-    str = " " & str & " "
-    pc = Mid(str, ind)
-    ind = ind + 1
+    str = " " & str & " "   ' Pad the string with spaces.
+    pc = Mid(str, ind)      ' Set the previous char based on current index.
+    ind = ind + 1           ' Offset the index to account for padding.
     
-    If Mid(str, ind + 1) = c Then
+'   Test for double (strong) or single (emphasis)    
+    If Mid(str, ind + 1, 1) = c Then
         rtn = c & c
-        ind = ind + 1
+        ind = ind + lro
     Else
         rtn = c
     End If
     
-    nc = Mid(str, ind + 1, 1)
+'   Set the next char based on the lro direction.    
+    nc = Mid(str, ind + lro, 1)
     
-    Dim nextPunc As Boolean
-    Dim prevPuncOrWhite As Boolean
-    Dim ncIsSpace As Boolean
-    Dim pcIsSpace As Boolean
+'   Previous and next char punctuation and whitespace flags.
+    Dim ncIsWhitespace As Boolean
+    Dim pcIsWhitespace As Boolean
+    Dim ncIsPunctuation As Boolean
+    Dim pcIsPunctuationOrWs As Boolean
     
-    ncIsSpace = nc = " " Or nc = Chr(160)
-    pcIsSpace = pc = " " Or pc = Chr(160)
+    ncIsWhitespace = nc = " " Or nc = Chr(160)
+    pcIsWhitespace = pc = " " Or pc = Chr(160)
     
-    If Not ncIsSpace Then
-        nextPunc = IsUnicodePunctuation(nc)
-        prevPuncOrWhite = pcIsSpace Or IsUnicodePunctuation(pc)
-        
-        If Not nextPunc Or (nextPunc And prevPuncOrWhite) Then
-            LeftFlankDelimiterRun = rtn
-        End If
-    End If
-End Function
+'   The next character cannot be whitespace.    
+    If Not ncIsWhitespace Then
+        ncIsPunctuation = IsUnicodePunctuation(nc)
+        pcIsPunctuationOrWs = pcIsWhitespace Or IsUnicodePunctuation(pc)
 
-Function IsUnicodePunctuation(char As String) As Boolean
-'   ASCII !, ", #, $, %, &, ', (, ), *, +, ,, -, ., / (U+0021–2F), :, ;, <, =, >, ?, @ (U+003A–0040), [, \, ], ^, _, ` (U+005B–0060), {, |, }, or ~ (U+007B–007E)
-' TODO those U+num jiggas from ASCII.
-' TODO: https://www.fileformat.info/info/unicode/category/Pc/list.htm
-    Select Case char
-        Case Is = "!", """", "#", "$", "%", "&", "'", "(", ")", "*", "+", ",", "-", ".", "/", ":", ";", "<", "=", ">", "?", "@", "[", "\", "]", "_", "`", "{", "|", "}", "~"
-            IsUnicodePunctuation = True
-    End Select
+'       The next character is not punctuation, or if it is, the previous
+'       character is also punctuation or whitespace.
+        If Not ncIsPunctuation Or (ncIsPunctuation And pcIsPunctuationOrWs) Then
+            FlankDelimiterRun = rtn
+        End If
+    End If   
 End Function

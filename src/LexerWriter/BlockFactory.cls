@@ -44,3 +44,26 @@ Attribute CreateBlock.VB_Description = "Returns a block of type blockName."
             Throw = Errs.UtilsBadArguments
     End Select
 End Function
+
+' Public Function CreateInlineContent(inlineName As String) As IInlineContent
+' Attribute CreateInlineContent.VB_Description = "Returns an InlineContent of type inlineName."
+' '   Returns an InlineContent of type inlineName
+' '
+' '   Args:
+' '       inlineName: The type name of the InlineContent to be generated.
+' '
+' '   Returns:
+' '       An IInlineContent of type inlineName.
+' '
+' '   Raises:
+' '       Bad argument if InlineContent type not registered.
+' '
+'     Select Case inlineName
+'         Case Is = "Normal"
+'             Set CreateInlineContent = New InlineContent
+'         Case Is = "Code"
+'             Set CreateInlineContent = New InlineCode
+'         Case Else
+'             Throw = Errs.UtilsBadArguments
+'     End Select
+' End Function

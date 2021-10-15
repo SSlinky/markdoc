@@ -2,7 +2,7 @@ VERSION 1.0 CLASS
 BEGIN
   MultiUse = -1  'True
 END
-Attribute VB_Name = "InlineContent"
+Attribute VB_Name = "InlineCode"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
@@ -13,8 +13,16 @@ Implements ISortable
 Implements IInlineContent
 
 '-------------------------------------------------------------------------------
-'   Class: InlineContent
+'   Class: InlineCode
 '   Container to hold text, style, and document location information.
+'   Adding text to this container processes further code only rules.
+'
+'   The contents of the code span are normalised in the following ways:
+
+'   * First, line endings are converted to spaces.
+'   * If the resulting string both begins and ends with a space character, but
+'     does not consist entirely of space characters, a single space character is
+'     removed from the front and back.
 '-------------------------------------------------------------------------------
 
 ' Private Backing Store
@@ -28,6 +36,21 @@ Private mSortIndex As Long
 ' Properties
 '-------------------------------------------------------------------------------
 Public Property Let Text(var As String)
+'   Replace line endings with spaces if they exist.
+'   This intentionally happens before the second check.
+    var = Replace(var, vbCrLf, " ")
+
+'   Trim the first and last char from the val if conditions met.
+    Dim allSpaces As Boolean
+    Dim leftRightIsSpace As Boolean
+
+    allSpaces = var = Space(Len(var))
+    leftRightIsSpace = Left(var, 1) & Right(var, 1) = "  "
+    
+    If leftRightIsSpace And Not allSpaces Then
+        var = Mid(var, 2, Len(var) - 2)
+    End If
+
     mText = var
 End Property
 
@@ -93,7 +116,9 @@ Attribute LazySetStyle.VB_Description = "Sets the style if it needs to."
 '   Sets the style if it needs to.'
 '
     If mStyle Is Nothing Then
-        Set mStyle = DocumentShortcuts.GetStyle("Normal")
+        Set mStyle = DocumentShortcuts.GetStyle("InlineCode")
+    ElseIf Not mStyle.NameLocal = "InlineCode" Then
+        Set mStyle = DocumentShortcuts.GetStyle("InlineCode")
     End If
 End Sub
 

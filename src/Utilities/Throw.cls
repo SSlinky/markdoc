@@ -38,6 +38,7 @@ Public Enum Errs
     LexerWarnNothingToWrite
 
 '   Parser
+    ParserBadArguments
     ParserIndentLevelOutsideRange
 
 '   Utility
@@ -109,6 +110,8 @@ Private Function ErrsLookup(errType As Errs) As String
             ErrsLookup = "File is empty."
         Case Is = Errs.LexerWarnNothingToWrite
             ErrsLookup = "Cannot write. No markdown parsed."
+        Case Is = Errs.ParserBadArguments
+            ErrsLookup = "Arguments passed not valid."
         Case Is = Errs.ParserIndentLevelOutsideRange
             ErrsLookup = "Cannot set new indentation level."
         Case Is = Errs.UtilsBadArguments

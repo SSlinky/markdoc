@@ -27,6 +27,7 @@ Public Enum Errs
     WarnNotImplementedException
 
 '   Block
+    BlockBadArguments
     BlockNotCreated
     BlockTypeMismatch
 
@@ -100,6 +101,8 @@ Private Function ErrsLookup(errType As Errs) As String
             ErrsLookup = "Could not create default style."
         Case Is = Errs.WarnNotImplementedException
             ErrsLookup = "Not yet implemented."
+        Case Is = Errs.BlockBadArguments
+            ErrsLookup = "Arguments passed to Block not valid."
         Case Is = Errs.BlockNotCreated
             ErrsLookup = "Block must be created using Create method."
         Case Is = Errs.BlockTypeMismatch
@@ -111,11 +114,11 @@ Private Function ErrsLookup(errType As Errs) As String
         Case Is = Errs.LexerWarnNothingToWrite
             ErrsLookup = "Cannot write. No markdown parsed."
         Case Is = Errs.ParserBadArguments
-            ErrsLookup = "Arguments passed not valid."
+            ErrsLookup = "Arguments passed to Parser not valid."
         Case Is = Errs.ParserIndentLevelOutsideRange
             ErrsLookup = "Cannot set new indentation level."
         Case Is = Errs.UtilsBadArguments
-            ErrsLookup = "Arguments passed not valid."
+            ErrsLookup = "Arguments passed to Utils not valid."
         Case Is = Errs.UtilsStringIndentNotBlank
             ErrsLookup = "String indentation must be white space."
         Case Is = Errs.UtilsWarnDestructiveCast

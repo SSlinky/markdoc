@@ -430,6 +430,18 @@ Public Sub CBlockLeaf( _
     End If
 End Sub
 
+Public Sub CBlockInline(block As IBlockInline, castToBlock As IBlockInline)
+Attribute CBlockInline.VB_Description = "Casts an IBlockInline to another IBlockInline."
+'   Casts an IBlockInline to another IBlockInline.
+'
+'   Args:
+'       block: The block to be cast.
+'       castToBlock: The block to cast to.
+'
+    castToBlock.Markdown = block.Markdown
+    Set block = castToBlock
+End Sub
+
 '   Document helpers
 '-------------------------------------------------------------------------------
 Public Sub WriteContent(toDoc As Document, block As IBlockContainer)

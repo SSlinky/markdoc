@@ -23,6 +23,7 @@ Public Enum Errs
     ApplicationValueError
     InterfaceUsedAsObject
     NotImplementedException
+    WarnFeatureDeprecated
     WarnNoNamedDefaultStyle
     WarnNotImplementedException
 
@@ -97,6 +98,8 @@ Private Function ErrsLookup(errType As Errs) As String
             ErrsLookup = "Interface cannot be concrete type."
         Case Is = Errs.NotImplementedException
             ErrsLookup = "Not yet implemented."
+        Case Is = Errs.WarnFeatureDeprecated
+            ErrsLookup = "This feature has been deprecated."
         Case Is = Errs.WarnNoNamedDefaultStyle
             ErrsLookup = "Could not create default style."
         Case Is = Errs.WarnNotImplementedException
@@ -138,7 +141,8 @@ Private Function ErrsLevelLookup(errType As Errs) As Level
 '       A logger level.
 '
     Select Case errType
-        Case Is = Errs.WarnNoNamedDefaultStyle, _
+        Case Is = Errs.WarnFeatureDeprecated, _
+                  Errs.WarnNoNamedDefaultStyle, _
                   Errs.WarnNotImplementedException, _
                   Errs.FileReaderWarnEmptyFile, _
                   Errs.LexerWarnNothingToWrite, _

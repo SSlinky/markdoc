@@ -36,6 +36,7 @@ Private mSortIndex As Long
 ' Properties
 '-------------------------------------------------------------------------------
 Public Property Let Text(var As String)
+    Throw = Errs.WarnFeatureDeprecated
 '   Replace line endings with spaces if they exist.
 '   This intentionally happens before the second check.
     var = Replace(var, vbCrLf, " ")
@@ -55,14 +56,17 @@ Public Property Let Text(var As String)
 End Property
 
 Public Property Get Text() As String
+    Throw = Errs.WarnFeatureDeprecated
     Text = mText
 End Property
 
 Public Property Set Range(var As Range)
+    Throw = Errs.WarnFeatureDeprecated
     Set mRange = var
 End Property
 
 Public Property Get Range() As Range
+    Throw = Errs.WarnFeatureDeprecated
     With mRange
         If .End <> .Start + Len(mText) Then
             Dim docLength As Long
@@ -78,20 +82,24 @@ Public Property Get Range() As Range
 End Property
 
 Public Property Set Style(var As Style)
+    Throw = Errs.WarnFeatureDeprecated
     Set mStyle = var
 End Property
 
 Public Property Get Style() As Style
+    Throw = Errs.WarnFeatureDeprecated
     LazySetStyle
     Set Style = mStyle
 End Property
 
 Public Property Let SortIndex(var As Long)
 Attribute SortIndex.VB_Description = "The sort number for this content."
+    Throw = Errs.WarnFeatureDeprecated
     mSortIndex = var
 End Property
 
 Public Property Get SortIndex() As Long
+    Throw = Errs.WarnFeatureDeprecated
     SortIndex = mSortIndex
 End Property
 
@@ -105,6 +113,7 @@ Attribute AppendText.VB_Description = "Appends text to the Text property."
 '   Args:
 '       str: The string to append to the Text property.
 '
+    Throw = Errs.WarnFeatureDeprecated
     Text = Text & str
 End Sub
 

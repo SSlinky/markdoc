@@ -90,6 +90,7 @@ Attribute LazyParseBlockFactory.VB_Description = "Pushes a new parallel inline b
 '   Args:
 '       char: a single character that could start a new inline block.
 '
+' TODO: move this to the class that actually parses. This class shouldn't know or care about this.
     Const TRIGGERS As String = "<`*_["
     If Not Utils.StrIn(TRIGGERS, char) Then Exit Sub
 

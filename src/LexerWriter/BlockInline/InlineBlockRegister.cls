@@ -91,7 +91,7 @@ Attribute LazyParseBlockFactory.VB_Description = "Pushes a new parallel inline b
 '       char: a single character that could start a new inline block.
 '
 ' TODO: move this to the class that actually parses. This class shouldn't know or care about this.
-    Const TRIGGERS As String = "<`*_["
+    Const TRIGGERS As String = "<`*_[!"
     If Not Utils.StrIn(TRIGGERS, char) Then Exit Sub
 
     Dim b As IBlockInline
@@ -106,6 +106,9 @@ Attribute LazyParseBlockFactory.VB_Description = "Pushes a new parallel inline b
             Set b = New BlockInline ' TODO: Update to correct concrete type.
             b.Text = char
         Case Is = "["
+            Set b = New BlockInline ' TODO: Update to correct concrete type.
+            b.Text = char
+        Case Is = "!"
             Set b = New BlockInline ' TODO: Update to correct concrete type.
             b.Text = char
 

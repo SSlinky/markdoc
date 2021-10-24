@@ -7,6 +7,7 @@
 
 # Ignore this for the minute to avoid gumming up the repo history.
 *.docm
+*.xlsx
 
 # Don't commit files with potentially private information.
 private_*

@@ -54,7 +54,8 @@ Attribute ParseCharacter.VB_Description = "Parses the character and creates a bl
 
 '   TODO: Check for any closed blocks (first in priority). Push valid blocks
 '         in the right order to the attached IBlockContent and bin invalid ones.
-'   TODO: Register does it's own parse to check for new blocks to be created.
+
+    LazyParseBlockFactory char
 End Sub
 
 Public Sub Register(block As IBlockInline)
@@ -82,6 +83,34 @@ End Sub
 
 ' Helpers
 '-------------------------------------------------------------------------------
+Private Sub LazyParseBlockFactory(char As String)
+Attribute LazyParseBlockFactory.VB_Description = "Pushes a new parallel inline block if char is the trigger for any type."
+'   Pushes a new parallel inline block if char is the trigger for any type.
+'
+'   Args:
+'       char: a single character that could start a new inline block.
+'
+    Const TRIGGERS As String = "<`*_["
+    If Not Utils.StrIn(TRIGGERS, char) Then Exit Sub
+
+    Dim b As IBlockInline
+    Select Case char
+        Case Is = "<"
+            Set b = New BlockInline ' TODO: Update to correct concrete type.
+            b.Text = char
+        Case Is = "`"
+            Set b = New BlockInline ' TODO: Update to correct concrete type.
+            b.Text = char
+        Case Is = "*", "_"
+            Set b = New BlockInline ' TODO: Update to correct concrete type.
+            b.Text = char
+        Case Is = "["
+            Set b = New BlockInline ' TODO: Update to correct concrete type.
+            b.Text = char
+
+    End Select
+    mItems.Push b
+End Sub
 
 
 ' Interface Implementation

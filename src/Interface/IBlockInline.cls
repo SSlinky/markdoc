@@ -70,13 +70,13 @@ Attribute Close.VB_Description = "Triggers a forced block closure and truncates 
     Throw = Errs.InterfaceUsedAsObject    
 End Sub
 
-Public Sub InjectBlockRegister(register As InlineBlockRegister)
-Attribute InjectBlockRegister.VB_Description = "Injects the block register so that the block can interact directly."
+Public Sub ParseCharacter(char As String)
+Attribute ParseCharacter.VB_Description = "Parses a character."
     Throw = Errs.InterfaceUsedAsObject
 End Sub
 
-Public Sub ParseCharacter(char As String)
-Attribute ParseCharacter.VB_Description = "Parses a character."
+Public Sub RegisterSelf(register As InlineBlockRegister)
+Attribute RegisterSelf.VB_Description = "Injects the block register so that the block can interact directly."
     Throw = Errs.InterfaceUsedAsObject
 End Sub
 

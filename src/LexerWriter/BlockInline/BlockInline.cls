@@ -117,14 +117,21 @@ Attribute Close.VB_Description = "Triggers a forced block closure and truncates 
     mClosed = True
 End Sub
 
-Public Sub InjectBlockRegister(register As InlineBlockRegister)
-Attribute InjectBlockRegister.VB_Description = "Injects the block register so that the block can interact directly."
-'   Injects the block register so that the block can interact directly.
+Public Sub RegisterSelf(register As InlineBlockRegister, mkdwnPosition As Long)
+Attribute RegisterSelf.VB_Description = "Injects the block register so that events are subscribed to."
+'   Injects the block register so that events are subscribed to.
 '
 '   Args:
 '       register: The block register to attach to.
 '
+'   Raises:
+'       BlockBadArguments if mkdwnPosition less than 1
+'
+    If mkdwnPosition < 1 Then Throw = Errs.BlockBadArguments
+
+    Position = mkdwnPosition
     Set mRegister = register
+    register.Register Me
 End Sub
 
 Public Sub ParseCharacter(char As String)
@@ -245,14 +252,14 @@ Attribute Close.VB_Description = "Triggers a forced block closure and truncates 
     Close  
 End Sub
 
-Public Sub IBlockInline_InjectBlockRegister(register As InlineBlockRegister)
-Attribute InjectBlockRegister.VB_Description = "Injects the block register so that the block can interact directly."
-    InjectBlockRegister register
-End Sub
-
 Public Sub IBlockInline_ParseCharacter(char As String)
 Attribute ParseCharacter.VB_Description = "Parses a character."
     ParseCharacter char
+End Sub
+
+Public Sub IBlockInline_RegisterSelf(register As InlineBlockRegister)
+Attribute RegisterSelf.VB_Description = "Injects the block register so that the block can interact directly."
+    RegisterSelf register
 End Sub
 
 Public Sub IBlockInline_StyleContent()

@@ -19,7 +19,6 @@ Implements IBlockInline
 
 ' Private Backing Store
 '-------------------------------------------------------------------------------
-Private mMarkdown As String
 Private mPositionClosed As Long
 Private mPositionOpened As Long
 Private mRange As Range
@@ -44,6 +43,7 @@ End Property
 
 Public Property Let PositionOpened(var As Long)
 Attribute PositionOpened.VB_Description = "The position this block was opened."
+'   This property is sort of read-only.
     If var > 0 And mPosition = 0 Then mPosition = var
 End Property
 
@@ -63,13 +63,17 @@ Attribute Range.VB_Description = "The location range in the document for this co
 End Property
 
 Public Property Get Range() As Range
+    If mRange Is Nothing Then Exit Property
+    Dim mkdwn As String
+    mkdwn = Markdown
+
     With mRange
-        If .End <> .Start + Len(mText) Then
+        If .End <> .Start + Len(mkdwn) Then
             Dim docLength As Long
             Dim rangeEnd As Long
 
             docLength = Len(.Parent.content)
-            rangeEnd = .Start + Len(mText)
+            rangeEnd = .Start + Len(mkdwn)
 
             Set mRange = .Parent.Range(.Start, Utils.Min(rangeEnd, docLength))
         End If
@@ -79,11 +83,12 @@ End Property
 
 Public Property Let SortIndex(var As Long)
 Attribute SortIndex.VB_Description = "The sort number for this content."
-    mSortIndex = var
+'   The sort index for this class is based on the position opened so cannot be set here.
+    Throw = Errs.WarnNotImplementedException
 End Property
 
 Public Property Get SortIndex() As Long
-    SortIndex = mSortIndex
+    SortIndex = PositionOpened
 End Property
 
 Public Property Get Valid() As Boolean

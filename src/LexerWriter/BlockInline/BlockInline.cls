@@ -25,7 +25,7 @@ Private mPosition As Long
 Private mRange As Range
 Private mSortIndex As Long
 
-Private mRegister As InlineBlockRegister
+Private WithEvents mRegister As InlineBlockRegister
 
 
 ' Properties
@@ -155,6 +155,21 @@ End Sub
 
 ' Helpers
 '-------------------------------------------------------------------------------
+
+
+' Events
+'-------------------------------------------------------------------------------
+Private Sub mRegister_OnRegister(block As IBlockInline)
+Attribute mRegister_OnRegister.VB_Description = "Event handler for when a block is registered."
+'   Event handler for when a block is registered.
+'
+'   Args:
+'       block: The block being registered.
+'
+'   A base block does nothing with this event.
+'   This method is a template for future use.
+    Logger.Log TypeName(Me) & " handling registration of " & TypeName(block)
+End Sub
 
 
 ' Interface Implementation

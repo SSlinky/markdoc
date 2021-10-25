@@ -9,6 +9,7 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 '@Folder("markDoc.src.LexerWriter.BlockInline")
 Option Explicit
+Public Event OnRegister(block As IBlockInline)
 
 '-------------------------------------------------------------------------------
 '   Class: InlineBlockRegister
@@ -66,6 +67,7 @@ Attribute Register.VB_Description = "Registers a block for tracking."
 '       block: The IBlockInline to register.
 '
     mItems.Push block
+    RaiseEvent OnRegister(block)
 End Sub
 
 Public Sub Unregister(block As IBlockInline)

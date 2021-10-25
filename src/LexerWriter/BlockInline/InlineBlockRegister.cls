@@ -19,6 +19,7 @@ Public Event OnRegister(block As IBlockInline)
 ' Private Backing Store
 '-------------------------------------------------------------------------------
 Private mItems As List
+Private mMarkdown As String
 
 
 ' Properties
@@ -32,6 +33,14 @@ Public Property Get Items() As List
     Set Items = mItems
 End Property
 
+Public Property Let Markdown(var As String)
+Attribute Markdown.VB_Description = "The markdown this register is related to."
+    If mMarkdown = vbNullString Then mMarkdown = var
+End Property
+
+Public Property Get Markdown() As String
+    Markdown = mMarkdown
+End Property
 
 
 ' Constructor

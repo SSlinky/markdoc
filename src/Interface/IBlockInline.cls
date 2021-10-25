@@ -28,13 +28,22 @@ Public Property Get Markdown() As String
     Throw = Errs.InterfaceUsedAsObject
 End Property
 
-Public Property Let Position(var As Long)
-Attribute Position.VB_Description = "The position this block was opened."
+Public Property Let PositionOpened(var As Long)
+Attribute PositionOpened.VB_Description = "The position this block was opened."
 '   This should be semi read-only in that can only be modified from 0
     Throw = Errs.InterfaceUsedAsObject
 End Property
 
-Public Property Get Position() As Long
+Public Property Get PositionOpened() As Long
+    Throw = Errs.InterfaceUsedAsObject
+End Property
+
+Public Property Let PositionClosed(var As Long)
+Attribute PositionClosed.VB_Description = "The position this block was closed."
+    Throw = Errs.InterfaceUsedAsObject
+End Property
+
+Public Property Get PositionClosed() As Long
     Throw = Errs.InterfaceUsedAsObject
 End Property
 

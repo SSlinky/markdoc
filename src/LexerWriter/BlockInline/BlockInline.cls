@@ -19,9 +19,9 @@ Implements IBlockInline
 
 ' Private Backing Store
 '-------------------------------------------------------------------------------
-Private mClosed As Boolean
 Private mMarkdown As String
-Private mPosition As Long
+Private mPositionClosed As Long
+Private mPositionOpened As Long
 Private mRange As Range
 Private mSortIndex As Long
 
@@ -32,26 +32,23 @@ Private WithEvents mRegister As InlineBlockRegister
 '-------------------------------------------------------------------------------
 Public Property Get Closed() As Boolean
 Attribute Closed.VB_Description = "Whether the block is closed or not."
-    Closed = mClosed
-End Property
-
-Public Property Let Markdown(var As String)
-Attribute Markdown.VB_Description = "The string content that was parsed."
-'   This property appends to existing rather than overwriting.
-    mMarkdown = mMarkdown & var
+    Closed = mPositionClosed > 0
 End Property
 
 Public Property Get Markdown() As String
-    Markdown = mMarkdown
+    Markdown = Mid( _
+        mRegister.Markdown, _
+        PositionOpened, _
+        PositionClosed - PositionOpened + 1)
 End Property
 
-Public Property Let Position(var As Long)
-Attribute Position.VB_Description = "The position this block was opened."
+Public Property Let PositionOpened(var As Long)
+Attribute PositionOpened.VB_Description = "The position this block was opened."
     If var > 0 And mPosition = 0 Then mPosition = var
 End Property
 
-Public Property Get Position() As Long
-    Position = mPosition
+Public Property Get PositionOpened() As Long
+    PositionOpened = mPosition
 End Property
 
 Public Property Get Priority() As Long
@@ -114,7 +111,7 @@ Attribute Close.VB_Description = "Triggers a forced block closure and truncates 
 '
     If Len(mMarkdown) < truncatePosition Then Throw = Errs.BlockBadArguments
     mMarkdown = Left(mMarkdown, truncatePosition)
-    mClosed = True
+    mPositionClosed = truncatePosition
 End Sub
 
 Public Sub RegisterSelf(register As InlineBlockRegister, mkdwnPosition As Long)
@@ -129,7 +126,7 @@ Attribute RegisterSelf.VB_Description = "Injects the block register so that even
 '
     If mkdwnPosition < 1 Then Throw = Errs.BlockBadArguments
 
-    Position = mkdwnPosition
+    PositionOpened = mkdwnPosition
     Set mRegister = register
     register.Register Me
 End Sub
@@ -175,6 +172,8 @@ Attribute mRegister_OnRegister.VB_Description = "Event handler for when a block 
 '
 '   A base block does nothing with this event.
 '   This method is a template for future use.
+    If Closed Then Exit Sub
+    If block Is Me Then Exit Sub
     Logger.Log TypeName(Me) & " handling registration of " & TypeName(block)
 End Sub
 
@@ -212,13 +211,22 @@ Public Property Get IBlockInline_Markdown() As String
     IBlockInline_Markdown = Markdown
 End Property
 
-Public Property Let IBlockInline_Position(var As Long)
-Attribute Position.VB_Description = "The position this block was opened."
-    Position = var
+Public Property Let IBlockInline_PositionClosed(var As Long)
+Attribute PositionClosed.VB_Description = "The position this block was closed."
+    PositionClosed = var
 End Property
 
-Public Property Get IBlockInline_Position() As Long
-    IBlockInline_Position = Position
+Public Property Get IBlockInline_PositionClosed() As Long
+    IBlockInline_PositionClosed = PositionClosed
+End Property
+
+Public Property Let IBlockInline_PositionOpened(var As Long)
+Attribute PositionOpened.VB_Description = "The position this block was opened."
+    PositionOpened = var
+End Property
+
+Public Property Get IBlockInline_PositionOpened() As Long
+    IBlockInline_PositionOpened = PositionOpened
 End Property
 
 Public Property Get IBlockInline_Priority() As Long

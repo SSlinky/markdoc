@@ -173,12 +173,26 @@ End Sub
 
 ' Helpers
 '-------------------------------------------------------------------------------
+Private Sub CloseSelf(pos As Long)
+Attribute CloseSelf.VB_Description = "Closes the block at the position."
+'   Closes the block at the position.
+'
+'   Args:
+'       pos: The position to close the block.
+'
+'   Raises:
+'       BlockBadArguments if the close position is before open.
+'
+    If pos < PositionOpened Then Throw = Errs.BlockBadArguments
+    PositionClosed = pos
+    mRegister.CloseBlock Me
+End Sub
 
 
 ' Events
 '-------------------------------------------------------------------------------
-Private Sub mRegister_OnRegister(block As IBlockInline)
-Attribute mRegister_OnRegister.VB_Description = "Event handler for when a block is registered."
+Private Sub mRegister_OnOpenBlock(block As IBlockInline)
+Attribute mRegister_OnOpenBlock.VB_Description = "Event handler for when a block is registered."
 '   Event handler for when a block is registered.
 '
 '   Args:
@@ -189,6 +203,30 @@ Attribute mRegister_OnRegister.VB_Description = "Event handler for when a block 
     If Closed Then Exit Sub
     If block Is Me Then Exit Sub
     Logger.Log TypeName(Me) & " handling registration of " & TypeName(block)
+End Sub
+
+Private Sub mRegister_OnParse(char As String, pos As Long)
+Attribute mRegister_OnParse.VB_Description = "Parses the character with relevance to the current block."
+'   Parses the character with relevance to the current block.
+'
+'   Args:
+'       char: a single character that could start a new inline block.
+'       pos: The character position in the markdown to parse.
+'
+'   The only thing that can close this block is the end of the line.
+    If char = vbNullString Then mPositionClosed = pos - 1
+End Sub
+
+Private Sub mRegister_OnCloseBlock(block As IBlockInline)
+Attribute mRegister_OnCloseBlock.VB_Description = "Event that handles another block closure."
+'   Event that handles another block closure.
+'
+'   Args:
+'       block: The block being closed.
+'
+'   Raises:
+'
+    
 End Sub
 
 

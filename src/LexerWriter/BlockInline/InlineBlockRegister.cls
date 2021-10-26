@@ -62,10 +62,8 @@ Attribute ParseCharacter.VB_Description = "Parses the character and creates a bl
         block.ParseCharacter char
     Next block
 
-'   TODO: Check for any closed blocks (first in priority). Push valid blocks
-'         in the right order to the attached IBlockContent and bin invalid ones.
-
-    LazyParseBlockFactory char
+'   Open a new block if we need to.
+    LazyParseOpenBlock char, pos
 End Sub
 
 Public Sub Register(block As IBlockInline)
@@ -94,34 +92,48 @@ End Sub
 
 ' Helpers
 '-------------------------------------------------------------------------------
-Private Sub LazyParseBlockFactory(char As String)
-Attribute LazyParseBlockFactory.VB_Description = "Pushes a new parallel inline block if char is the trigger for any type."
+Private Sub LazyParseOpenBlock(char As String, pos As Long)
+Attribute LazyParseOpenBlock.VB_Description = "Pushes a new parallel inline block if char is the trigger for any type."
 '   Pushes a new parallel inline block if char is the trigger for any type.
 '
 '   Args:
 '       char: a single character that could start a new inline block.
+'       pos: The character position in the markdown to parse.
 '
-' TODO: move this to the class that actually parses. This class shouldn't know or care about this.
     Const TRIGGERS As String = "<`*_[!"
     If Not Utils.StrIn(TRIGGERS, char) Then Exit Sub
 
     Dim b As IBlockInline
+
+'   Open a code block if we had back ticks and now we don't.
+    If Not char = "`" And mBacktickCount > 0 Then
+        If Not mBlockInlineCodeOpen Then
+            Set b = New BlockInline
+            b.Text = String("`", mBacktickCount)
+            mItems.RegisterSelf(Me, pos - mBacktickCount)
+        End If
+        mBacktickCount = 0
+    End If
+    mBlockInlineCodeOpen = False
+
     Select Case char
         Case Is = "<"
             Set b = New BlockInline ' TODO: Update to correct concrete type.
-            b.Text = char
         Case Is = "`"
-            Set b = New BlockInline ' TODO: Update to correct concrete type.
-            b.Text = char
+            mBacktickCount = mBacktickCount + 1
         Case Is = "*", "_"
             Set b = New BlockInline ' TODO: Update to correct concrete type.
-            b.Text = char
         Case Is = "["
             Set b = New BlockInline ' TODO: Update to correct concrete type.
-            b.Text = char
         Case Is = "!"
             Set b = New BlockInline ' TODO: Update to correct concrete type.
-            b.Text = char
+        Case Else
+'           Drop out if nothing interesting discovered.
+            Exit Sub
+    End Select
+
+'   Set the text and position and register.
+    b.Text = char
 
     End Select
     mItems.Push b

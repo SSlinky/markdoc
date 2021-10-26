@@ -41,14 +41,23 @@ Public Property Get Markdown() As String
         PositionClosed - PositionOpened + 1)
 End Property
 
+Public Property Let PositionClosed(var As Long)
+Attribute PositionClosed.VB_Description = "The position this block was closed."
+    mPositionClosed = var
+End Property
+
+Public Property Get PositionClosed() As Long
+    PositionClosed = mPositionClosed
+End Property
+
 Public Property Let PositionOpened(var As Long)
 Attribute PositionOpened.VB_Description = "The position this block was opened."
 '   This property is sort of read-only.
-    If var > 0 And mPosition = 0 Then mPosition = var
+    If var > 0 And mPositionOpened = 0 Then mPositionOpened = var
 End Property
 
 Public Property Get PositionOpened() As Long
-    PositionOpened = mPosition
+    PositionOpened = mPositionOpened
 End Property
 
 Public Property Get Priority() As Long

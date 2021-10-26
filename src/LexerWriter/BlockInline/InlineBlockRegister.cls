@@ -9,8 +9,9 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 '@Folder("markDoc.src.LexerWriter.BlockInline")
 Option Explicit
-Public Event OnRegister(block As IBlockInline)
-
+Public Event OnOpenBlock(block As IBlockInline)
+Public Event OnCloseBlock(block As IBlockInline)
+Public Event OnParse(char As String, pos As Long)
 '-------------------------------------------------------------------------------
 '   Class: InlineBlockRegister
 '   Manages active inline blocks.
@@ -21,6 +22,8 @@ Public Event OnRegister(block As IBlockInline)
 Private mItems As List
 Private mMarkdown As String
 
+Private mBacktickCount As Long
+Private mBlockInlineCodeOpen As Boolean
 
 ' Properties
 '-------------------------------------------------------------------------------
@@ -49,18 +52,18 @@ End Property
 
 ' Methods
 '-------------------------------------------------------------------------------
-Public Sub ParseCharacter(char As String)
+Public Sub ParseCharacter(pos As Long)
 Attribute ParseCharacter.VB_Description = "Parses the character and creates a block if required."
 '   Parses the character and creates a block if required.
 '
 '   Args:
-'       char: The character to parse.
+'       pos: The character position in the markdown to parse.
 '
+    Dim char As String
+    char = Mid(Markdown, pos, 1)
+
 '   Each registered block should parse the character.
-    Dim block As IBlockInline
-    For Each block In mItems
-        block.ParseCharacter char
-    Next block
+    RaiseEvent OnParse(char, pos)
 
 '   Open a new block if we need to.
     LazyParseOpenBlock char, pos
@@ -74,7 +77,7 @@ Attribute Register.VB_Description = "Registers a block for tracking."
 '       block: The IBlockInline to register.
 '
     mItems.Push block
-    RaiseEvent OnRegister(block)
+    RaiseEvent OnOpenBlock(block)
 End Sub
 
 Public Sub Unregister(block As IBlockInline)
@@ -87,6 +90,25 @@ Attribute Register.VB_Description = "Removes a block from tracking."
     Dim i As Long
     i = mItems.IndexOf(block)
     If i > 0 Then mItems.Remove i
+End Sub
+
+Public Sub CloseBlock(block As IBlockInline)
+Attribute CloseBlock.VB_Description = "Raises the event that a block is closed."
+'   Raises the event that a block is closed.
+'
+'   Args:
+'       block: The IBlockInline to close.
+'
+    RaiseEvent OnCloseBlock(block)
+End Sub
+
+Public Sub BlockInlineCodeOpen()
+Attribute BlockInlineCodeOpen.VB_Description = "Prevents inline code being opened on the same tick."
+'   Prevents inline code being opened on the same tick.
+'   This should be called by a code block when it is closed to stop the
+'   same back ticks opening another block.
+'
+    mBlockInlineCodeOpen = True
 End Sub
 
 
@@ -134,9 +156,7 @@ Attribute LazyParseOpenBlock.VB_Description = "Pushes a new parallel inline bloc
 
 '   Set the text and position and register.
     b.Text = char
-
-    End Select
-    mItems.Push b
+    mItems.RegisterSelf(Me, pos)
 End Sub
 
 

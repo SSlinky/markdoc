@@ -34,6 +34,10 @@ Attribute Closed.VB_Description = "Whether the block is closed or not."
     Closed = mPositionClosed > 0
 End Property
 
+Public Property Get Content() As String
+    Content = Markdown
+End Property
+
 Public Property Get Markdown() As String
     Markdown = Mid( _
         mRegister.Markdown, _
@@ -241,17 +245,13 @@ Public Property Get ISortable_SortIndex() As Long
     ISortable_SortIndex = SortIndex
 End Property
 
-Public Property Let IBlockInline_SortIndex(var As Long)
-    SortIndex = var
-End Property
-
-Public Property Get IBlockInline_SortIndex() As Long
-    IInlineContent_SortIndex = SortIndex
-End Property
-
 Public Property Get IBlockInline_Closed() As Boolean
 Attribute Closed.VB_Description = "Whether this block is closed or not."
     IBlockInline_Closed = Closed
+End 
+
+Public Property Get IBlockInline_Content() As String
+    IBlockInline_Content = Content
 End Property
 
 Public Property Let IBlockInline_Markdown(var As String)

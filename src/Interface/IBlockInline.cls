@@ -19,6 +19,11 @@ Attribute Closed.VB_Description = "Whether this block is closed or not."
     Throw = Errs.InterfaceUsedAsObject
 End Property
 
+Public Property Get Content() As String
+Attribute Content.VB_Description = "The parsed content for this block."
+    Throw = Errs.InterfaceUsedAsObject
+End Property
+
 Public Property Let Markdown(var As String)
 Attribute Markdown.VB_Description = "The string content that was parsed."
     Throw = Errs.InterfaceUsedAsObject

@@ -144,11 +144,6 @@ Private Sub mLexerMarkdown_OnReadChar(char As String, pos As Long)
     mCharsRead = mCharsRead & char
 End Sub
 
-Private Sub mLexerMarkdown_OnEOF()
+Private Sub mLexerMarkdown_OnEOF(pos As Long)
     mCountEOFRaised = mCountEOFRaised + 1
 End Sub
-
-
-' Interface Implementation
-'-------------------------------------------------------------------------------
-

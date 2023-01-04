@@ -7,6 +7,26 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
+' Copyright 2023 Sam Vanderslink
+' 
+' Permission is hereby granted, free of charge, to any person obtaining a copy 
+' of this software and associated documentation files (the "Software"), to deal 
+' in the Software without restriction, including without limitation the rights 
+' to use, copy, modify, merge, publish, distribute, sublicense, and/or sell 
+' copies of the Software, and to permit persons to whom the Software is 
+' furnished to do so, subject to the following conditions:
+' 
+' The above copyright notice and this permission notice shall be included in 
+' all copies or substantial portions of the Software.
+' 
+' THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
+' IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+' FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
+' AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+' LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING 
+' FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS 
+' IN THE SOFTWARE.
+
 Option Explicit
 Implements ILexerToken
 
@@ -145,13 +165,17 @@ Attribute OpenToken.VB_Description = "Opens the token at the position."
     mTokState = MODE_OPEN
 End Sub
 
-Private Sub ValidateEndOfLine()
+Private Sub ValidateEndOfLine(pos As Long)
 Attribute ValidateEndOfLine.VB_Description = "Closes or invalidates the token."
 '   Closes or invalidates the token.
-    If mBase.TokenState = MODE_CLOSING And mLenCloseFence = mLenOpenFence Then
-        mEvents.RaiseOnSetCloseCharPos pos
-    End If
-    If mBase.TokenState <> MODE_CLOSED Then mEvents.RaiseOnInvalidate 
+    Select Case True
+'       Close as valid token.    
+        Case Is = mTokState = MODE_CLOSING And mLenCloseFence = mLenOpenFence:
+            mEvents.RaiseOnSetCloseCharPos pos
+'       Invalidate and unregister the token.            
+        Case Is = mBase.TokenState <> TokenStateType.MODE_CLOSED:
+            mEvents.RaiseOnInvalidate
+    End Select
 End Sub
 
 
@@ -165,7 +189,7 @@ Private Sub mBase_OnNewLine(pos As Long)
     ValidateEndOfLine
 End Sub
 
-Private Sub mBase_OnEOF()
+Private Sub mBase_OnEOF(pos As Long)
     ValidateEndOfLine
 End Sub
 

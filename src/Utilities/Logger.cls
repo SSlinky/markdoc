@@ -35,6 +35,8 @@ Option Explicit
 '   Allows for better logging later.
 '-------------------------------------------------------------------------------
 
+' Enums
+'-------------------------------------------------------------------------------
 Public Enum Level
     Debugging
     Information
@@ -43,6 +45,7 @@ Public Enum Level
     Critical
     NoLevel
 End Enum
+
 
 ' Private Backing Store
 '-------------------------------------------------------------------------------

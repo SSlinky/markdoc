@@ -71,7 +71,7 @@ Public Sub OpenStream(args As String)
 '   Args:
 '       args: (excl proxy) The url location of the file.
 '             (incl proxy) url,proxy url,username,password.
-'
+
     Const HTTPREQUEST_PROXYSETTING_PROXY As Long = 2
 
     Dim resource As String

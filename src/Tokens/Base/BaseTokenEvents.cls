@@ -41,25 +41,6 @@ Public Event OnSetOpenCharPos(pos As Long)
 Public Event OnSetCloseCharPos(pos As Long)
 
 
-' Private Backing Store
-'-------------------------------------------------------------------------------
-' Private mToken As ILexerToken
-
-
-' Constructor
-'-------------------------------------------------------------------------------
-' Public Sub Initialize(tok As ILexerToken)
-' Attribute Initialize.VB_Description = "Acts as a faux constructor. Must be called immediately after initialization."
-' '   Acts as a faux constructor. Must be called immediately after initialization.
-' '
-' '   Args:
-' '       tok: The token for event subscription.
-
-'     If Not mToken Is Nothing Then Exit Sub
-'     Set mToken = tok
-' End Sub
-
-
 ' Methods
 '-------------------------------------------------------------------------------
 Public Sub RaiseOnInvalidate()
@@ -71,16 +52,3 @@ End Sub
 Public Sub RaiseOnSetCloseCharPos(pos As Long)
     RaiseEvent OnSetCloseCharPos(pos)
 End Sub
-
-
-' Interface Implementation
-'-------------------------------------------------------------------------------
-' Public Sub ILexerTokenEvents_OnInvalidate()
-'     RaiseEvent OnValidate()
-' End Sub
-' Public Sub ILexerTokenEvents_OnSetOpenCharPos(pos As Long)
-'     RaiseEvent OnSetOpenCharPos(pos As Long)
-' End Sub
-' Public Sub ILexerTokenEvents_OnSetCloseCharPos(pos As Long)
-'     RaiseEvent OnSetCloseCharPos(pos As Long)
-' End Sub

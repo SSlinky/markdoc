@@ -35,6 +35,8 @@ Option Explicit
 '   Adds a modern language feel to throwing errors.
 '-------------------------------------------------------------------------------
 
+' Enums
+'-------------------------------------------------------------------------------
 Public Enum Errs
 '   Error types enum. Each error should
 '   have an equivalent description in ErrsLookup.

@@ -368,6 +368,7 @@ Attribute EndsWith.VB_Description = "Tests whether a string ends with a string."
     EndsWith = Right(str, Len(subStr)) = subStr
 End Function
 
+
 '   Long Helpers
 '-------------------------------------------------------------------------------
 Public Function Between(n As Long, a As Long, b As Long) As Boolean
@@ -449,6 +450,7 @@ Public Sub CBlockLeaf( _
         parentBlock.Children.Insert childIndex, block
     End If
 End Sub
+
 
 '   Document helpers
 '-------------------------------------------------------------------------------

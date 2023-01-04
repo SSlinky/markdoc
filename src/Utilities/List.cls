@@ -109,7 +109,7 @@ Attribute Identifier.VB_Description = "Pushes an ISortable into a sorted stack p
 '
 '   Args:
 '       obj: The object to be push sorted.
-'
+
     Dim searchLow As Long
     Dim searchMid As Long
     Dim searchHigh As Long
@@ -171,7 +171,6 @@ Attribute Identifier.VB_Description = "Pushes an ISortable into a sorted stack p
 '   Insert at sorted position.
     Insert searchMid, obj
 End Sub
-
 
 Public Function Pop() As Variant
 '   Returns the first item, popping it from the list.

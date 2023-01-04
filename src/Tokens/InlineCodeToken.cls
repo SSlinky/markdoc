@@ -94,6 +94,7 @@ Attribute Initialize.VB_Description = "Acts as a faux constructor. Must be calle
                      priorityLevel:=2
 End Sub
 
+
 ' Helpers
 '-------------------------------------------------------------------------------
 Private Sub RequireInitialization()

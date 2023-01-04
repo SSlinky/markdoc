@@ -119,6 +119,18 @@ End Sub
 
 ' Methods
 '-------------------------------------------------------------------------------
+Public Function RawMarkdown(mkdwn As String) As String
+Attribute RawMarkdown.VB_Description = "Returns the subsection of raw markdown that this token relates to."
+'   Returns the subsection of raw markdown that this token relates to.
+'
+'   Args:
+'       mkdwn: The full raw markdown.
+'
+'   Returns:
+'       The substring of raw markdown that this token relates to.
+
+    RawMarkdown = Mid(mkdwn, mOpenCharPos, mCloseCharPos - mOpenCharPos + 1)
+End Function
 
 
 ' Helpers

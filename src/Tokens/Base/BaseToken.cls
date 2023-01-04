@@ -99,7 +99,9 @@ Public Sub Initialize( _
     parentToken As ILexerToken, _
     eventsAdaptor As BaseTokenEvents, _
     lexer As LexerMarkdown, _
-    priorityLevel As Long)
+    priorityLevel As Long, _
+    Optional openPos As Long = 0, _
+    Optional closePos As Long = 0)
 Attribute Initialize.VB_Description = "Acts as a faux constructor. Must be called immediately after initialization."
 '   Acts as a faux constructor. Must be called immediately after initialization.
 '
@@ -114,6 +116,13 @@ Attribute Initialize.VB_Description = "Acts as a faux constructor. Must be calle
     Set mParentToken = parentToken
     Set mLexerMarkdown = lexer
     Set mParentTokenEvents = eventsAdaptor
+
+'   Optional setup to allow for direct assignation without firing events.    
+    mOpenCharPos = openPos
+    mCloseCharPos = closePos
+    If mOpenCharPos * mCloseCharPos > 0 Then
+        mTokenState = TokenStateType.MODE_CLOSED
+    End If
 End Sub
 
 
@@ -143,16 +152,6 @@ Attribute IsInitialized.VB_Description = "Raises an exception if not initialized
         Debug.Print "Not initialized - TODO implement exception."
     End If
 End Function
-
-Private Sub HandleTokenClosedEvent(tok As ILexerToken)
-Attribute HandleTokenClosedEvent.VB_Description = "If this token is lower priority and clashes, invalidate the token."
-'   If this token is lower priority and clashes, invalidate the token.
-'
-'   Args:
-'       tok: The token that has closed as valid.
-
-    If tok.
-End Sub
 
 Private Sub InvalidateMe()
 Attribute InvalidateMe.VB_Description = "Invalidates this token."
